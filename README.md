@@ -14,7 +14,7 @@ Anropa sedan API:et när användaren skrivit klart och fokus flyttas från input
 
 
 För godkänt ska ni göra en webbsida som
-- kan begära en API-nyckel
+- kan begära en API-nyckel --CHECK
 - kan lägga till en bok
 - kan se vilka böcker som man har lagt in
 - har ett funktionellt gränssnitt
