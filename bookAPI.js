@@ -43,7 +43,7 @@ window.addEventListener('load', function (event) {
     const title = document.getElementById('title');
     const author = document.getElementById('author');
 
-    sendBook.addEventListener('click', function(event) {
+    sendBook.addEventListener('click', function (event) {
         addBook(title.value, author.value);
         console.log("SENT")
         console.log(title.value, author.value);
@@ -79,25 +79,26 @@ function addBook(title, author) {
     addBookRequest.send();
 }
 
-function addBook(title, author){
-      const addBookRequest = new XMLHttpRequest();
-      let responseText = null;
+function addBook(title, author) {
+    const addBookRequest = new XMLHttpRequest();
+    let responseText = null;
 
-      addBookRequest.onreadystatechange = function(event) {
-          if (addBookRequest.readyState === 4) {
-              responseText = JSON.parse(addBookRequest.responseText);
-              if(responseText.status == 'error'){
+    addBookRequest.onreadystatechange = function (event) {
+        if (addBookRequest.readyState === 4) {
+            responseText = JSON.parse(addBookRequest.responseText);
+            if (responseText.status == 'error') {
                 console.log(responseText.message);
-              } else {
+            } else {
                 console.log(responseText.status);
-              }
-              console.log(responseText.id);
-          }
-      }
+            }
+            console.log(responseText.id);
+        }
+    }
 
-      addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
-      addBookRequest.send();
-  
+    addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
+    addBookRequest.send();
+}
+
 function retrieveKey() {
     /* Retrieve apiKey */
     return localStorage.getItem('apiKey');
