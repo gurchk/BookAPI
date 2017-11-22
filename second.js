@@ -10,6 +10,9 @@ window.addEventListener('load', function (event) {
   document.getElementById('fetchBooks').addEventListener('click', retrieveBooks);
   retrieveBooks();
 
+
+  statsEdit(4,2,2);
+
 /* End of callback */
 });
 
@@ -59,11 +62,11 @@ function retrieveBooks(event){
 
   retrieveBooks.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${retrieveKey()}`);
   retrieveBooks.send();
+
 }
 
 /* Add books to DOM */
 function displayBooks(id, title, author, updated){
-
 
   let listItem = document.createElement('div');
 
@@ -118,3 +121,6 @@ function removeBook(event){
   removeBookRequest.send();
 
 }
+
+
+/* Statistics functions */
