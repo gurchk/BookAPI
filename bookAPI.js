@@ -45,17 +45,21 @@ function retrieveKey(){
 }
 
 function addBook(title, author){
-
       const addBookRequest = new XMLHttpRequest();
       let responseText = null;
+
       addBookRequest.onreadystatechange = function(event) {
           if (addBookRequest.readyState === 4) {
               responseText = JSON.parse(addBookRequest.responseText);
-              console.log(responseText.status);
+              if(responseText.status == 'error'){
+                console.log(responseText.message);
+              } else {
+                console.log(responseText.status);
+              }
               console.log(responseText.id);
           }
       }
-      
+
       addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
       addBookRequest.send();
 }
