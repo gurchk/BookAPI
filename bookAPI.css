@@ -55,20 +55,29 @@ input {
 }
 /* Library design */
 #library {
-    width: 70%;
+    display: flex;
+    width: 50%;
+    flex-direction: column;
     margin: 15px auto;
     padding: 0px;
+    position: relative;
     background-color: #d2d1d1;
     box-shadow: 2px 2px 6px #222;
 }
+
 #library > span {
-  display: inline-block;
+  display: inline-flex;
   padding: 10px 0px;
   margin: 10px;
 }
 
+#library > div > .spanID {
+  flex: 0 0 5%;
+}
+
 #library > div {
   display: flex;
+  flex: 2 2 auto;
   padding: 20px;
   margin: 0px;
 }
@@ -91,7 +100,7 @@ input {
 #library > div > span {
   font-family: sans-serif;
   display: inline-block;
-  flex: 0 0 25%;
+  flex: 0 0 30%;
   padding: 10px 5px;
 }
 #library > div > hr {
@@ -103,18 +112,22 @@ input {
   border-radius: 5px;
   border: none;
   margin: 0px 9px;
-  flex: 1 1 auto;
+  flex: 0 0 5%;
   background-color: #555;
   color: #fff;
 }
 #library > div > button:hover {
   background-color: #f14848;
 }
+#library > div > button:last-child:hover:not(.libraryAddBtn) {
+  background-color: #cfc72b;
+}
 #library > div > .libraryAddBtn {
   font-size: 1em;
   border-radius: 7px;
+  flex: 0 0 5%;
   border: none;
-  margin: 0 20px 0 -8px;
+  margin: 0 5px;
   padding: 0px;
   border: 1px solid #adadad;
   background-color: inherit;
