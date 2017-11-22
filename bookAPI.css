@@ -3,11 +3,9 @@
     text-align: center;
 }
 
-
-section {
-    display: block;
-    padding: 30px;
-    margin: 10px 100px;
+body {
+    margin: 0;
+    padding: 0;
 }
 
 h1,
@@ -37,8 +35,19 @@ aside {
     top: 220px;
 }
 
+main {
+    width: 70%;
+    margin: 0 auto;
+}
+
 main button {
     font-size: 1.2rem;
+}
+
+nav {
+    margin-bottom: 100px;
+    background-color: #404747;
+    padding: 40px;
 }
 
 input {
@@ -52,16 +61,32 @@ input {
     padding: 0 5px;
 }
 
+.active {
+    background-color: #f8d4ff;
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    font-family: monospace;
+}
+
 .left input {
     text-align: left;
+}
+
+#saveCurrent {
+    position: absolute;
+    right: 40px;
+}
+
+#returnKey {
+    position: absolute;
+    right: 100px;
 }
 
 /* Library design */
 
 #library {
-    display: flex;
-    width: 50%;
-    flex-direction: column;
     margin: 15px auto;
     padding: 0px;
     position: relative;
@@ -81,7 +106,7 @@ input {
 
 #library > div {
     display: flex;
-    flex: 2 2 auto;
+    position: relative flex: 2 2 auto;
     padding: 20px;
     margin: 0px;
 }
@@ -138,13 +163,13 @@ input {
 #library > div > .libraryAddBtn {
     font-size: 1em;
     border-radius: 7px;
-    flex: 0 0 5%;
     border: none;
     margin: 0 5px;
     padding: 0px;
     border: 1px solid #adadad;
     background-color: inherit;
     color: #666;
+    display: inline-block;
 }
 
 #library > div > .libraryAddBtn:hover {
@@ -153,11 +178,21 @@ input {
 }
 
 #requestAPI {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-family: monospace;
     text-transform: uppercase;
     font-weight: 700;
     padding: 10px 40px;
+    display: inline-block;
+    position: relative;
+    margin-right: 40px;
+}
+#requestAPI:hover {
+    background-color: crimson;
+}
+#apiInputKey {
+    position: relative;
+    display: inline-block;
 }
 
 button {
