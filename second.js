@@ -8,6 +8,7 @@ window.addEventListener('load', function (event) {
   }
 
   document.getElementById('fetchBooks').addEventListener('click', retrieveBooks);
+  retrieveBooks();
 
 /* End of callback */
 });
@@ -41,15 +42,18 @@ function retrieveBooks(event){
 
           /*JavaScript object from JSON data */
           let responseData = JSON.parse(retrieveBooks.responseText);
-
-          /* Iterate through JavaScript object with for loop */
-          for(let i = 0; i < responseData.data.length; i++){
-            displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
-          }
-
           if(retrieveBooks.status == 'error'){
+            /* Print errormessage */
             console.log(retrieveBooks.message);
-          } else console.log(retrieveBooks.status);
+
+          } else {
+
+            /* Iterate through JavaScript object with for loop */
+            for(let i = 1; i < responseData.data.length; i++){
+              displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
+            }
+            console.log(retrieveBooks.status);
+          }
       }
   }
 
@@ -60,18 +64,28 @@ function retrieveBooks(event){
 /* Add books to DOM */
 function displayBooks(id, title, author, updated){
 
+
   let listItem = document.createElement('div');
 
   listItem.innerHTML = '<span class="spanID">'+id+'</span> <hr> <span>'+title+'</span> <hr> <span>'+author+'</span> <hr> <button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button><button pen="true" class="libraryRemoveBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>'
+
   const libraryDiv = document.getElementById('library');
-  
-  libraryDiv.appendChild(listItem);
 
-
+  let exists = false;
   for(let listItem of libraryDiv.children){
-    btnAddEventListeners(listItem);
+    if(id == listItem.children[0].innerText){
+      exists = true;
+    }
   }
+  if(!exists){
+    libraryDiv.appendChild(listItem);
 
+    for(let listItem of libraryDiv.children){
+      btnAddEventListeners(listItem);
+    }
+  } else {
+    console.log('This book already exists!');
+  }
 }
 
 /* Function to edit a book */

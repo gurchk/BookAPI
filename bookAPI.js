@@ -48,6 +48,17 @@ window.addEventListener('load', function (event) {
         console.log("SENT")
         console.log(title.value, author.value);
     })
+
+    /* adding eventListener to saveOurKey & retrieveOurKey */
+    //let saveCurrentBtn = document.getElementById('saveCurrent');
+    saveCurrentBtn.addEventListener('click', function(e){
+      saveOurKey(retrieveKey());
+    });
+
+    //let goBackBtn = document.getElementById('returnKey');
+    goBackBtn.addEventListener('click', function(e){
+      saveKey(retrieveOurKey());
+    });
 });
 
 
@@ -58,11 +69,28 @@ window.addEventListener('load', function (event) {
 
 /* Functions */
 
+function saveObject(obj){
+  localStorage.setItem('apiObj', obj);
+}
+function retrieveObject(){
+  return localStorage.getItem('apiObj');
+}
+
 function saveKey() {
     /* Declare constant apiVariable */
     const apiKeyValue = document.getElementById('apiKEY').innerText;
+
     /* Save the key to local storage */
     localStorage.setItem('apiKey', apiKeyValue);
+}
+
+function saveOurKey(apiKeyValue){
+  /* Vår apiKey */
+  localStorage.setItem('ourApiKey', apiKeyValue);
+}
+function retrieveOurKey(){
+  /* Vår apiKey */
+  return localStorage.getItem('ourApiKey');
 }
 
 function addBook(title, author) {
