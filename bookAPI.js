@@ -7,7 +7,7 @@ window.addEventListener('load', function (event) {
         const log = document.getElementById('apiKEY');
         let ourNiceKey = null;
 
-        requestedAPI.onreadystatechange = function(event) {
+        requestedAPI.onreadystatechange = function (event) {
             if (requestedAPI.readyState === 4) {
                 ourNiceKey = JSON.parse(requestedAPI.responseText);
                 log.innerHTML = ourNiceKey.key;
@@ -17,31 +17,66 @@ window.addEventListener('load', function (event) {
         requestedAPI.send();
     });
 
-      /* Add eventListener for saveKey button */
-      document.getElementById('useApiKey').addEventListener('click', saveKey);
+    /* Add eventListener for saveKey button */
+    document.getElementById('useApiKey').addEventListener('click', saveKey);
 
-      /* Testing addBook */
-      addBook('hi', 'bye');
+    // Add a book
+    const addBookBtn = document.getElementById('addBookBtn');
+    // Get the button that opens the modal
+    const addBookModal = document.getElementById('addBookModal');
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName("close")[0];
+    addBookBtn.addEventListener('click', function (event) {
+        addBookModal.style.display = "block";
+        console.log("CLICKED");
+    })
+    span.addEventListener('click', function (event) {
+        addBookModal.style.display = "none";
+    })
+    window.onclick = function (event) {
+        if (event.target == addBookModal) {
+            addBookModal.style.display = "none";
+        }
+    }
 
+    const sendBook = document.getElementById('sendBook');
+    const title = document.getElementById('title');
+    const author = document.getElementById('author');
+
+    sendBook.addEventListener('click', function(event) {
+        addBook(title.value, author.value);
+        console.log("SENT")
+        console.log(title.value, author.value);
+    })
 });
+
+
+//    if(responseText.status == 'error'){
+//        console.log(responseText.message);
+//     } else console.log(responseText.status);
+
 
 /* Functions */
 
-function saveKey(){
-
-  /* Declare constant apiVariable */
-  const apiKeyValue = document.getElementById('apiKEY').innerText;
-
-  /* Save the key to local storage */
-  localStorage.setItem('apiKey', apiKeyValue);
-
-
+function saveKey() {
+    /* Declare constant apiVariable */
+    const apiKeyValue = document.getElementById('apiKEY').innerText;
+    /* Save the key to local storage */
+    localStorage.setItem('apiKey', apiKeyValue);
 }
 
-function retrieveKey(){
+function addBook(title, author) {
 
-  /* Retrieve apiKey */
-  return localStorage.getItem('apiKey');
+    const addBookRequest = new XMLHttpRequest();
+    let responseText = null;
+    addBookRequest.onreadystatechange = function (event) {
+        if (addBookRequest.readyState === 4) {
+            responseText = JSON.parse(addBookRequest.responseText);
+        }
+    }
+
+    addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
+    addBookRequest.send();
 }
 
 function addBook(title, author){
@@ -62,4 +97,8 @@ function addBook(title, author){
 
       addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
       addBookRequest.send();
+  
+function retrieveKey() {
+    /* Retrieve apiKey */
+    return localStorage.getItem('apiKey');
 }
