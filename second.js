@@ -64,18 +64,28 @@ function retrieveBooks(event){
 /* Add books to DOM */
 function displayBooks(id, title, author, updated){
 
+
   let listItem = document.createElement('div');
 
   listItem.innerHTML = '<span class="spanID">'+id+'</span> <hr> <span>'+title+'</span> <hr> <span>'+author+'</span> <hr> <button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button><button pen="true" class="libraryRemoveBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>'
+
   const libraryDiv = document.getElementById('library');
 
-  libraryDiv.appendChild(listItem);
-
-
+  let exists = false;
   for(let listItem of libraryDiv.children){
-    btnAddEventListeners(listItem);
+    if(id == listItem.children[0].innerText){
+      exists = true;
+    }
   }
+  if(!exists){
+    libraryDiv.appendChild(listItem);
 
+    for(let listItem of libraryDiv.children){
+      btnAddEventListeners(listItem);
+    }
+  } else {
+    console.log('This book already exists!');
+  }
 }
 
 /* Function to edit a book */

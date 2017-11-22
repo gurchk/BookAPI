@@ -50,12 +50,12 @@ window.addEventListener('load', function (event) {
     })
 
     /* adding eventListener to saveOurKey & retrieveOurKey */
-    let saveCurrentBtn = document.getElementById('saveCurrent');
+    //let saveCurrentBtn = document.getElementById('saveCurrent');
     saveCurrentBtn.addEventListener('click', function(e){
       saveOurKey(retrieveKey());
     });
 
-    let goBackBtn = document.getElementById('returnKey');
+    //let goBackBtn = document.getElementById('returnKey');
     goBackBtn.addEventListener('click', function(e){
       saveKey(retrieveOurKey());
     });
@@ -68,6 +68,13 @@ window.addEventListener('load', function (event) {
 
 
 /* Functions */
+
+function saveObject(obj){
+  localStorage.setItem('apiObj', obj);
+}
+function retrieveObject(){
+  return localStorage.getItem('apiObj');
+}
 
 function saveKey() {
     /* Declare constant apiVariable */
