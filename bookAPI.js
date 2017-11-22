@@ -1,7 +1,8 @@
 window.addEventListener('load', function (event) {
 
     const requestAPIbtn = document.getElementById('requestAPI');
-
+    apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
+    currentSavedKey.innerHTML = `Saved Key: <strong>${retrieveOurKey()}</strong>`;
     requestAPIbtn.addEventListener('click', function (event) {
         const requestedAPI = new XMLHttpRequest();
         const log = document.getElementById('apiKEY');
@@ -11,14 +12,13 @@ window.addEventListener('load', function (event) {
             if (requestedAPI.readyState === 4) {
                 ourNiceKey = JSON.parse(requestedAPI.responseText);
                 log.innerHTML = ourNiceKey.key;
+                saveKey();
+                apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
             }
         }
         requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
         requestedAPI.send();
     });
-
-    /* Add eventListener for saveKey button */
-    document.getElementById('useApiKey').addEventListener('click', saveKey);
 
     // Add a book
     const addBookBtn = document.getElementById('addBookBtn');
@@ -50,15 +50,23 @@ window.addEventListener('load', function (event) {
     })
 
     /* adding eventListener to saveOurKey & retrieveOurKey */
-    //let saveCurrentBtn = document.getElementById('saveCurrent');
+    let saveCurrentBtn = document.getElementById('saveCurrent');
     saveCurrentBtn.addEventListener('click', function(e){
       saveOurKey(retrieveKey());
     });
 
-    //let goBackBtn = document.getElementById('returnKey');
+    let goBackBtn = document.getElementById('returnKey');
     goBackBtn.addEventListener('click', function(e){
       saveKey(retrieveOurKey());
     });
+    
+    // Fetch Key
+    
+    const inputFetch = document.getElementById('apiInputKey');
+    const fetchKey = document.getElementById('fetchKey');
+    
+    
+    
 });
 
 

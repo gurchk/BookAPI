@@ -61,27 +61,21 @@ input {
     padding: 0 5px;
 }
 
-.active {
-    background-color: #f8d4ff;
-    margin-top: 10px;
-    position: relative;
-    display: inline-block;
-    font-size: 2rem;
-    font-family: monospace;
-}
 
 .left input {
     text-align: left;
 }
 
 #saveCurrent {
-    position: absolute;
-    right: 40px;
+    position: relative;
+    display: inline-block;
+    float: right;
 }
 
 #returnKey {
-    position: absolute;
-    right: 100px;
+    position: relative;
+    display: inline-block;
+    float: right;
 }
 
 /* Library design */
@@ -217,12 +211,23 @@ button:hover {
 }
 
 #apiKEY {
-    margin-top: 10px;
-    position: relative;
+    position: absolute;
     display: inline-block;
     background-color: #f8d4ff;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-family: monospace;
+    top: 0px;
+    left: 0px;
+}
+
+#currentSavedKey {
+    position: absolute;
+    display: inline-block;
+    background-color: #f8d4ff;
+    font-size: 1rem;
+    font-family: monospace;
+    top: 0px;
+    right: 10px;
 }
 
 #addBookModal {
