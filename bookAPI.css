@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+    text-align: center;
+}
+
+
+section {
+    display: block;
+    padding: 30px;
+    margin: 10px 100px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: monospace;
+
+}
+
+aside {
+    background-color: #959595;
+    border: 3px solid #6667a5;
+    border-radius: 4px;
+    position: fixed;
+    display: inline-block;
+    padding: 20px;
+}
+
+.left {
+    left: 10px;
+}
+
+.right {
+    right: 10px;
+}
+
+
+
+main button {
+    font-size: 1.2rem;
+}
+
+input {
+    display: block;
+    position: relative;
+    margin: 10px;
+    border-radius: 2px;
+    line-height: 30px;
+    color: #ad2370;
+    text-align: right;
+    padding: 0 5px;
+}
+
+.left input {
+    text-align: left;
+}
+
+#library {
+    width: 100%;
+    background-color: #d2d1d1;
+}
+
+#requestAPI {
+    font-size: 2rem;
+    font-family: monospace;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px 40px;
+}
+
+button {
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color: lightgray;
+    transition: 0.3s;
+    color: midnightblue;
+}
+
+button:hover {
+    background-color: midnightblue;
+    transition: 0.3s;
+    color: lightgray;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.right > button:nth-child(2n) {
+    margin-top: 20px;
+}
+#apiKEY {
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+    background-color: #f8d4ff;
+    font-size: 2rem;
+    font-family: monospace;
