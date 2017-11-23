@@ -76,6 +76,8 @@ window.addEventListener('load', function (event) {
     fetchKey.addEventListener('click', function (event) {
         saveKey(inputFetch.value)
         logActive.innerHTML = `Active Key: ${inputFetch.value}`;
+        // Reloads the window
+        window.location.href = window.location.href
     })
 
 
