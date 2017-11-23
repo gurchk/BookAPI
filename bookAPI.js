@@ -1,19 +1,22 @@
 window.addEventListener('load', function (event) {
 
     const requestAPIbtn = document.getElementById('requestAPI');
-    apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
-    currentSavedKey.innerHTML = `Saved Key: <strong>${retrieveOurKey()}</strong>`;
+    const logActive = document.getElementById('apiKEY');
+    updateSaved();
+    updateActive();
+
+
+
+
     requestAPIbtn.addEventListener('click', function (event) {
         const requestedAPI = new XMLHttpRequest();
-        const log = document.getElementById('apiKEY');
-        let ourNiceKey = null;
-
+        var ourNiceKey = null;
         requestedAPI.onreadystatechange = function (event) {
             if (requestedAPI.readyState === 4) {
                 ourNiceKey = JSON.parse(requestedAPI.responseText);
-                log.innerHTML = ourNiceKey.key;
-                saveKey();
-                apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
+                logActive.innerHTML = ourNiceKey.key;
+                saveKey(ourNiceKey.key);
+                updateActive();
             }
         }
         requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
@@ -28,7 +31,6 @@ window.addEventListener('load', function (event) {
     const span = document.getElementsByClassName("close")[0];
     addBookBtn.addEventListener('click', function (event) {
         addBookModal.style.display = "block";
-        console.log("CLICKED");
     })
     span.addEventListener('click', function (event) {
         addBookModal.style.display = "none";
@@ -45,28 +47,36 @@ window.addEventListener('load', function (event) {
 
     sendBook.addEventListener('click', function (event) {
         addBook(title.value, author.value);
-        console.log("SENT")
-        console.log(title.value, author.value);
+        console.log("Added: " + title.value + " " + author.value);
+        shake("shakeMe");
     })
 
-    /* adding eventListener to saveOurKey & retrieveOurKey */
+    /* adding eventListener to saveActiveKey & retrieveOurKey */
     let saveCurrentBtn = document.getElementById('saveCurrent');
-    saveCurrentBtn.addEventListener('click', function(e){
-      saveOurKey(retrieveKey());
+    saveCurrentBtn.addEventListener('click', function (e) {
+        saveActiveKey(retrieveKey());
+        updateSaved();
     });
 
     let goBackBtn = document.getElementById('returnKey');
-    goBackBtn.addEventListener('click', function(e){
-      saveKey(retrieveOurKey());
+    goBackBtn.addEventListener('click', function (e) {
+        saveKey(retrieveOurKey());
+        updateActive();
     });
-    
+
     // Fetch Key
-    
+
     const inputFetch = document.getElementById('apiInputKey');
     const fetchKey = document.getElementById('fetchKey');
-    
-    
-    
+
+    fetchKey.addEventListener('click', function (event) {
+        saveKey(inputFetch.value)
+        logActive.innerHTML = `Active Key: ${inputFetch.value}`;
+    })
+
+
+    /* Declare constant apiVariable */
+
 });
 
 
@@ -74,45 +84,52 @@ window.addEventListener('load', function (event) {
 //        console.log(responseText.message);
 //     } else console.log(responseText.status);
 
-
 /* Functions */
 
-function saveObject(obj){
-  localStorage.setItem('apiObj', obj);
-}
-function retrieveObject(){
-  return localStorage.getItem('apiObj');
+function shake(idToShake){
+    assShake = document.getElementById(idToShake);
+    assShake.setAttribute('class', "vibe")
+    setTimeout(function(){
+       assShake.removeAttribute('class', "vibe"); 
+    }, 1500)
 }
 
-function saveKey() {
-    /* Declare constant apiVariable */
-    const apiKeyValue = document.getElementById('apiKEY').innerText;
+function updateActive() {
+    apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
+}
+
+function updateSaved() {
+    currentSavedKey.innerHTML = `Saved Key: <strong>${retrieveOurKey()}</strong>`;
+}
+
+function saveObject(obj) {
+    localStorage.setItem('apiObj', obj);
+}
+
+function retrieveObject() {
+    return localStorage.getItem('apiObj');
+}
+
+function saveKey(keyToSave) {
+
 
     /* Save the key to local storage */
-    localStorage.setItem('apiKey', apiKeyValue);
+    localStorage.setItem('apiKey', keyToSave);
 }
 
-function saveOurKey(apiKeyValue){
-  /* Vår apiKey */
-  localStorage.setItem('ourApiKey', apiKeyValue);
-}
-function retrieveOurKey(){
-  /* Vår apiKey */
-  return localStorage.getItem('ourApiKey');
+function saveActiveKey() {
+    updateSaved();
+    localStorage.setItem('ourApiKey', retrieveActiveKey());
 }
 
-function addBook(title, author) {
+function retrieveActiveKey() {
+    return localStorage.getItem('apiKey');
+}
 
-    const addBookRequest = new XMLHttpRequest();
-    let responseText = null;
-    addBookRequest.onreadystatechange = function (event) {
-        if (addBookRequest.readyState === 4) {
-            responseText = JSON.parse(addBookRequest.responseText);
-        }
-    }
+function retrieveOurKey() {
+    /* Sparad apiKey */
+    return localStorage.getItem('ourApiKey');
 
-    addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
-    addBookRequest.send();
 }
 
 function addBook(title, author) {
