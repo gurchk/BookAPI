@@ -1,4 +1,4 @@
-window.addEventListener('load', function (event) {
+ window.addEventListener('load', function (event) {
 
     const requestAPIbtn = document.getElementById('requestAPI');
     const logActive = document.getElementById('apiKEY');
