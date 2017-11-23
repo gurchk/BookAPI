@@ -12,7 +12,7 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: monospace;
+    font-family: sans-serif;
 
 }
 
@@ -37,6 +37,7 @@ aside {
 
 main {
     width: 70%;
+    position: relative;
     margin: 0 auto;
 }
 
@@ -170,6 +171,90 @@ input {
     background-color: inherit;
     color: #ddd;
 }
+/* Stats Modal */
+.statsModal {
+  position: absolute;
+  box-shadow: 2px 2px 4px #222;
+  margin: -100px 0px;
+  padding: 15px 25px;
+  width: 70%;
+  left: 15%;
+  height: 400px;
+  background-color: #ddd;
+  display: none;
+}
+.statsModal h1 {
+  color: #111;
+  margin: 0 0 0 20px;
+  padding: 0;
+}
+
+/* MessageDiv */
+.messageDiv {
+  display: inline-block;
+  background-color: #ddd;
+  padding: 7px 8px 10px 0;
+  border-radius: 5px;
+  margin: 5px;
+  display: none;
+}
+
+.messageDiv > span + span {
+  color: #da5951;
+  font-size: 1.8em;
+  cursor: pointer;
+  padding: 0px;
+  line-height: 0px;
+  margin-left: 4px;
+  vertical-align: -4.8px;
+}
+
+.apiKeyDisplay {
+  display: inline-block;
+  background-color: #ddd;
+  padding: 7px 10px 10px 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.successMsg::before {
+  content: 'Success';
+  border-right: 1px solid #aaa;
+  color: #111;
+  font-size: 0.8em;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 15px 10px 15px;
+  margin-right: 5px;
+  background-color: #53da51;
+}
+.errorMsg::before {
+  content: 'Error';
+  font-size: 0.8em;
+  border-right: 1px solid #aaa;
+  color: #111;
+  height: 100%;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 15px 10px 15px;
+  margin-right: 5px;
+  background-color: #da5951;
+}
+.warningMsg::before {
+  content: 'Warning';
+  font-size: 0.8em;
+  border-right: 1px solid #aaa;
+  color: #111;
+  height: 100%;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 15px 10px 15px;
+  margin-right: 5px;
+  background-color: #d16400;
+}
+
+
+/* Api stuff */
 
 #requestAPI {
     font-size: 1.5rem;
@@ -262,13 +347,9 @@ button:hover {
 
 
 #apiKEY {
-    position: absolute;
     display: inline-block;
-    background-color: #f8d4ff;
-    font-size: 1.5rem;
+    font-size: 1em;
     font-family: monospace;
-    top: 0px;
-    left: 0px;
 }
 
 #currentSavedKey {

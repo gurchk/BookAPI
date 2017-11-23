@@ -1,17 +1,17 @@
-window.addEventListener('load', function (event) {
+  window.addEventListener('load', function (event) {
   const libraryDiv = document.getElementById('library');
 
-
+console.log('Total requests so far: ' + totalRequests());
   /* Adding eventListener to all listItems */
   for(let listItem of libraryDiv.children){
     btnAddEventListeners(listItem);
   }
 
-  document.getElementById('fetchBooks').addEventListener('click', retrieveBooks);
-  retrieveBooks();
-
-
-  statsEdit(4,2,2);
+  document.getElementById('fetchBooks').addEventListener('click', function(){
+    retrieveBooks(0);
+  });
+  //Uncomment to retrieve books on load.
+  //retrieveBooks(0);
 
 /* End of callback */
 });
@@ -29,6 +29,10 @@ function btnAddEventListeners(listItem){
 
         /* Add eventListener for function removeBook*/
         element.addEventListener('click', removeBook);
+
+      } else if(element.getAttribute('refresh') != undefined){
+        /* Add eventListener for function refreshStats*/
+        element.addEventListener('click', displayStats);
       }
     }
   }
@@ -37,32 +41,55 @@ function btnAddEventListeners(listItem){
 
 
 /* Function to retrieve books */
-function retrieveBooks(event){
-  const retrieveBooks = new XMLHttpRequest();
+function retrieveBooks(counter){
+  console.log('COUNTER IS NOW: '+counter);
+  if(counter > 10){
+    printMsg('Failed after 10 retries.', 'error');
+    return;
+  } else {
 
-  retrieveBooks.onreadystatechange = function(event) {
-      if (retrieveBooks.readyState === 4 && retrieveBooks.status === 200) {
+    const retrieveBooksRequest = new XMLHttpRequest();
 
-          /*JavaScript object from JSON data */
-          let responseData = JSON.parse(retrieveBooks.responseText);
-          if(retrieveBooks.status == 'error'){
-            /* Print errormessage */
-            console.log(retrieveBooks.message);
+    retrieveBooksRequest.onreadystatechange = function(event) {
+        console.log(retrieveBooksRequest.readyState);
+        console.log(retrieveBooksRequest.status);
+        console.log(retrieveBooksRequest.responseText);
+        if (retrieveBooksRequest.readyState === 4 && retrieveBooksRequest.status === 200) {
 
-          } else {
+          /* Failed after 20 retries */
+            let responseData = JSON.parse(retrieveBooksRequest.responseText);
+            if(responseData.status == "error"){
+              /* Try to retrieve books again, plus one to counter */
 
-            /* Iterate through JavaScript object with for loop */
-            for(let i = 1; i < responseData.data.length; i++){
-              displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
+              retrieveBooks(counter+1);
+
+              /* Print errormessage */
+              console.log(responseData.message);
+              console.log('Error - Log in if');
+              increaseFailed();
+            } else {
+              console.log('Success - Log in else');
+              /* If the status is success, create JavaScript object */
+              let responseData = JSON.parse(retrieveBooksRequest.responseText);
+              console.log('Length of responsedata.length is: '+ responseData.data.length);
+              /* Iterate through JavaScript object with for loop */
+              for(let i = 0; i < responseData.data.length; i++){
+                console.log('Calling displayBooks function for the '+(i+1)+'th time.')
+                displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
+              }
+              console.log(retrieveBooksRequest.status);
+              increaseSuccess();
+              printMsg('Successfully retrieved the books on the '+(counter+1)+'th try.', 'success');
+              if(responseData.data.length == 0){
+                printMsg('No books found!', 'warning');
+              }
             }
-            console.log(retrieveBooks.status);
-          }
-      }
+        }
+    }
+
+    retrieveBooksRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${retrieveKey()}`);
+    retrieveBooksRequest.send();
   }
-
-  retrieveBooks.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${retrieveKey()}`);
-  retrieveBooks.send();
-
 }
 
 /* Add books to DOM */
@@ -87,7 +114,8 @@ function displayBooks(id, title, author, updated){
       btnAddEventListeners(listItem);
     }
   } else {
-    console.log('This book already exists!');
+    printMsg('The book already exists!', 'warning');
+    console.log('This book already exists');
   }
 }
 
@@ -100,27 +128,90 @@ function editBook(event){
 function removeBook(event){
 
   let parent = event.target.parentNode;
-  let bookID = parent.children[0].innerText;
-  parent.parentNode.removeChild(parent);
-
-
-  /* Function to remove from api */
-  const removeBookRequest = new XMLHttpRequest();
-  let responseText = null;
-
-  removeBookRequest.onreadystatechange = function(event) {
-      if (removeBookRequest.readyState === 4 && removeBookRequest.status === 200) {
-          responseText = JSON.parse(removeBookRequest.responseText);
-          if(responseText.status == 'error'){
-            console.log(responseText.message);
-          } else console.log(responseText.status);
-      }
+  let libraryDiv = document.getElementById('library');
+  /* Parent should always be the listItem */
+  if(event.target.nodeName == 'I'){
+    parent = event.target.parentNode.parentNode;
   }
 
-  removeBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${retrieveKey()}&id=${bookID}`);
-  removeBookRequest.send();
+  console.log('This is supposed to be bookID: '+ parent.children[0].innerText)
+  let bookID = parent.children[0].innerText;
+  console.log('BookID is: '+ bookID)
+
+  console.log('UNDEFINED?!?'+parent.parentNode.getAttribute('id'));
+  libraryDiv.removeChild(parent);
+
+
+  /* REMOVE THE BOOK FROM THE API */
+  removeBookFromApi(bookID, 0);
 
 }
 
+/* Function to remove the book from the api */
+function removeBookFromApi(bookID,counter){
+  if(counter >= 10){
+    printMsg('Failed to remove book after 10 retries.', 'error');
+  } else {
 
-/* Statistics functions */
+    /* REMOVE THE BOOK FROM THE API */
+    const removeBookRequest = new XMLHttpRequest();
+
+    removeBookRequest.onreadystatechange = function(event) {
+        if (removeBookRequest.readyState === 4 && removeBookRequest.status === 200) {
+            responseData = JSON.parse(removeBookRequest.responseText);
+
+            if(responseData.status == 'error'){
+              printMsg('Failed to remove book from the API, trying again.', 'error');
+              console.log(responseData.message);
+
+              return removeBookFromApi(bookID,counter+1);
+
+            } else {
+              printMsg('Book removed from the API', 'success');
+              console.log(responseData.status);
+            }
+        }
+    }
+
+    removeBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${retrieveKey()}&id=${bookID}`);
+    removeBookRequest.send();
+
+  }
+}
+
+/* Statistics functions for API-requests. */
+
+function increaseSuccess(){
+  let storageRequests = localStorage.getItem('successRequests');
+
+  if(storageRequests == undefined || isNaN(storageRequests)){
+    localStorage.setItem('successRequests', 1);
+  } else {
+    localStorage.setItem('successRequests', parseInt(storageRequests)+1);
+  }
+
+  console.log(storageRequests);
+}
+
+function increaseFailed(){
+  let storageRequests = localStorage.getItem('failedRequests');
+  if(storageRequests == undefined || isNaN(storageRequests)){
+    localStorage.setItem('failedRequests', 1);
+  } else {
+    localStorage.setItem('failedRequests', parseInt(storageRequests)+1);
+  }
+}
+function totalRequests(){
+  let failedRequests = localStorage.getItem('failedRequests');
+  let successRequests = localStorage.getItem('successRequests');
+
+  console.log(successRequests, failedRequests);
+
+  if(failedRequests == undefined || isNaN(failedRequests)){
+    localStorage.setItem('failedRequests', 0);
+  }
+  if(successRequests == undefined || isNaN(successRequests)) {
+    localStorage.setItem('successRequests', 0);
+  }
+  return (failedRequests-0) + (successRequests-0);
+}
