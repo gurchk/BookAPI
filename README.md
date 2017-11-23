@@ -14,7 +14,7 @@ Anropa sedan API:et när användaren skrivit klart och fokus flyttas från input
 
 
 För godkänt ska ni göra en webbsida som
-- kan begära en API-nyckel --CHECK
+- kan begära en API-nyckel
 - kan lägga till en bok
 - kan se vilka böcker som man har lagt in
 - har ett funktionellt gränssnitt
@@ -28,6 +28,7 @@ För väl godkänt ska ni göra en webbsida som
 - kan ändra en bok utan att använda ett button-element med klickhändelse
 - är responsiv, dvs fungerar även på mindre skärmar
 - har en funktion för att lägga till ett antal böcker till listan, från ett annat API
+http://www.penguinrandomhouse.biz/webservices/rest/
 
 
 
