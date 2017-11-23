@@ -43,6 +43,9 @@ function btnAddEventListeners(listItem){
 /* Function to retrieve books */
 function retrieveBooks(counter){
   console.log('COUNTER IS NOW: '+counter);
+
+  /* Change the headers */
+  changeLibraryHeader('ID', 'Author', 'Title');
   if(counter > 10){
     printMsg('Failed after 10 retries.', 'error');
     return;
@@ -68,19 +71,34 @@ function retrieveBooks(counter){
               console.log('Error - Log in if');
               increaseFailed();
             } else {
+
+              /* THE REQUEST IS SUCCESSFUL, WE HAVE RETRIEVED THE DATA */
+
               console.log('Success - Log in else');
               /* If the status is success, create JavaScript object */
               let responseData = JSON.parse(retrieveBooksRequest.responseText);
               console.log('Length of responsedata.length is: '+ responseData.data.length);
+
               /* Iterate through JavaScript object with for loop */
+              let userCount = 0;
+              let bookCount = 0;
               for(let i = 0; i < responseData.data.length; i++){
-                console.log('Calling displayBooks function for the '+(i+1)+'th time.')
-                displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
+                console.log('Calling displayBooks function for the '+(i+1)+'th time.');
+
+                /* If the JavaScript data is a user. Ignore it! */
+                if(responseData.data[i].title != 'user'){
+                  displayBooks(responseData.data[i].id,responseData.data[i].title,responseData.data[i].author,responseData.data[i].updated);
+                  bookCount++;
+                } else {
+                  userCount++;
+                }
               }
+              console.log('Number of users in the api:' + userCount);
               console.log(retrieveBooksRequest.status);
               increaseSuccess();
-              printMsg('Successfully retrieved the books on the '+(counter+1)+'th try.', 'success');
-              if(responseData.data.length == 0){
+              printMsg('Successfully retrieved ' + bookCount + ' book(s) on the '+(counter+1)+'th try.', 'success');
+
+              if(bookCount == 0){
                 printMsg('No books found!', 'warning');
               }
             }
@@ -94,12 +112,24 @@ function retrieveBooks(counter){
 
 /* Add books to DOM */
 function displayBooks(id, title, author, updated){
+  const libraryDiv = document.getElementById('library');
+
+  /* Check if stats are active, if so, remove it */
+  let listItem1 = libraryDiv.children[1];
+  if(listItem1 != null){
+    /* There is a listItem under the header, look after stats attribute*/
+    if(listItem1.children[0].getAttribute('stats') != undefined){
+      libraryDiv.removeChild(libraryDiv.children[1]);
+      console.log('Stats removed to display books!');
+    }
+
+  }
 
   let listItem = document.createElement('div');
 
   listItem.innerHTML = '<span class="spanID">'+id+'</span> <hr> <span>'+title+'</span> <hr> <span>'+author+'</span> <hr> <button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button><button pen="true" class="libraryRemoveBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>'
 
-  const libraryDiv = document.getElementById('library');
+
 
   let exists = false;
   for(let listItem of libraryDiv.children){
@@ -134,16 +164,19 @@ function removeBook(event){
     parent = event.target.parentNode.parentNode;
   }
 
-  console.log('This is supposed to be bookID: '+ parent.children[0].innerText)
-  let bookID = parent.children[0].innerText;
-  console.log('BookID is: '+ bookID)
+  let bookID = parent.children[0];
 
-  console.log('UNDEFINED?!?'+parent.parentNode.getAttribute('id'));
+
   libraryDiv.removeChild(parent);
 
 
-  /* REMOVE THE BOOK FROM THE API */
-  removeBookFromApi(bookID, 0);
+  /* REMOVE THE BOOK FROM THE API, unless it is a statsListItem.  */
+  if(bookID.getAttribute('stats') == undefined){
+    removeBookFromApi(bookID.innerText, 0);
+    console.log('Removed book with ID: '+ bookID.innerText);
+  } else {
+    console.log('Did not remove stats from the api.');
+  }
 
 }
 
@@ -189,8 +222,6 @@ function increaseSuccess(){
   } else {
     localStorage.setItem('successRequests', parseInt(storageRequests)+1);
   }
-
-  console.log(storageRequests);
 }
 
 function increaseFailed(){
