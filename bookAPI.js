@@ -17,6 +17,8 @@ window.addEventListener('load', function (event) {
                 logActive.innerHTML = ourNiceKey.key;
                 saveKey(ourNiceKey.key);
                 updateActive();
+                // Reloads the window
+                window.location.href = window.location.href
             }
         }
         requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
@@ -62,6 +64,8 @@ window.addEventListener('load', function (event) {
     goBackBtn.addEventListener('click', function (e) {
         saveKey(retrieveOurKey());
         updateActive();
+        // Reloads the window
+        window.location.href = window.location.href
     });
 
     // Fetch Key
@@ -86,11 +90,11 @@ window.addEventListener('load', function (event) {
 
 /* Functions */
 
-function shake(idToShake){
+function shake(idToShake) {
     assShake = document.getElementById(idToShake);
     assShake.setAttribute('class', "vibe")
-    setTimeout(function(){
-       assShake.removeAttribute('class', "vibe"); 
+    setTimeout(function () {
+        assShake.removeAttribute('class', "vibe");
     }, 1500)
 }
 
