@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="bookAPI.js"></script>
     <script src="second.js" /></script>
+    <script src="users.js"></script>
 </head>
 
 <body>
@@ -16,11 +17,35 @@
         <button id="requestAPI">Get a new inventory</button>
 
         <span id="currentSavedKey"></span>
-        <input placeholder="Inventory Key" id="apiInputKey" type="text" />
+        <input type="text" id="apiInputKey" placeholder="Inventory Key" />
         <button id="fetchKey">Fetch Inventory</button>
+        <button id="userPanelBtn"><i class="fa fa-user fa-2x"></i></button>
         <button id="saveCurrent"><i class="fa fa-hdd-o fa-2x"></i></button>
         <button id="returnKey"><i class="fa fa-mail-reply fa-2x"></i></button>
 
+        <div class="userPanel">
+            <div>
+              <h2>User Panel</h2>
+              <div>
+                <button id="createUserBtn">Create user</button>
+              </div>
+              <div>
+                <button id="retrieveUserBtn">Retrieve user</button>
+              </div>
+              <div class="userModal">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Key">
+                <button class="apiBtn">Create</button>
+                <span><span><span class="close">&times;</span></span></span>
+              </div>
+              <div class="userModal">
+                <input type="text" placeholder="Name">
+                <button class="apiBtn">Retrieve</button>
+                <span><span><span class="close">&times;</span></span></span>
+              </div>
+              <span><span class="close">&times;</span></span>
+            </div>
+        </div>
     </nav>
     <main>
         <h1>Your book inventory</h1>

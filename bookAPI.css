@@ -1,4 +1,4 @@
-* {
+*:not(input) {
     box-sizing: border-box;
     text-align: center;
 }
@@ -58,10 +58,11 @@ input {
     border-radius: 2px;
     line-height: 30px;
     color: #111;
-    text-align: right;
     padding: 0 5px;
 }
-
+#apiInputKey {
+  text-align: right;
+}
 
 .left input {
     text-align: left;
@@ -189,6 +190,50 @@ input {
   padding: 0;
 }
 
+/* USer panel modal */
+.userPanel {
+  display: none;
+  position: relative;
+  background-color: #ccc;
+  width: 50%;
+  margin: 10px auto;
+  border-radius: 5px;
+  color: #111;
+  font-size: 1em;
+  padding: 5px 5px 20px;
+}
+
+/* Close Button */
+.userPanel .close {
+  margin: 5px;
+  right: 7px;
+  top: 15px;
+  position: absolute;
+  line-height: 0px
+}
+.userPanel .userModal .close {
+  margin: 2px;
+  right: 5px;
+  top: 14px;
+  position: absolute;
+  line-height: 0px
+}
+.userPanel > div > div {
+  display: inline-block;
+}
+.userPanel .userModal {
+  position: relative;
+  display: none;
+  border-radius: 5px;
+  width: 50%;
+  margin: 5px auto;
+  padding: 15px;
+  background-color: #222;
+  color: #fff;
+}
+.userPanel .userModal > input {
+  display: inline-block;
+}
 /* MessageDiv */
 .messageDiv {
   display: inline-block;

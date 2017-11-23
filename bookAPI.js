@@ -130,7 +130,6 @@ function changeLibraryHeader(left, middle, right){
     headerDiv.children[0].innerText = left;
     headerDiv.children[2].innerText = middle;
     headerDiv.children[4].innerText = right;
-    printMsg('Headers changed!', 'success');
     console.log('Changed libraryHeader to: '+left + ' - ' + middle + ' - ' + right);
   }
     console.log('Headers already changed.');
