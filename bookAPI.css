@@ -45,7 +45,7 @@ main button {
 }
 
 nav {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     background-color: #404747;
     padding: 40px;
 }
@@ -181,9 +181,11 @@ input {
     position: relative;
     margin-right: 40px;
 }
+
 #requestAPI:hover {
     background-color: crimson;
 }
+
 #apiInputKey {
     position: relative;
     display: inline-block;
@@ -209,6 +211,55 @@ button:hover {
 .right > button:nth-child(2n) {
     margin-top: 20px;
 }
+
+.vibe {
+    animation: vibe 1s linear 0.2s;
+}
+@keyframes vibe {
+    0% {}
+    2% {
+        transform: translateX(5px) rotateZ(1deg);
+    }
+    4% {
+        transform: translateX(-5px) rotateZ(-1deg);
+    }
+    6% {
+        transform: translateX(3px) rotateZ(2deg);
+    }
+    8% {
+        transform: translateX(-2px) rotateZ(-2deg);
+    }
+    10% {
+        transform: translateX(1px) rotateZ(2deg);
+    }
+    12% {
+        transform: translateX(-5px) rotateZ(-2deg);
+    }
+    14% {
+        transform: translateX(3px) rotateZ(-1deg);
+    }
+    16% {
+        transform: translateX(-5px) rotateZ(-2deg);
+    }
+    18% {
+        transform: translateX(5px) rotateZ(2deg);
+    }
+    20 {
+        transform: translateX(-5px) rotateZ(-2deg);
+    }
+    22% {
+        transform: translateX(5px) rotateZ(2deg);
+    }
+    24% {
+        transform: translateX(-3px) rotateZ(-2deg);
+    }
+    26% {
+        transform: translateX(0px) rotateZ(0deg);
+    }
+    100% {}
+}
+
+
 
 #apiKEY {
     position: absolute;
