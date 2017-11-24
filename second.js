@@ -8,6 +8,7 @@ console.log('Total requests so far: ' + totalRequests());
   }
 
   document.getElementById('fetchBooks').addEventListener('click', function(){
+    removeBooksFromLibrary();
     retrieveBooks(0);
   });
   //Uncomment to retrieve books on load.
@@ -36,6 +37,9 @@ function btnAddEventListeners(listItem){
       } else if(element.getAttribute('expand') != undefined){
         /* Add eventListener for function refreshStats*/
         element.addEventListener('click', expandBookInfo);
+      } else if(element.getAttribute('upload') != undefined){
+        /* Add eventListener for function refreshStats*/
+        element.addEventListener('click', userUploadKey);
       }
     }
   }
@@ -183,9 +187,15 @@ function removeBook(event){
 
 
   /* REMOVE THE BOOK FROM THE API, unless it is a statsListItem.  */
+
   if(bookID.getAttribute('stats') == undefined){
-    removeBookFromApi(bookID.innerText, 0);
-    console.log('Removed book with ID: '+ bookID.innerText);
+    if(bookID.getAttribute('user') == undefined){
+      removeBookFromApi(bookID.innerText, 0);
+      console.log('Removed book with ID: '+ bookID.innerText);
+    } else {
+      removeBookFromApi(bookID.innerText, 0, true);
+      console.log('Removed user with ID: '+ bookID.innerText);
+    }
   } else {
     console.log('Did not remove stats from the api.');
   }
@@ -193,7 +203,7 @@ function removeBook(event){
 }
 
 /* Function to remove the book from the api */
-function removeBookFromApi(bookID,counter){
+function removeBookFromApi(bookID, counter, user){
   if(counter >= 10){
     printMsg('Failed to remove book after 10 retries.', 'error');
   } else {
@@ -206,13 +216,16 @@ function removeBookFromApi(bookID,counter){
             responseData = JSON.parse(removeBookRequest.responseText);
 
             if(responseData.status == 'error'){
-              printMsg('Failed to remove book from the API, trying again.', 'error');
               console.log(responseData.message);
-
-              return removeBookFromApi(bookID,counter+1);
+              return removeBookFromApi(bookID,counter+1, user);
 
             } else {
-              printMsg('Book removed from the API', 'success');
+              if(user){
+                printMsg('User removed from the database', 'success');
+              } else {
+                printMsg('Book removed from the database', 'success');
+              }
+
               console.log(responseData.status);
             }
         }
