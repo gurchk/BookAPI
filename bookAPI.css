@@ -96,7 +96,9 @@ input {
     display: inline-block;
     float: right;
 }
+
 /* Book Log Design */
+
 #topBookLog {
     background-color: #AAAAAA;
     display: block;
@@ -104,29 +106,46 @@ input {
     font-family: monospace;
     text-transform: uppercase;
     font-size: 1.3rem;
+    border-radius: 10px;
 }
+
+#docLog {
+    padding-left: 0;
+
+}
+
+#docLog span {
+    width: 32.9%;
+}
+
+#docLog li:nth-child(even) {
+    background-color: #DDDDDD;
+}
+
 #docLog li {
     list-style: none;
     padding: 2px;
     font-size: 0.8rem;
+    text-align: left;
+    display: block;
 }
 
-#topBookLog span:nth-child(2):before, 
-#topBookLog span:nth-child(2):after {
-    content: "/";
-    padding: 0 60px;
+#docLog li:first-child {
+    font-size: 1.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #2f484b;
+    font-family: sans-serif;
 }
+
 
 #topBookLog span {
     display: inline-block;
     position: relative;
-    padding: 10px 20px;
+    padding: 10px 0px;
+    text-transform: none;
+    font-family: sans-serif;
 }
-#topBookLog hr {
-    height: 10px;
-    width: 1px;
-}
-
 
 /* Library design */
 
@@ -203,6 +222,7 @@ input {
 #library > div > button:hover.hoverGold {
     background-color: #c6bc00;
 }
+
 #library > div > button:hover.hoverGrey {
     background-color: #aaa;
 }
@@ -281,14 +301,14 @@ input {
 }
 
 .userPanel .userModal {
-  position: relative;
-  display: none;
-  border-radius: 5px;
-  width: 50%;
-  margin: 15px auto 0px;
-  padding: 15px;
-  background-color: #222;
-  color: #fff;
+    position: relative;
+    display: none;
+    border-radius: 5px;
+    width: 50%;
+    margin: 15px auto 0px;
+    padding: 15px;
+    background-color: #222;
+    color: #fff;
 }
 
 .userPanel .userModal > input {
