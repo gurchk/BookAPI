@@ -151,11 +151,16 @@ function displayStats(){
 }
 
 function printMsg(message, type){
-  let messages = document.getElementsByClassName('messageDiv');
+
+    let messages = document.getElementsByClassName('messageDiv');
 
     /* Set exsists to true and create a new msgDiv*/
     msgDiv = document.createElement('div');
 
+    /* Function to create a unique ID. Attach this to every
+    message to only remove that with setTimeout. */
+    let uniqueID = guid();
+    msgDiv.setAttribute('uniqueID', uniqueID);
 
   if(type == 'error'){
     msgDiv.className = 'errorMsg messageDiv';
@@ -184,7 +189,12 @@ function printMsg(message, type){
 
   setTimeout(function(){
     if(main.children[1].getAttribute('class') != 'apiKeyDisplay'){
-      main.removeChild(main.children[1]);
+      if(main.children[1].getAttribute('uniqueID') == uniqueID){
+        main.removeChild(main.children[1]);
+        console.log('Removed msgDiv where uniqueID was correct.');
+      } else {
+        console.log('Pfft, almost removed another msgDiv than original!');
+      }
     } else {
       console.log('main.children[1].nodeName = ' + main.children[1].nodeName + '.\n'
       + 'Some messages has probably been closed due to it being too many or manually');

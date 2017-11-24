@@ -24,7 +24,7 @@ function btnAddEventListeners(listItem){
       if(element.getAttribute('pen') != undefined){
 
         /* Add eventListener for function editBook*/
-        element.addEventListener('click', editBook);
+        element.addEventListener('click', editBookInputFields);
 
       } else if(element.getAttribute('rmvBtn') != undefined) {
 
@@ -63,6 +63,16 @@ function btnAddEventListeners(listItem){
     }
   }
 }
+function editBookInputFields(event){
+  let listItem = event.target.parentNode;
+  alert('Working on this atm!');
+  /* Change title to input field */
+  let titleSpan = listItem.children[2];
+
+  /* Change author to input field */
+  let authorSpan = listItem.children[4];
+}
+
 /* Add fetchBooks eventListener */
 function expandBookInfo(event){
   alert('yes' + event.target.innerText);
@@ -256,8 +266,50 @@ function removeStats(){
 }
 
 /* Function to edit a book */
-function editBook(event){
 
+/*Modify data
+
+Change the entry for a specific book. Querystring parameters:
+
+    op=update
+    key - an API key that identifies the request
+    id - identifies what book you want to update
+    title - new title
+    author - new author
+
+*/
+
+function editBook(bookID, title, author, counter){
+
+  if(counter > 10){
+    return;
+  } else {
+
+    /* Make the request to the API */
+    let xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function(){
+
+      /* We've got a response! */
+      if(xhr.readyState === 4 && xhr.status === 200){
+
+        /* Convert JSON to JavaScript object. Save it in responseData */
+        let responseData = JSON.parse(xhr.responseText);
+
+        if(responseData.status == 'error'){
+          increaseFailed();
+          return editBook(bookID, title, author, counter+1);
+        } else {
+          increaseSuccess();
+          /* The request was successful! */
+          printMsg('Edit book request was successful', 'success');
+        }
+      }
+    }
+
+    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key=${retrieveKey()}&id=${bookID}&title=${title}&author=${author}`);
+    xhr.send();
+  }
 }
 
 /* Function to remove a book */
@@ -360,4 +412,15 @@ function totalRequests(){
     localStorage.setItem('successRequests', 0);
   }
   return (failedRequests-0) + (successRequests-0);
+}
+
+/* Guid function */
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
 }
