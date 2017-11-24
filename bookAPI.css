@@ -220,11 +220,13 @@ input {
 }
 
 #library > div > button:hover.hoverGold {
-    background-color: #c6bc00;
+    background-color: #faffdb;
+    color: #222;
 }
 
 #library > div > button:hover.hoverGrey {
-    background-color: #aaa;
+    background-color: #faffdb;
+    color: #222;
 }
 
 #library > div > .libraryAddBtn {
@@ -278,6 +280,43 @@ input {
     padding: 5px 5px 20px;
 }
 
+.userPanelBtnActive {
+  background-color: #999;
+}
+.lockBtn {
+  position: absolute;
+  color: #faffdb;
+  background-color: #444;
+  text-align: center;
+  font-size: 0.8em;
+  border-radius: 5px;
+  border: none;
+  margin-left: 4px;
+  padding: 6px 9px 6px 10px;
+}
+.unlockBtn {
+  position: absolute;
+  text-align: center;
+  background-color: #444;
+  font-size: 0.8em;
+  border: none;
+  margin-left: 4px;
+  padding: 6px 9px 6px 10px;
+}
+.inputPassword {
+  display: inline-block;
+  padding: 10px 12px;
+  width: 50%;
+  margin: -10px auto;
+  line-height: 0px;
+}
+
+#library > div:nth-child(odd) .inputPassword {
+  background-color: #ddd;
+}
+#library > div:nth-child(even) .inputPassword {
+  background-color: #ccc;
+}
 /* Close Button */
 
 .userPanel .close {
@@ -380,6 +419,18 @@ input {
     padding: 10px 15px 10px 15px;
     margin-right: 5px;
     background-color: #d16400;
+}
+.commonMsg::before {
+    content: 'General';
+    font-size: 0.8em;
+    border-right: 1px solid #aaa;
+    color: #111;
+    height: 100%;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 10px 15px 10px 15px;
+    margin-right: 5px;
+    background-color: #8fd0be;
 }
 
 
