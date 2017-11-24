@@ -53,12 +53,14 @@ nav {
 
 input {
     display: block;
+    border: none;
     position: relative;
     margin: 10px;
-    border-radius: 2px;
+    background-color: #ddd;
+    border-radius: 4px;
     line-height: 30px;
     color: #111;
-    padding: 0 5px;
+    padding: 5px 10px 6px;
 }
 #apiInputKey {
   text-align: right;
