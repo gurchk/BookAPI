@@ -10,6 +10,7 @@
     <script src="bookAPI.js"></script>
     <script src="second.js" /></script>
     <script src="users.js"></script>
+    <script src="getBook.js"></script>
 </head>
 
 <body>
@@ -25,25 +26,27 @@
 
         <div class="userPanel">
             <div>
-              <h2>User Panel</h2>
-              <div>
-                <button id="createUserBtn">Create user</button>
-              </div>
-              <div>
-                <button id="retrieveUserBtn">Retrieve user</button>
-              </div>
-              <div class="userModal">
-                <input type="text" placeholder="Name">
-                <input type="text" placeholder="Key">
-                <button class="apiBtn">Create</button>
-                <span><span><span class="close">&times;</span></span></span>
-              </div>
-              <div class="userModal">
-                <input type="text" placeholder="Name">
-                <button class="apiBtn">Retrieve</button>
-                <span><span><span class="close">&times;</span></span></span>
-              </div>
-              <span><span class="close">&times;</span></span>
+                <h2>User Panel</h2>
+                <div>
+                    <button id="createUserBtn">Create user</button>
+                </div>
+                <div>
+                    <button id="retrieveUserBtn">Retrieve user</button>
+                </div>
+                <div class="userModal">
+                    <input type="text" placeholder="Name">
+                    <input type="text" placeholder="Key">
+                    <button class="apiBtn">Create</button>
+                    <span><span><span class="close">&times;</span></span>
+                    </span>
+                </div>
+                <div class="userModal">
+                    <input type="text" placeholder="Name">
+                    <button class="apiBtn">Retrieve</button>
+                    <span><span><span class="close">&times;</span></span>
+                    </span>
+                </div>
+                <span><span class="close">&times;</span></span>
             </div>
         </div>
     </nav>
@@ -79,13 +82,13 @@
                 <div>
                     <span class="close">&times;</span>
                 </div>
-                  <h1>Statistics</h1>
-                  <ul>
+                <h1>Statistics</h1>
+                <ul>
                     <li>Stats</li>
                     <li>Stats</li>
                     <li>Stats</li>
                     <li>Stats</li>
-                  </ul>
+                </ul>
             </div>
         </div>
     </main>
@@ -95,9 +98,21 @@
         <div id="modal-content" class="modal-content hvr-vibration">
             <div id="shakeMe">
                 <span class="close">&times;</span>
-                <button id="sendBook">Add a book</button>
+                <button id="sendBook">Add own book</button>
                 <input id="title" class="inputBook" placeholder="Title" type="text" />
                 <input id="author" class="inputBook" placeholder="Author" b type="text" />
+            </div>
+            <div id="bookApi">
+                <input id="bookApiInput" placeholder="Search book" type="text" />
+                <button id="bookApiBtn">Search for book</button>
+                <div id="bookLog">
+                    <div id="topBookLog">
+                    <span>Title</span>
+                    <span>Author</span>
+                    <span>Date</span>
+                        <ul id="docLog"></ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

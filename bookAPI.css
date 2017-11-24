@@ -51,6 +51,20 @@ nav {
     padding: 40px;
 }
 
+#bookApi {
+    margin-top: 40px;
+}
+
+#bookApiBtn {
+    display: inline-block;
+
+}
+
+#bookApiInput {
+    width: 200px;
+    display: inline-block;
+}
+
 input {
     display: block;
     position: relative;
@@ -60,8 +74,9 @@ input {
     color: #111;
     padding: 0 5px;
 }
+
 #apiInputKey {
-  text-align: right;
+    text-align: right;
 }
 
 .left input {
@@ -79,6 +94,37 @@ input {
     display: inline-block;
     float: right;
 }
+/* Book Log Design */
+#topBookLog {
+    background-color: #AAAAAA;
+    display: block;
+    position: relative;
+    font-family: monospace;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+}
+#docLog li {
+    list-style: none;
+    padding: 2px;
+    font-size: 0.8rem;
+}
+
+#topBookLog span:nth-child(2):before, 
+#topBookLog span:nth-child(2):after {
+    content: "/";
+    padding: 0 60px;
+}
+
+#topBookLog span {
+    display: inline-block;
+    position: relative;
+    padding: 10px 20px;
+}
+#topBookLog hr {
+    height: 10px;
+    width: 1px;
+}
+
 
 /* Library design */
 
@@ -172,130 +218,143 @@ input {
     background-color: inherit;
     color: #ddd;
 }
+
 /* Stats Modal */
+
 .statsModal {
-  position: absolute;
-  box-shadow: 2px 2px 4px #222;
-  margin: -100px 0px;
-  padding: 15px 25px;
-  width: 70%;
-  left: 15%;
-  height: 400px;
-  background-color: #ddd;
-  display: none;
+    position: absolute;
+    box-shadow: 2px 2px 4px #222;
+    margin: -100px 0px;
+    padding: 15px 25px;
+    width: 70%;
+    left: 15%;
+    height: 400px;
+    background-color: #ddd;
+    display: none;
 }
+
 .statsModal h1 {
-  color: #111;
-  margin: 0 0 0 20px;
-  padding: 0;
+    color: #111;
+    margin: 0 0 0 20px;
+    padding: 0;
 }
 
 /* USer panel modal */
+
 .userPanel {
-  display: none;
-  position: relative;
-  background-color: #ccc;
-  width: 50%;
-  margin: 10px auto;
-  border-radius: 5px;
-  color: #111;
-  font-size: 1em;
-  padding: 5px 5px 20px;
+    display: none;
+    position: relative;
+    background-color: #ccc;
+    width: 50%;
+    margin: 10px auto;
+    border-radius: 5px;
+    color: #111;
+    font-size: 1em;
+    padding: 5px 5px 20px;
 }
 
 /* Close Button */
+
 .userPanel .close {
-  margin: 5px;
-  right: 7px;
-  top: 15px;
-  position: absolute;
-  line-height: 0px
+    margin: 5px;
+    right: 7px;
+    top: 15px;
+    position: absolute;
+    line-height: 0px
 }
+
 .userPanel .userModal .close {
-  margin: 2px;
-  right: 5px;
-  top: 14px;
-  position: absolute;
-  line-height: 0px
+    margin: 2px;
+    right: 5px;
+    top: 14px;
+    position: absolute;
+    line-height: 0px
 }
+
 .userPanel > div > div {
-  display: inline-block;
+    display: inline-block;
 }
+
 .userPanel .userModal {
-  position: relative;
-  display: none;
-  border-radius: 5px;
-  width: 50%;
-  margin: 5px auto;
-  padding: 15px;
-  background-color: #222;
-  color: #fff;
+    position: relative;
+    display: none;
+    border-radius: 5px;
+    width: 50%;
+    margin: 5px auto;
+    padding: 15px;
+    background-color: #222;
+    color: #fff;
 }
+
 .userPanel .userModal > input {
-  display: inline-block;
+    display: inline-block;
 }
+
 /* MessageDiv */
+
 .messageDiv {
-  display: inline-block;
-  background-color: #ddd;
-  padding: 7px 8px 10px 0;
-  border-radius: 5px;
-  margin: 5px;
-  display: none;
+    display: inline-block;
+    background-color: #ddd;
+    padding: 7px 8px 10px 0;
+    border-radius: 5px;
+    margin: 5px;
+    display: none;
 }
 
 .messageDiv > span + span {
-  color: #da5951;
-  font-size: 1.8em;
-  cursor: pointer;
-  padding: 0px;
-  line-height: 0px;
-  margin-left: 4px;
-  vertical-align: -4.8px;
+    color: #da5951;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 0px;
+    line-height: 0px;
+    margin-left: 4px;
+    vertical-align: -4.8px;
 }
 
 .apiKeyDisplay {
-  display: inline-block;
-  background-color: #ddd;
-  padding: 7px 10px 10px 10px;
-  border-radius: 5px;
-  margin: 5px;
+    display: inline-block;
+    background-color: #ddd;
+    padding: 7px 10px 10px 10px;
+    border-radius: 5px;
+    margin: 5px;
 }
 
 .successMsg::before {
-  content: 'Success';
-  border-right: 1px solid #aaa;
-  color: #111;
-  font-size: 0.8em;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  padding: 10px 15px 10px 15px;
-  margin-right: 5px;
-  background-color: #53da51;
+    content: 'Success';
+    border-right: 1px solid #aaa;
+    color: #111;
+    font-size: 0.8em;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 10px 15px 10px 15px;
+    margin-right: 5px;
+    background-color: #53da51;
 }
+
 .errorMsg::before {
-  content: 'Error';
-  font-size: 0.8em;
-  border-right: 1px solid #aaa;
-  color: #111;
-  height: 100%;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  padding: 10px 15px 10px 15px;
-  margin-right: 5px;
-  background-color: #da5951;
+    content: 'Error';
+    font-size: 0.8em;
+    border-right: 1px solid #aaa;
+    color: #111;
+    height: 100%;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 10px 15px 10px 15px;
+    margin-right: 5px;
+    background-color: #da5951;
 }
+
 .warningMsg::before {
-  content: 'Warning';
-  font-size: 0.8em;
-  border-right: 1px solid #aaa;
-  color: #111;
-  height: 100%;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  padding: 10px 15px 10px 15px;
-  margin-right: 5px;
-  background-color: #d16400;
+    content: 'Warning';
+    font-size: 0.8em;
+    border-right: 1px solid #aaa;
+    color: #111;
+    height: 100%;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 10px 15px 10px 15px;
+    margin-right: 5px;
+    background-color: #d16400;
 }
 
 
@@ -345,6 +404,7 @@ button:hover {
 .vibe {
     animation: vibe 1s linear 0.2s;
 }
+
 @keyframes vibe {
     0% {}
     2% {
