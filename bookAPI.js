@@ -132,7 +132,7 @@ function changeLibraryHeader(left, middle, right){
     headerDiv.children[4].innerText = right;
     console.log('Changed libraryHeader to: '+left + ' - ' + middle + ' - ' + right);
   }
-    console.log('Headers already changed.');
+
 }
 
 function displayStats(){
@@ -287,6 +287,9 @@ function addBook(counter, title, author, dbApiKey) {
       let addUser = false;
 
       /* If the dbApiKey is undefined. This is a book being added. */
+      console.log(dbApiKey);
+      console.log(retrieveDatabaseKey());
+      
       if(dbApiKey == retrieveDatabaseKey()){
         addUser = true;
       } else {
