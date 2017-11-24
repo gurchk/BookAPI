@@ -33,19 +33,24 @@ function btnAddEventListeners(listItem){
       } else if(element.getAttribute('refresh') != undefined){
         /* Add eventListener for function refreshStats*/
         element.addEventListener('click', displayStats);
+      } else if(element.getAttribute('expand') != undefined){
+        /* Add eventListener for function refreshStats*/
+        element.addEventListener('click', expandBookInfo);
       }
     }
   }
 }
 /* Add fetchBooks eventListener */
-
+function expandBookInfo(event){
+  alert('yes' + event.target.innerText);
+}
 
 /* Function to retrieve books */
 function retrieveBooks(counter){
   console.log('COUNTER IS NOW: '+counter);
 
   /* Change the headers */
-  changeLibraryHeader('ID', 'Author', 'Title');
+  changeLibraryHeader('ID', 'Title', 'Author');
   if(counter > 10){
     printMsg('Failed after 10 retries.', 'error');
     return;
@@ -101,6 +106,7 @@ function retrieveBooks(counter){
               if(bookCount == 0){
                 printMsg('No books found!', 'warning');
               }
+              removeStats();
             }
         }
     }
@@ -116,18 +122,11 @@ function displayBooks(id, title, author, updated){
 
   /* Check if stats are active, if so, remove it */
   let listItem1 = libraryDiv.children[1];
-  if(listItem1 != null){
-    /* There is a listItem under the header, look after stats attribute*/
-    if(listItem1.children[0].getAttribute('stats') != undefined){
-      libraryDiv.removeChild(libraryDiv.children[1]);
-      console.log('Stats removed to display books!');
-    }
-
-  }
+  removeStats();
 
   let listItem = document.createElement('div');
 
-  listItem.innerHTML = '<span class="spanID">'+id+'</span> <hr> <span>'+title+'</span> <hr> <span>'+author+'</span> <hr> <button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button><button pen="true" class="libraryRemoveBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>'
+  listItem.innerHTML = '<span class="spanID">'+id+'</span> <hr> <span>'+title+'</span> <hr> <span>'+author+'</span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button expand="true" class="hoverGrey libraryRemoveBtn"><i class="fa fa-expand" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button>';
 
 
 
@@ -146,6 +145,19 @@ function displayBooks(id, title, author, updated){
   } else {
     printMsg('The book already exists!', 'warning');
     console.log('This book already exists');
+  }
+}
+/* Function to remove books */
+function removeStats(){
+  let libraryDiv = document.getElementById('library');
+  let listItem = libraryDiv.children[1];
+
+  if(listItem != null){
+    /* There is a listItem under the header, look after stats attribute*/
+    if(listItem.children[0].getAttribute('stats') != undefined){
+      libraryDiv.removeChild(libraryDiv.children[1]);
+      console.log('Stats removed to display books!');
+    }
   }
 }
 

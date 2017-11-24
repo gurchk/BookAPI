@@ -67,12 +67,14 @@ nav {
 
 input {
     display: block;
+    border: none;
     position: relative;
     margin: 10px;
-    border-radius: 2px;
+    background-color: #ddd;
+    border-radius: 4px;
     line-height: 30px;
     color: #111;
-    padding: 0 5px;
+    padding: 5px 10px 6px;
 }
 
 #apiInputKey {
@@ -198,8 +200,11 @@ input {
     background-color: #f14848;
 }
 
-#library > div > button:last-child:hover:not(.libraryAddBtn) {
-    background-color: #cfc72b;
+#library > div > button:hover.hoverGold {
+    background-color: #c6bc00;
+}
+#library > div > button:hover.hoverGrey {
+    background-color: #aaa;
 }
 
 #library > div > .libraryAddBtn {
@@ -276,14 +281,14 @@ input {
 }
 
 .userPanel .userModal {
-    position: relative;
-    display: none;
-    border-radius: 5px;
-    width: 50%;
-    margin: 5px auto;
-    padding: 15px;
-    background-color: #222;
-    color: #fff;
+  position: relative;
+  display: none;
+  border-radius: 5px;
+  width: 50%;
+  margin: 15px auto 0px;
+  padding: 15px;
+  background-color: #222;
+  color: #fff;
 }
 
 .userPanel .userModal > input {

@@ -56,7 +56,7 @@ window.addEventListener('load', function (event) {
     const author = document.getElementById('author');
 
     sendBook.addEventListener('click', function (event) {
-        addBook(title.value, author.value);
+        addBook(0, title.value, author.value);
         console.log("Added: " + title.value + " " + author.value);
         shake("shakeMe");
     });
@@ -189,15 +189,12 @@ function printMsg(message, type){
 
   /* Finally add a eventListener to the close btn */
   addCloseBtnListener();
-
-
-
 }
 
 function addStats(total, successful, failed){
 
   let listItem = document.createElement('div');
-  listItem.innerHTML = '<span stats="true" class="spanID">'+total+'</span> <hr> <span>'+successful+'</span> <hr> <span>'+failed+'</span> <hr> <button rmvBtn="true"><i class="fa fa-times"></i></button> <button refresh="true"><i class="fa fa-refresh"></i></button>'
+  listItem.innerHTML = '<span stats="true" class="spanID">'+total+'</span> <hr> <span>'+successful+'</span> <hr> <span>'+failed+'</span> <hr> <button rmvBtn="true"><i class="fa fa-times"></i></button> <button class="hoverGold" refresh="true"><i class="fa fa-refresh"></i></button>'
 
   const libraryDiv = document.getElementById('library');
 
@@ -207,11 +204,32 @@ function addStats(total, successful, failed){
     btnAddEventListeners(listItem);
     console.log('Added stats for the first time.');
   } else if(libraryDiv.children[1].children[0].getAttribute('stats') != undefined){
+
     libraryDiv.removeChild(libraryDiv.children[1]);
     libraryDiv.appendChild(listItem);
     btnAddEventListeners(listItem);
     console.log('Stats refreshed.');
     printMsg('Stats refreshed.', 'success');
+
+  } else {
+    /* There is a book at this location! */
+    /* Remove all books then display stats */
+    removeBooksFromLibrary();
+    libraryDiv.appendChild(listItem);
+    btnAddEventListeners(listItem);
+  }
+}
+
+function removeBooksFromLibrary(){
+const libraryDiv = document.getElementById('library');
+let length = libraryDiv.children.length;
+  console.log('Library Length is: ' + length);
+  for(let i = length; i > 0; i--){
+    var currentChild = libraryDiv.children[i-1];
+
+    if(currentChild != libraryDiv.children[0]){
+      libraryDiv.removeChild(currentChild);
+    }
   }
 }
 
@@ -259,26 +277,48 @@ function retrieveOurKey() {
 
 }
 
-function addBook(title, author) {
-    const addBookRequest = new XMLHttpRequest();
-    let responseText = null;
+function addBook(counter, title, author, dbApiKey) {
+    if(counter > 10){
+      return printMsg('Failed after 10 retries','error');
+    } else {
 
-    addBookRequest.onreadystatechange = function (event) {
-        if (addBookRequest.readyState === 4) {
-            responseText = JSON.parse(addBookRequest.responseText);
-            if (responseText.status == 'error') {
-                console.log(responseText.message);
-                printMsg('Book request timed out.', 'error');
-            } else {
-                console.log(responseText.status);
-                printMsg('Book added!', 'success');
-            }
-            console.log(responseText.id);
-        }
-    }
+      const addBookRequest = new XMLHttpRequest();
+      let responseText = null;
+      let addUser = false;
 
-    addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${retrieveKey()}&title=${title}&author=${author}`);
-    addBookRequest.send();
+      /* If the dbApiKey is undefined. This is a book being added. */
+      if(dbApiKey == retrieveDatabaseKey()){
+        addUser = true;
+      } else {
+        dbApiKey = retrieveKey();
+      }
+
+      addBookRequest.onreadystatechange = function (event) {
+
+          if (addBookRequest.readyState === 4 && addBookRequest.status === 200) {
+
+              /* Parse JSON to JavaScript */
+              responseData = JSON.parse(addBookRequest.responseText);
+
+              if (responseData.status == 'error') {
+                /* IF ERROR, CALL MYSELF */
+                return addBook(counter+1, title, author, dbApiKey);
+
+              } else {
+                  console.log(responseData.status);
+                  if(addUser){
+                    printMsg('User created!', 'success');
+                  } else {
+                    printMsg('Book added!', 'success');
+                  }
+              }
+              console.log(responseData.id);
+          }
+      }
+
+      addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${dbApiKey}&title=${title}&author=${author}`);
+      addBookRequest.send();
+  }
 }
 
 function retrieveKey() {
