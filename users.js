@@ -31,22 +31,41 @@ apiBtn1.addEventListener('click', function(event){
   let parent = event.target.parentNode;
   let name = parent.children[0].value;
   let key = parent.children[1].value;
-  console.log('Key is: '+key);
-  if(key == ""){
-    key = 'saved';
-  }
-  createUser(name,key);
 
+  /* If name field is empty */
+  if(name == ""){
+    printMsg('Empty name field!', 'error');
+  } else if(key != ""){
+    verifyKey(key);
+  } else {
+
+    key = retrieveKey();
+    console.log('Creating user!');
+    parent.children[0].value = "";
+    parent.children[1].value = "";
+    createUser(name,key);
+  }
 });
 
 /* Retrieve user eventListener */
-apiBtn2.addEventListener('click', function(){
+apiBtn2.addEventListener('click', function(event){
   /* Retrieve user */
+  let parent = event.target.parentNode;
+  let name = parent.children[0].value;
+  if(name == ""){
+    printMsg('Empty field!', 'error');
+  } else{
 
+    retrieveUser(0, name);
+
+    console.log('Retrieving user!');
+    parent.children[0].value = "";
+    parent.children[1].value = "";
+  }
 });
 
-//createUser('anton', 'fffs');
-retrieveUser(0, 'Anton');
+//retrieveUser(0, 'Anton');
+createDatabaseKey();
 /* End of callback */
 });
 
@@ -54,11 +73,17 @@ retrieveUser(0, 'Anton');
 
 
 /* Functions */
-function createUser(name, key){
-  if(key == 'saved'){
-    key = retrieveKey();
-  }
 
+/* Database functions */
+function createDatabaseKey(){
+  localStorage.setItem('databaseKey', 'NvvhR');
+}
+
+function retrieveDatabaseKey(){
+  return localStorage.getItem('databaseKey');
+}
+
+function createUser(name, key){
   let userObject = {
     name: name,
     key: key
@@ -66,13 +91,37 @@ function createUser(name, key){
 
   let strObj = JSON.stringify(userObject);
 
+  /* Set dbApiKey to databaseKey */
+  let dbApiKey = retrieveDatabaseKey();
+
   /* Add the user to the API using the addBook function */
-  addBook('user', strObj);
-  printMsg('User created with name '+name+' and key '+key,'success');
+  addBook(0, 'user', strObj, dbApiKey);
+}
+
+
+function verifyKey(key, name){
+    const xhr = new XMLHttpRequest();
+    var bad = false;
+
+    xhr.onreadystatechange = function(){
+      if(xhr.responseText.toString().includes('Bad API key')){
+        bad = true;
+      }
+
+      if(xhr.readyState === 4 && bad){
+        printMsg('Bad API key', 'error');
+      } else if(xhr.readyState === 4 && !bad){
+        createUser(name, key);
+      }
+    }
+
+
+    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${key}`);
+    xhr.send();
+
 }
 
 /* Function to retrieve a user */
-/* Function to retrieve books */
 function retrieveUser(counter, name, id){
 
   /* Should we use ID to retrieve user? */
@@ -89,9 +138,6 @@ function retrieveUser(counter, name, id){
     const retrieveUserRequest = new XMLHttpRequest();
 
     retrieveUserRequest.onreadystatechange = function(event) {
-        console.log(retrieveUserRequest.readyState);
-        console.log(retrieveUserRequest.status);
-        console.log(retrieveUserRequest.responseText);
         if (retrieveUserRequest.readyState === 4 && retrieveUserRequest.status === 200) {
 
             /* Always parse responseData */
@@ -100,7 +146,7 @@ function retrieveUser(counter, name, id){
             /* If the API returns error */
             if(responseData.status == "error"){
               /* Try to retrieve user again, plus one to counter */
-              retrieveUser(counter+1);
+              return retrieveUser(counter+1, name, id);
 
               /* Print errormessage */
               console.log(responseData.message);
@@ -110,20 +156,32 @@ function retrieveUser(counter, name, id){
 
               /* Iterate through JavaScript object with for loop */
               let userCount = 0;
-              let bookCount = 0;
+              let found = false;
 
               for(let i = 0; i < responseData.data.length; i++){
-
-                /* If the JavaScript data is a book. Ignore it! */
+                /* If the JavaScript data is a . Ignore it! */
                 if(responseData.data[i].title != 'user'){
-                  bookCount++;
                 } else {
+
                   /* If the data is a user! */
                   /* Convert userData to JavaScript object */
+
                   let userObject = JSON.parse(responseData.data[i].author);
-                  console.log(userObject.key);
+                  let nameStr = userObject.name;
+                  
+                  /* Check if the user is found! */
+                  if(nameStr.toLowerCase() == name.toLowerCase()){
+                    found = true;
+                  }
+                  console.log(userObject.name);
                   userCount++;
                 }
+              }
+
+              if(found) {
+                printMsg('User found!', 'success');
+              } else {
+                printMsg('User not found.', 'error');
               }
               console.log('Number of users in the api:' + userCount);
               console.log(retrieveUserRequest.status);
@@ -137,7 +195,7 @@ function retrieveUser(counter, name, id){
         }
     }
 
-    retrieveUserRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${retrieveKey()}`);
+    retrieveUserRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${retrieveDatabaseKey()}`);
     retrieveUserRequest.send();
   }
 }
