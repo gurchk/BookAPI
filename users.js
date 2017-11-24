@@ -12,48 +12,75 @@ let userModal2 = document.getElementsByClassName('userModal')[1];
 let userModal3 = document.getElementsByClassName('userModal')[2];
 
 /* Create User Button EVENTLISTENER*/
-document.getElementById('createUserBtn').addEventListener('click', function(){
+let createUserBtn = document.getElementById('createUserBtn');
+let retrieveUserBtn = document.getElementById('retrieveUserBtn');
+let removeUserBtn = document.getElementById('removeUserById');
+createUserBtn.addEventListener('click', function(){
   userModal1.style.display = 'block';
   userModal2.style.display = 'none';
   userModal3.style.display = 'none';
+
+  /* Set active to createUser btn */
+  createUserBtn.className = 'userPanelBtnActive';
+
+  /* Remove from the other two */
+  removeUserBtn.className = '';
+  retrieveUserBtn.className = '';
 });
 
 /* Retrieve User Button EVENTLISTENER*/
-document.getElementById('retrieveUserBtn').addEventListener('click', function(){
+retrieveUserBtn.addEventListener('click', function(){
   userModal1.style.display = 'none';
   userModal2.style.display = 'block';
   userModal3.style.display = 'none';
+  /* Set active to Retrieve btn */
+  retrieveUserBtn.className = 'userPanelBtnActive';
+
+  /* Remove from the other two */
+  createUserBtn.className = '';
+  removeUserBtn.className = '';
 });
 
-document.getElementById('removeUserById').addEventListener('click', function(){
+removeUserBtn.addEventListener('click', function(){
   userModal1.style.display = 'none';
   userModal2.style.display = 'none';
   userModal3.style.display = 'block';
+  /* Set active to Remove btn */
+  removeUserBtn.className = 'userPanelBtnActive';
+
+  /* Remove from the other two */
+  createUserBtn.className = '';
+  retrieveUserBtn.className = '';
 });
 
 let apiBtn1 = document.getElementsByClassName('apiBtn')[0];
 let apiBtn2 = document.getElementsByClassName('apiBtn')[1];
 let apiBtn3 = document.getElementsByClassName('apiBtn')[2];
 let apiBtn4 = document.getElementsByClassName('apiBtn')[3];
+
 /* Create user eventListener */
 apiBtn1.addEventListener('click', function(event){
+
   /* Create user */
   let parent = event.target.parentNode;
   let name = parent.children[0].value;
   let key = parent.children[1].value;
+  let password = parent.children[2].value;
 
+  let hashed = md5(password);
   /* If name field is empty */
   if(name == ""){
     printMsg('Empty name field!', 'error');
   } else if(key != ""){
-    verifyKey(key, name);
+    verifyKey(key, name, hashed);
   } else {
 
     key = retrieveKey();
     console.log('Creating user!');
     parent.children[0].value = "";
     parent.children[1].value = "";
-    createUser(name,key);
+    parent.children[2].value = "";
+    createUser(name,key, hashed);
   }
 });
 
@@ -66,8 +93,8 @@ apiBtn2.addEventListener('click', function(event){
     printMsg('Empty field!', 'error');
   } else{
 
+    removeBooksFromLibrary();
     retrieveUser(0, name, 0);
-
     console.log('Retrieving user!');
     parent.children[0].value = "";
     parent.children[1].value = "";
@@ -78,6 +105,7 @@ apiBtn3.addEventListener('click', function(event){
   /* Retrieve ALL USERS & display*/
     removeBooksFromLibrary();
     retrieveUser(0, 1, 0, true);
+    console.log('Retrieving all users!');
 });
 
 apiBtn4.addEventListener('click', function(event){
@@ -103,6 +131,14 @@ apiBtn4.addEventListener('click', function(event){
 
 /* Functions */
 
+/* Style Functions */
+function removeActiveBtn(){
+  createUserBtn.className = '';
+  retrieveUserBtn.className = '';
+  removeUserBtn.className = '';
+}
+
+
 /* Database functions */
 function createDatabaseKey(){
   localStorage.setItem('databaseKey', 'NvvhR');
@@ -112,12 +148,18 @@ function retrieveDatabaseKey(){
   return localStorage.getItem('databaseKey');
 }
 
-function createUser(name, key){
+function createUser(name, key, hashed){
+
+  /*Kolla om användaren vill ha lösenord */
+  if(hashed == undefined){
+    hashed = false;
+  }
 
   /* Skapar användaren */
   let userObject = {
     name: name,
-    key: key
+    key: key,
+    password: hashed
   };
 
   let strObj = JSON.stringify(userObject);
@@ -130,7 +172,7 @@ function createUser(name, key){
 }
 
 
-function verifyKey(key, name){
+function verifyKey(key, name, hashed, create = true){
     const xhr = new XMLHttpRequest();
     var bad = false;
 
@@ -142,7 +184,9 @@ function verifyKey(key, name){
       if(xhr.readyState === 4 && bad){
         printMsg('Bad API key', 'error');
       } else if(xhr.readyState === 4 && !bad){
-        createUser(name, key);
+        if(create){
+          createUser(name, key, hashed);
+        }
       }
     }
 
@@ -159,13 +203,18 @@ function userUploadKey(event){
   }
   let key = listItem.children[4].innerText;
   console.log(key);
+
+  /* Vibe it */
+  shakeElement(event.target);
+
+  /* Change saved key */
   saveKey(key);
   updateActive();
   printMsg('Changed active key to: ' + key, 'success');
 }
 
 /* Function to display a user in the table */
-function displayUser(id, username, userKey){
+function displayUser(id, username, userKey, hashedPassword){
   const libraryDiv = document.getElementById('library');
 
   /* Check if stats are active, if so, remove it */
@@ -174,8 +223,14 @@ function displayUser(id, username, userKey){
   changeLibraryHeader('UserID', 'Username', 'Personal apikey');
 
   let listItem = document.createElement('div');
+  let upload = true;
 
-  listItem.innerHTML = '<span user="true" class="spanID">'+id+'</span> <hr> <span>'+username+'</span> <hr> <span>'+userKey+'</span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button upload="true" class="hoverGrey libraryRemoveBtn"><i class="fa fa-upload" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-user-times" aria-hidden="true"></i></button>';
+  if(userKey.toLowerCase().includes('protected')){
+    userKey += ' <button unlock="true" class="lockBtn"><i class="fa fa-lock" aria-hidden="true"></i></button>';
+    upload = false;
+  }
+
+  listItem.innerHTML = '<span user="true" class="spanID" hp="'+hashedPassword+'">'+id+'</span> <hr> <span>'+username+'</span> <hr> <span class="userKey">'+userKey+'</span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button upload="'+upload+'" class="hoverGrey libraryRemoveBtn"><i class="fa fa-upload" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-user-times" aria-hidden="true"></i></button>';
 
 
   let exists = false;
@@ -187,12 +242,13 @@ function displayUser(id, username, userKey){
   if(!exists){
     libraryDiv.appendChild(listItem);
 
-    for(let listItem of libraryDiv.children){
-      btnAddEventListeners(listItem);
-    }
   } else {
     printMsg('This user already exists!', 'warning');
     console.log('This user already exists');
+  }
+
+  for(let listItem of libraryDiv.children){
+    btnAddEventListeners(listItem);
   }
 }
 
@@ -251,7 +307,11 @@ console.log('COUNTER IS: ' + counter);
 
                     /*If all is true, print ALL users to library */
                     if(all){
-                      displayUser(responseData.data[i].id,userObj.name,userObj.key);
+                      if(userObj.password){
+                        displayUser(responseData.data[i].id,userObj.name,'Protected',userObj.password);
+                      } else {
+                        displayUser(responseData.data[i].id,userObj.name,userObj.key);
+                      }
                     } else {
                       /* Else check for a certain user! */
 
@@ -259,7 +319,12 @@ console.log('COUNTER IS: ' + counter);
 
                         if(userObj.name.toLowerCase().includes(name.toLowerCase())){
                           found = true;
-                          displayUser(responseData.data[i].id,userObj.name,userObj.key);
+                          if(userObj.password){
+                            printMsg('This user is password protected!', 'warning');
+                            displayUser(responseData.data[i].id,userObj.name,'Protected',userObj.password);
+                          } else {
+                            displayUser(responseData.data[i].id,userObj.name,userObj.key);
+                          }
                         }
                     }
                   } else {

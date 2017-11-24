@@ -32,15 +32,34 @@ function btnAddEventListeners(listItem){
         element.addEventListener('click', removeBook);
 
       } else if(element.getAttribute('refresh') != undefined){
+
         /* Add eventListener for function refreshStats*/
         element.addEventListener('click', displayStats);
       } else if(element.getAttribute('expand') != undefined){
+
         /* Add eventListener for function refreshStats*/
         element.addEventListener('click', expandBookInfo);
       } else if(element.getAttribute('upload') != undefined){
-        /* Add eventListener for function refreshStats*/
-        element.addEventListener('click', userUploadKey);
+        /* Kolla om den är true/false */
+        if(element.getAttribute('upload') == 'true'){
+          /* Add eventListener for function uploadKey*/
+          element.addEventListener('click', userUploadKey);
+        } else {
+          /* Add eventListener for function refreshStats*/
+          element.addEventListener('click', unlockProtected);
+        }
+
       }
+    } else if(element.className == 'userKey'){
+      if(element.children[0] != undefined){
+        /* Means it contains a button */
+        element.children[0].addEventListener('click', unlockProtected);
+
+        /* Add mouseEnter event and mouseLeave */
+        element.children[0].addEventListener('mouseenter', changeUnlockIcon);
+        element.children[0].addEventListener('mouseleave', changeUnlockIcon);
+      }
+
     }
   }
 }
@@ -49,10 +68,80 @@ function expandBookInfo(event){
   alert('yes' + event.target.innerText);
 }
 
+/* unlockProtected function */
+function unlockProtected(event){
+  let listItem = event.target.parentNode;
+  if(event.target.getAttribute('unlock') != undefined){
+    listItem = event.target.parentNode.parentNode;
+  }
+  let protect = listItem.children[4];
+  console.log(listItem.children[4].innerText);
+
+
+  let inputField = document.createElement('input');
+  //inputField.setAttribute('type', 'text');
+  protect.innerHTML = '<input class="inputPassword" type="password" placeholder="Enter password..">';
+  //listItem.insertBefore(inputField,listItem.children[4]);
+  // listItem.removeChild(listItem.children[5].children[0]);
+  protect.children[0].focus();
+  protectEventListener(protect);
+}
+
+
+function protectEventListener(protectHtmlObj){
+  protectHtmlObj.addEventListener('change', function(event){
+    let listItem = event.target.parentNode;
+
+    if(verifyHash(event.target.value, listItem)){
+      printMsg('Password is correct!', 'success');
+      event.target.blur();
+      /* Password was correct. Create function here */
+
+    } else {
+      /* Bad password! */
+      printMsg('Bad password!', 'error');
+      event.target.blur();
+    }
+  });
+
+  protectHtmlObj.children[0].addEventListener('blur', function(event){
+    let listItem = event.target.parentNode;
+
+    /* Reset the input box */
+    event.target.parentNode.innerHTML = 'Protected <button unlock="true" class="lockBtn"><i class="fa fa-lock" aria-hidden="true"></i></button>';
+
+    btnAddEventListeners(listItem.parentNode);
+  });
+
+}
+
+function verifyHash(passwordValue, listItem){
+  let hashedPassword = md5(passwordValue);
+  let listItemHash = listItem.parentNode.children[0].getAttribute('hp');
+  console.log(hashedPassword);
+  console.log(listItemHash);
+  return hashedPassword == listItemHash;
+}
+
+function changeUnlockIcon(event){
+  let i = event.target.children[0];
+  if(i.className == 'fa fa-lock'){
+    i.className = 'fa fa-unlock';
+    i.parentNode.className = 'unlockBtn'
+  } else {
+    i.className = 'fa fa-lock';
+    i.parentNode.className = 'lockBtn'
+  }
+}
+
 /* Function to retrieve books */
 function retrieveBooks(counter){
   console.log('COUNTER IS NOW: '+counter);
-
+  /* Do we have a key?! If not, printMsg and return. */
+  if(retrieveKey() == ""){
+    printMsg('No active key found!', 'warning');
+    return;
+  }
   /* Change the headers */
   changeLibraryHeader('ID', 'Title', 'Author');
   if(counter > 10){
@@ -151,6 +240,7 @@ function displayBooks(id, title, author, updated){
     console.log('This book already exists');
   }
 }
+
 /* Function to remove books */
 function removeStats(){
   let libraryDiv = document.getElementById('library');

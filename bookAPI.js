@@ -42,6 +42,12 @@ window.addEventListener('load', function (event) {
     for(let closeBtn of closeBtns){
       closeBtn.addEventListener('click', function (event) {
           event.target.parentNode.parentNode.parentNode.style.display = 'none';
+
+          if(event.target.parentNode.parentNode.parentNode.className == 'userModal'){
+            createUserBtn.className = '';
+            retrieveUserBtn.className = '';
+            removeUserBtn.className = '';
+          }
       });
     }
 
@@ -240,6 +246,19 @@ function shake(idToShake) {
         assShake.removeAttribute('class', "vibe");
     }, 1500)
 }
+function shakeElement(element) {
+  let oldClass = element.className;
+
+  /* Om det är en knapp, gör den guld när man vibbar */
+  if(element.nodeName == 'BUTTON'){
+    element.className = 'vibe libraryRemoveBtn hoverGold';
+  } else {
+    element.className = 'vibe';
+  }
+    setTimeout(function () {
+        element.className = oldClass;
+    }, 1500)
+}
 
 function updateActive() {
     apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
@@ -289,7 +308,7 @@ function addBook(counter, title, author, dbApiKey) {
       /* If the dbApiKey is undefined. This is a book being added. */
       console.log(dbApiKey);
       console.log(retrieveDatabaseKey());
-      
+
       if(dbApiKey == retrieveDatabaseKey()){
         addUser = true;
       } else {
