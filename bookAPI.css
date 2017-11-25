@@ -717,8 +717,8 @@ button:hover {
 
 .animateBtn::before {
     font-family: 'FontAwesome';
-    content: "\f055";
-    font-size: 2.2em;
+    content: "\f196";
+    font-size: 2.5em;
 }
 
 .onclic {
@@ -776,7 +776,7 @@ button:hover {
 .afterClick:after {
     font-family: 'FontAwesome';
     content: "\f00c";
-    font-size: 2rem;
+    font-size: 2.5em;
 }
 
 .afterClick:hover {
