@@ -16,6 +16,11 @@ h4 {
 
 }
 
+#shakeMe {
+    background-color: #474e4c;
+    padding: 30px;
+}
+
 aside {
     background-color: #ddd;
     border: 2px solid #747474;
@@ -57,12 +62,16 @@ nav {
 
 #bookApiBtn {
     display: inline-block;
+}
 
+#bookApiBtn:hover {
+    background-color: #969696;
 }
 
 #bookApiInput {
     width: 200px;
     display: inline-block;
+    background-color: #ae9090;
 }
 
 input {
@@ -97,6 +106,13 @@ input {
     float: right;
 }
 
+.addFromLibrary {
+    display: inline-block;
+    position: absolute;
+    right: 5px;
+    padding: 0;
+}
+
 /* Book Log Design */
 
 #topBookLog {
@@ -116,6 +132,8 @@ input {
 
 #docLog span {
     width: 32.9%;
+    margin: auto 0;
+    vertical-align: baseline;
 }
 
 #docLog li:nth-child(even) {
@@ -124,7 +142,8 @@ input {
 
 #docLog li {
     list-style: none;
-    padding: 2px;
+    padding: 4px;
+    padding-right: 40px;
     font-size: 0.8rem;
     text-align: left;
     display: block;
@@ -145,6 +164,7 @@ input {
     padding: 10px 0px;
     text-transform: none;
     font-family: sans-serif;
+    vertical-align: middle;
 }
 
 /* Library design */
@@ -417,9 +437,10 @@ button {
 button:hover {
     background-color: #444;
     transition: 0.3s;
-    color: lightgray;
+    color: #313232;
     border-radius: 6px;
     cursor: pointer;
+    background-color: #ae9090;
 }
 
 .right > button:nth-child(2n) {
@@ -515,9 +536,8 @@ button:hover {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
-    /* 15% from the top and centered */
-    padding: 40px;
+    margin: 5% auto;
+    padding: 20px;
     border: 1px solid #888;
     border-radius: 5px;
     display: inline-block;
@@ -546,4 +566,98 @@ button:hover {
     color: red;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* BUTTON ANIMATION */
+
+.animateBtn {
+    outline: none;
+    height: 40px;
+    text-align: center;
+    width: 40px;
+    background-color: transparent;
+    color: #555555;
+    cursor: pointer;
+    border: none;
+    -webkit-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    border-radius: 50px;
+}
+
+.animateBtn:hover {
+    color: #1ECD97;
+    background-color: transparent;
+}
+
+.animateBtn:active {
+    letter-spacing: 2px;
+}
+
+.animateBtn::before {
+    font-family: 'FontAwesome';
+    content: "\f055";
+    font-size: 2.2em;
+}
+
+.onclic {
+    border: 2px solid #1ECD97;
+    border-radius: 50px;
+    border-color: #bbbbbb;
+    border-width: 3px;
+    font-size: 0;
+    border-left-color: #1ECD97;
+    -webkit-animation: rotating 2s 0.25s linear infinite;
+    animation: rotating 2s 0.25s linear infinite;
+}
+
+
+
+
+@-webkit-keyframes rotating {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.afterClick {
+    font-size: 13px;
+    color: white;
+    background: #1ECD97;
+    border: none;
+    border-radius: none;
+    color: #1ECD97;
+    outline: none;
+    border: none;
+    background-color: inherit;
+    display: inline-block;
+    position: absolute;
+    right: 5px;
+    padding: 0;
+}
+
+.afterClick:after {
+    font-family: 'FontAwesome';
+    content: "\f00c";
+    font-size: 2rem;
+}
+
+.afterClick:hover {
+    background-color: transparent;
+    color: #1ECD97;
 }
