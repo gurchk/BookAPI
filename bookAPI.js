@@ -65,8 +65,7 @@ window.addEventListener('load', function (event) {
         addBook(0, title.value, author.value);
         console.log("Added: " + title.value + " " + author.value);
         shake("shakeMe");
-        removeBooksFromLibrary();
-        retrieveBooks(0);
+        addToTop(title.value, author.value);
     });
 
     /* adding eventListener to saveActiveKey & retrieveOurKey */
