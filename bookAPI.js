@@ -42,6 +42,12 @@ window.addEventListener('load', function (event) {
     for(let closeBtn of closeBtns){
       closeBtn.addEventListener('click', function (event) {
           event.target.parentNode.parentNode.parentNode.style.display = 'none';
+
+          if(event.target.parentNode.parentNode.parentNode.className == 'userModal'){
+            createUserBtn.className = '';
+            retrieveUserBtn.className = '';
+            removeUserById.className = '';
+          }
       });
     }
 
@@ -91,10 +97,13 @@ window.addEventListener('load', function (event) {
     const fetchKey = document.getElementById('fetchKey');
 
     fetchKey.addEventListener('click', function (event) {
-        saveKey(inputFetch.value)
-        logActive.innerHTML = `Active Key: ${inputFetch.value}`;
-        // Reloads the window
-        window.location.href = window.location.href
+        if(saveKey(inputFetch.value)){
+          logActive.innerHTML = `Active Key: ${inputFetch.value}`;
+          // Reloads the window
+          //window.location.href = window.location.href
+          printMsg('Inventory fetched with key: '+ inputFetch.value, 'success');
+          inputFetch.value = "";
+        }
     });
 
 
@@ -145,11 +154,16 @@ function displayStats(){
 }
 
 function printMsg(message, type){
-  let messages = document.getElementsByClassName('messageDiv');
+
+    let messages = document.getElementsByClassName('messageDiv');
 
     /* Set exsists to true and create a new msgDiv*/
     msgDiv = document.createElement('div');
 
+    /* Function to create a unique ID. Attach this to every
+    message to only remove that with setTimeout. */
+    let uniqueID = guid();
+    msgDiv.setAttribute('uniqueID', uniqueID);
 
   if(type == 'error'){
     msgDiv.className = 'errorMsg messageDiv';
@@ -178,7 +192,12 @@ function printMsg(message, type){
 
   setTimeout(function(){
     if(main.children[1].getAttribute('class') != 'apiKeyDisplay'){
-      main.removeChild(main.children[1]);
+      if(main.children[1].getAttribute('uniqueID') == uniqueID){
+        main.removeChild(main.children[1]);
+        console.log('Removed msgDiv where uniqueID was correct.');
+      } else {
+        console.log('Pfft, almost removed another msgDiv than original!');
+      }
     } else {
       console.log('main.children[1].nodeName = ' + main.children[1].nodeName + '.\n'
       + 'Some messages has probably been closed due to it being too many or manually');
@@ -240,6 +259,19 @@ function shake(idToShake) {
         assShake.removeAttribute('class', "vibe");
     }, 1500)
 }
+function shakeElement(element) {
+  let oldClass = element.className;
+
+  /* Om det är en knapp, gör den guld när man vibbar */
+  if(element.nodeName == 'BUTTON'){
+    element.className = 'vibe libraryRemoveBtn hoverGold';
+  } else {
+    element.className = 'vibe';
+  }
+    setTimeout(function () {
+        element.className = oldClass;
+    }, 1500)
+}
 
 function updateActive() {
     apiKEY.innerHTML = `Active Key: ${retrieveKey()}`;
@@ -259,7 +291,18 @@ function retrieveObject() {
 
 function saveKey(keyToSave) {
     /* Save the key to local storage */
-    localStorage.setItem('apiKey', keyToSave);
+    if(keyToSave == undefined){
+      printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave == ""){
+      printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave.length != 5){
+      printMsg('Invalid API Key', 'warning');
+    } else {
+      printMsg('Active key changed to: '+keyToSave,'success')
+      localStorage.setItem('apiKey', keyToSave);
+      return true;
+    }
+    return false;
 }
 
 function saveActiveKey() {
@@ -289,7 +332,7 @@ function addBook(counter, title, author, dbApiKey) {
       /* If the dbApiKey is undefined. This is a book being added. */
       console.log(dbApiKey);
       console.log(retrieveDatabaseKey());
-      
+
       if(dbApiKey == retrieveDatabaseKey()){
         addUser = true;
       } else {
