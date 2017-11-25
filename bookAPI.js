@@ -15,10 +15,11 @@ window.addEventListener('load', function (event) {
             if (requestedAPI.readyState === 4) {
                 ourNiceKey = JSON.parse(requestedAPI.responseText);
                 //logActive.innerHTML = ourNiceKey.key;
-                saveKey(ourNiceKey.key);
-                updateActive();
-                // Reloads the window
-                window.location.href = window.location.href
+                if(ourNiceKey != null || ourNiceKey != undefined){
+                  saveKey(ourNiceKey.key);
+                } else {
+                  printMsg('Failed to require a API Key','error');
+                }
             }
         }
         requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
@@ -99,13 +100,7 @@ window.addEventListener('load', function (event) {
     const fetchKey = document.getElementById('fetchKey');
 
     fetchKey.addEventListener('click', function (event) {
-        if (saveKey(inputFetch.value)) {
-            logActive.innerHTML = `Active Key: ${inputFetch.value}`;
-            // Reloads the window
-            //window.location.href = window.location.href
-            printMsg('Inventory fetched with key: ' + inputFetch.value, 'success');
-            inputFetch.value = "";
-        }
+        saveKey(inputFetch.value);
     });
 
 
@@ -301,12 +296,13 @@ function saveKey(keyToSave) {
     } else if (keyToSave.length != 5) {
         printMsg('Invalid API Key', 'warning');
     } else {
-      /* Verify the key, create user? NO. */
-        if(verifyKey(keyToSave)){
-          printMsg('Active key changed to: ' + keyToSave, 'success')
-          localStorage.setItem('apiKey', keyToSave);
-          return true;
-        }
+      /* Verify the key, create user? NO.
+
+      function verifyKey(key, name, hashed, create = false, setKey = false)
+
+      */
+      verifyKey(keyToSave, undefined, undefined, false, true);
+      return true;
     }
     return false;
 }
@@ -354,11 +350,12 @@ function addBook(counter, title, author, dbApiKey) {
 
                 if (responseData.status == 'error') {
                     /* IF ERROR, CALL MYSELF */
-                    return addBook(counter + 1, title, author, dbApiKey);
+                    return addBook((counter + 1), title, author, dbApiKey);
 
                 } else {
                     console.log(responseData.status);
                     if (addUser) {
+                        console.log('In addbook dbApiKey is: '+dbApiKey);
                         printMsg('User created!', 'success');
                     } else {
                         printMsg('Book added!', 'success');
