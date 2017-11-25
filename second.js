@@ -11,6 +11,10 @@ console.log('Total requests so far: ' + totalRequests());
     removeBooksFromLibrary();
     retrieveBooks(0);
   });
+
+  document.getElementById('settingsBtn').addEventListener('click', function(){
+    printMsg('Settings are not implemented yet. Stay tuned tho!', 'warning');
+  });
   //Uncomment to retrieve books on load.
   //retrieveBooks(0);
 
@@ -65,22 +69,167 @@ function btnAddEventListeners(listItem){
 }
 function editBookInputFields(event){
   let listItem = event.target.parentNode;
-  alert('Working on this atm!');
   /* Change title to input field */
   let titleSpan = listItem.children[2];
-
+  let titleText = titleSpan.innerText;
+  titleSpan.innerHTML = '<input class="inputPassword" type="text" value="'+titleText+'" placeholder="Enter a title..">';
+  titleSpan.children[0].focus();
   /* Change author to input field */
   let authorSpan = listItem.children[4];
+  let authorText = authorSpan.innerText;
+  authorSpan.innerHTML = '<input class="inputPassword" type="text" value="'+authorText+'" placeholder="Enter an author..">';
+
+  /* Change the icon to a save icon */
+  event.target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
+
+
+  // This will always only be one or two. Two in this case.
+  let inputFields = document.getElementsByClassName('inputPassword');
+
+  /* Verify inputs before saving */
+  inputFields[0].addEventListener('keypress', verifyInput);
+  inputFields[1].addEventListener('keypress', verifyInput);
+
+  /* Make it possible to run this outside eventListener */
+  //verifyInput(inputFields[0], true);
+  //verifyInput(inputFields[1], true);
+
+
+  /* Remove old eventListener and add a new one. */
+  event.target.removeEventListener('click', editBookInputFields);
+
+
+  /* SAVE ICON EVENT LISTENER BELOW */
+  /* SAVE ICON EVENT LISTENER BELOW */
+  /* SAVE ICON EVENT LISTENER BELOW */
+
+  /* Save the input, and modify the old book data */
+  event.target.addEventListener('click', function tempFunction(event){
+
+
+
+
+    /* Create the actual values from inside the listItem */
+    let bookID = listItem.children[0].innerText;
+    let title = inputFields[0].value;
+    let author = inputFields[1].value;
+
+
+
+
+    /* Making some checks to the values */
+    let change = true;
+
+    if(titleText == title && authorText == author){
+      /* No change check */
+      printMsg('No change was made!', 'warning');
+      change = false;
+      /* Verify the inputs with a function. The function prints messages. */
+    } else {
+      editBook(bookID, title, author);
+    }
+    // } else if(verifyInput(inputFields[1]) && verifyInput(inputFields[0])){
+    //   printMsg('Saving','success');
+
+    //   accepted = true;
+    // }
+
+    if(change){
+      inputFields[0].parentNode.innerHTML = inputFields[0].value;
+      inputFields[0].parentNode.innerHTML = inputFields[0].value;
+    } else {
+      inputFields[0].parentNode.innerHTML = titleText;
+      inputFields[0].parentNode.innerHTML = authorText;
+    }
+
+
+    /* Remove input fields, set back to the value */
+
+    /* If we change [0] first the [1] is now actually [0]
+
+    This would actually work: (lmfao).
+
+    inputFields[0].parentNode.innerHTML = inputFields[0].value;
+    inputFields[0].parentNode.innerHTML = inputFields[0].value;
+
+    */
+
+
+    /* Change the icon back to a pencil icon */
+    event.target.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+
+
+    /* Change the eventListener back aswell! */
+    event.target.addEventListener('click', editBookInputFields);
+    /* And remove the old one */
+    event.target.removeEventListener('click', tempFunction);
+  });
 }
 
-/* Add fetchBooks eventListener */
+/* Advanced check for input field. This takes a HTML object as parameter.*/
+function verifyInput(event, notEvent){
+  if(notEvent){
+    console.log('This ran outside an event.');
+  }
+
+  let parent = event.target.parentNode;
+  let lastChild = parent.lastChild;
+
+  let errorMessageElement = document.createElement('span');
+  let successMessageElement = document.createElement('span');
+  errorMessageElement.setAttribute('error', 'true');
+  successMessageElement.setAttribute('success', 'true');
+  successMessageElement.innerHTML = '<span class="inputSuccess"><i class="fa fa-check" aria-hidden="true"></i></span>';
+
+  /* Start by adding the Check if no check is displaying. */
+  if(parent.lastChild == event.target){
+    parent.appendChild(successMessageElement);
+  }
+  /* Make some checks. */
+
+  if(event.target.value.length < 3){
+    /* Field less than 3 characters */
+
+      /* If X is already there. Don't append another one. */
+      console.log(parent.lastChild.innerHTML);
+      if(parent.lastChild.getAttribute('error') != 'true'){
+        errorMessageElement.innerHTML = '<span class="inputError"><i class="fa fa-times" aria-hidden="true"></i><span class="hoverText">Input too short!</span></span>';
+
+        /* Success is active! Remove it. */
+        if(parent.lastChild.getAttribute('success') == 'true'){
+          parent.removeChild(parent.lastChild);
+        }
+        parent.appendChild(errorMessageElement);
+
+      }
+
+    } else if(event.target.value.length > 64){
+      if(parent.lastChild.getAttribute('success') == 'true'){
+        parent.removeChild(parent.lastChild);
+      } else if(parent.lastChild.getAttribute('error') != 'true'){
+        /* Error message already displaying */
+        errorMessageElement.innerHTML = '<span class="inputError"><i class="fa fa-times" aria-hidden="true"></i><span class="hoverText">Input too long.</span></span>';
+
+        parent.appendChild(errorMessageElement);
+      }
+    } else {
+      if(parent.lastChild.getAttribute('error') == 'true'){
+        parent.removeChild(parent.lastChild);
+        parent.appendChild(successMessageElement);
+      }
+    }
+}
+
+/* Add fetchBooks eventListener Searchid: 42D*/
 function expandBookInfo(event){
-  alert('yes' + event.target.innerText);
+  alert('This is the expandBookInfo function. Search for me: 42D' + event.target.innerText);
 }
 
 /* unlockProtected function */
 function unlockProtected(event){
   let listItem = event.target.parentNode;
+
+
   if(event.target.getAttribute('unlock') != undefined){
     listItem = event.target.parentNode.parentNode;
   }
@@ -97,39 +246,9 @@ function unlockProtected(event){
   protectEventListener(protect);
 }
 
-
-function protectEventListener(protectHtmlObj){
-  protectHtmlObj.addEventListener('change', function(event){
-    let listItem = event.target.parentNode;
-
-    if(verifyHash(event.target.value, listItem)){
-      printMsg('Password is correct!', 'success');
-      event.target.blur();
-      /* Password was correct. Create function here */
-
-    } else {
-      /* Bad password! */
-      printMsg('Bad password!', 'error');
-      event.target.blur();
-    }
-  });
-
-  protectHtmlObj.children[0].addEventListener('blur', function(event){
-    let listItem = event.target.parentNode;
-
-    /* Reset the input box */
-    event.target.parentNode.innerHTML = 'Protected <button unlock="true" class="lockBtn"><i class="fa fa-lock" aria-hidden="true"></i></button>';
-
-    btnAddEventListeners(listItem.parentNode);
-  });
-
-}
-
 function verifyHash(passwordValue, listItem){
   let hashedPassword = md5(passwordValue);
   let listItemHash = listItem.parentNode.children[0].getAttribute('hp');
-  console.log(hashedPassword);
-  console.log(listItemHash);
   return hashedPassword == listItemHash;
 }
 
