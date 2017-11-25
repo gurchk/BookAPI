@@ -34,7 +34,7 @@ window.addEventListener('load', function (event) {
 
             }
         }
-        bookReq.open('GET', `http://openlibrary.org/search.json?q=${value}`);
+        bookReq.open('GET', `https://openlibrary.org/search.json?q=${value}`);
         bookReq.send();
     })
 
