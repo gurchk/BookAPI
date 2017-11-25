@@ -46,7 +46,7 @@ window.addEventListener('load', function (event) {
           if(event.target.parentNode.parentNode.parentNode.className == 'userModal'){
             createUserBtn.className = '';
             retrieveUserBtn.className = '';
-            removeUserBtn.className = '';
+            removeUserById.className = '';
           }
       });
     }
@@ -97,10 +97,13 @@ window.addEventListener('load', function (event) {
     const fetchKey = document.getElementById('fetchKey');
 
     fetchKey.addEventListener('click', function (event) {
-        saveKey(inputFetch.value)
-        logActive.innerHTML = `Active Key: ${inputFetch.value}`;
-        // Reloads the window
-        window.location.href = window.location.href
+        if(saveKey(inputFetch.value)){
+          logActive.innerHTML = `Active Key: ${inputFetch.value}`;
+          // Reloads the window
+          //window.location.href = window.location.href
+          printMsg('Inventory fetched with key: '+ inputFetch.value, 'success');
+          inputFetch.value = "";
+        }
     });
 
 
@@ -288,7 +291,18 @@ function retrieveObject() {
 
 function saveKey(keyToSave) {
     /* Save the key to local storage */
-    localStorage.setItem('apiKey', keyToSave);
+    if(keyToSave == undefined){
+      printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave == ""){
+      printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave.length != 5){
+      printMsg('Invalid API Key', 'warning');
+    } else {
+      printMsg('Active key changed to: '+keyToSave,'success')
+      localStorage.setItem('apiKey', keyToSave);
+      return true;
+    }
+    return false;
 }
 
 function saveActiveKey() {

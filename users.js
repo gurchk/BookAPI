@@ -94,7 +94,7 @@ apiBtn2.addEventListener('click', function(event){
   } else{
 
     removeBooksFromLibrary();
-    retrieveUser(0, name, 0);
+    retrieveUser(0, name, undefined, false);
     console.log('Retrieving user!');
     parent.children[0].value = "";
     parent.children[1].value = "";
@@ -104,7 +104,8 @@ apiBtn2.addEventListener('click', function(event){
 apiBtn3.addEventListener('click', function(event){
   /* Retrieve ALL USERS & display*/
     removeBooksFromLibrary();
-    retrieveUser(0, 1, 0, true);
+    /* retrieveUser(counter, name, id, all) */
+    retrieveUser(0, 'all', undefined, true);
     console.log('Retrieving all users!');
 });
 
@@ -253,10 +254,43 @@ function displayUser(id, username, userKey, hashedPassword){
 }
 
 
+function protectEventListener(protectHtmlObj){
+  protectHtmlObj.addEventListener('change', function(event){
+    let listItem = event.target.parentNode;
+    let userID = protectHtmlObj.parentNode.children[0].innerText;
+
+    if(verifyHash(event.target.value, listItem)){
+      printMsg('Password is correct!', 'success');
+      event.target.blur();
+      /* Password was correct. Create function here */
+      passwordWasCorrect(userID);
+      console.log(listItem.innerHTML.parentNode);
+    } else {
+      /* Bad password! */
+      printMsg('Bad password!', 'error');
+      event.target.blur();
+    }
+  });
+
+  protectHtmlObj.children[0].addEventListener('blur', function(event){
+    let listItem = event.target.parentNode;
+
+    /* Reset the input box */
+    event.target.parentNode.innerHTML = 'Protected <button unlock="true" class="lockBtn"><i class="fa fa-lock" aria-hidden="true"></i></button>';
+
+    btnAddEventListeners(listItem.parentNode);
+  });
+}
+
+function passwordWasCorrect(userID){
+  /* Set active key from the user ID */
+  retrieveUser(0, undefined, userID, false);
+  console.log('Password was correct. Trying to retrieve user from database with ID.');
+}
+
+
 /* Function to retrieve a user */
 function retrieveUser(counter, name, id, all){
-console.log(all);
-console.log('COUNTER IS: ' + counter);
   /* Should we use ID to retrieve user? */
   let useID = false;
   if(id != undefined){
@@ -305,8 +339,18 @@ console.log('COUNTER IS: ' + counter);
                   /* If username doesn't exist. This is a corrupt object */
                   if(userObj.name != undefined){
 
-                    /*If all is true, print ALL users to library */
-                    if(all){
+                    if(useID){
+                      if(id == responseData.data[i].id){
+
+                        /* We found the user by ID! */
+                        saveKey(userObj.key);
+                        updateActive();
+                        removeBooksFromLibrary();
+                        retrieveBooks(0);
+
+                      }
+                    } else if(all){
+                      /*If all is true, print ALL users to library */
                       if(userObj.password){
                         displayUser(responseData.data[i].id,userObj.name,'Protected',userObj.password);
                       } else {
@@ -315,9 +359,9 @@ console.log('COUNTER IS: ' + counter);
                     } else {
                       /* Else check for a certain user! */
 
-                      /* Check if the user is found! */
+                      /* Check if the user is found! But only if useid is false*/
 
-                        if(userObj.name.toLowerCase().includes(name.toLowerCase())){
+                        if(userObj.name.toLowerCase().includes(name.toLowerCase()) && !useID){
                           found = true;
                           if(userObj.password){
                             printMsg('This user is password protected!', 'warning');
@@ -334,7 +378,7 @@ console.log('COUNTER IS: ' + counter);
                 }
               }
 
-              if(!all && !found){
+              if(!all && !found && !useID){
                   printMsg('User not found.', 'error');
                 //printMsg('User found! Name:' + userObj.name + 'Key: '+userObj.key, 'success');
               } else if (found){
