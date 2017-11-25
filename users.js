@@ -176,13 +176,13 @@ function createUser(name, key, hashed){
 
   /* Set dbApiKey to databaseKey */
   let dbApiKey = retrieveDatabaseKey();
-
+  console.log('In createUser dbApiKey is: '+dbApiKey);
   /* Add the user to the API using the addBook function */
   addBook(0, 'user', strObj, dbApiKey);
 }
 
 
-function verifyKey(key, name, hashed, create = false){
+function verifyKey(key, name, hashed, create = false, setKey = false){
     const xhr = new XMLHttpRequest();
     var bad = false;
 
@@ -193,17 +193,20 @@ function verifyKey(key, name, hashed, create = false){
 
       if(xhr.readyState === 4 && bad){
         printMsg('Bad API key', 'error');
-        return false;
       } else if(xhr.readyState === 4 && !bad){
         if(create){
           createUser(name, key, hashed);
+        } else if (setKey){
+          printMsg('Active key changed to: ' + key, 'success');
+          localStorage.setItem('apiKey', key);
         }
-        return true;
       }
     }
-    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${key}`, false);
+    xhr.addEventListener('load', updateActive);
+    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${key}`);
     xhr.send();
 }
+
 
 function userUploadKey(event){
   let listItem = event.target.parentNode;
@@ -353,6 +356,12 @@ function retrieveUser(counter, name, id, all){
                   /* If username doesn't exist. This is a corrupt object */
                   if(userObj.name != undefined){
 
+                    /* The user has a name. */
+                    /* Check if their key is null / undefined. */
+                    if(userObj.key == null || userObj.key == undefined){
+                      printMsg('User does not have a key.', 'error');
+                      userObj.key = 'Key not found';
+                    }
                     if(useID){
                       if(id == responseData.data[i].id){
 
