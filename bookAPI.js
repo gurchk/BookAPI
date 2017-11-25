@@ -301,9 +301,12 @@ function saveKey(keyToSave) {
     } else if (keyToSave.length != 5) {
         printMsg('Invalid API Key', 'warning');
     } else {
-        printMsg('Active key changed to: ' + keyToSave, 'success')
-        localStorage.setItem('apiKey', keyToSave);
-        return true;
+      /* Verify the key, create user? NO. */
+        if(verifyKey(keyToSave)){
+          printMsg('Active key changed to: ' + keyToSave, 'success')
+          localStorage.setItem('apiKey', keyToSave);
+          return true;
+        }
     }
     return false;
 }

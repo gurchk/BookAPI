@@ -66,13 +66,18 @@ apiBtn1.addEventListener('click', function(event){
   let name = parent.children[0].value;
   let key = parent.children[1].value;
   let password = parent.children[2].value;
+  let hashed;
 
-  let hashed = md5(password);
+  if(password != ""){
+    hashed = md5(password);
+  }
+
+
   /* If name field is empty */
   if(name == ""){
     printMsg('Empty name field!', 'error');
   } else if(key != ""){
-    verifyKey(key, name, hashed);
+    verifyKey(key, name, hashed, true);
   } else {
 
     key = retrieveKey();
@@ -80,7 +85,9 @@ apiBtn1.addEventListener('click', function(event){
     parent.children[0].value = "";
     parent.children[1].value = "";
     parent.children[2].value = "";
-    createUser(name,key, hashed);
+
+    createUser(name, key, hashed);
+    console.log('hashed is: '+ hashed);
   }
 });
 
@@ -114,7 +121,7 @@ apiBtn4.addEventListener('click', function(event){
     /* Remove user by ID */
 
     let parent = event.target.parentNode;
-    removeBookFromApi(parent.children[0].value, 0);
+    removeBookFromApi(parent.children[0].value, 0, true);
     parent.children[0].value = "";
 });
 
@@ -149,6 +156,7 @@ function retrieveDatabaseKey(){
   return localStorage.getItem('databaseKey');
 }
 
+
 function createUser(name, key, hashed){
 
   /*Kolla om användaren vill ha lösenord */
@@ -162,6 +170,7 @@ function createUser(name, key, hashed){
     key: key,
     password: hashed
   };
+  console.log('HASHED IN CREATEUSER(name, key, hashed) is now: '+ hashed);
 
   let strObj = JSON.stringify(userObject);
 
@@ -173,7 +182,7 @@ function createUser(name, key, hashed){
 }
 
 
-function verifyKey(key, name, hashed, create = true){
+function verifyKey(key, name, hashed, create = false){
     const xhr = new XMLHttpRequest();
     var bad = false;
 
@@ -184,17 +193,16 @@ function verifyKey(key, name, hashed, create = true){
 
       if(xhr.readyState === 4 && bad){
         printMsg('Bad API key', 'error');
+        return false;
       } else if(xhr.readyState === 4 && !bad){
         if(create){
           createUser(name, key, hashed);
         }
+        return true;
       }
     }
-
-
-    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${key}`);
+    xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${key}`, false);
     xhr.send();
-
 }
 
 function userUploadKey(event){
@@ -330,12 +338,18 @@ function retrieveUser(counter, name, id, all){
               for(let i = 0; i < responseData.data.length; i++){
                 /* If the JavaScript data is a . Ignore it! */
                 if(responseData.data[i].title != 'user'){
+                  printMsg('Book found in userDB. ID: '+responseData.data[i].id, 'warning');
                 } else {
                   /* If the data has title "user" */
 
                   /* Convert userData to JavaScript object */
                   let userObj= JSON.parse(responseData.data[i].author);
-
+                  console.log('PASSWORD IS: ' + userObj.password);
+                  if(userObj.password){
+                    console.log('PASSWORD IS NOT FALSE');
+                  } else {
+                    console.log('PASSWORD IS FALSE');
+                  }
                   /* If username doesn't exist. This is a corrupt object */
                   if(userObj.name != undefined){
 
@@ -351,6 +365,7 @@ function retrieveUser(counter, name, id, all){
                       }
                     } else if(all){
                       /*If all is true, print ALL users to library */
+
                       if(userObj.password){
                         displayUser(responseData.data[i].id,userObj.name,'Protected',userObj.password);
                       } else {
