@@ -39,16 +39,16 @@ window.addEventListener('load', function (event) {
     })
 
     /* Add eventListeners for closeBtns */
-    for(let closeBtn of closeBtns){
-      closeBtn.addEventListener('click', function (event) {
-          event.target.parentNode.parentNode.parentNode.style.display = 'none';
+    for (let closeBtn of closeBtns) {
+        closeBtn.addEventListener('click', function (event) {
+            event.target.parentNode.parentNode.parentNode.style.display = 'none';
 
-          if(event.target.parentNode.parentNode.parentNode.className == 'userModal'){
-            createUserBtn.className = '';
-            retrieveUserBtn.className = '';
-            removeUserById.className = '';
-          }
-      });
+            if (event.target.parentNode.parentNode.parentNode.className == 'userModal') {
+                createUserBtn.className = '';
+                retrieveUserBtn.className = '';
+                removeUserById.className = '';
+            }
+        });
     }
 
     window.onclick = function (event) {
@@ -65,6 +65,8 @@ window.addEventListener('load', function (event) {
         addBook(0, title.value, author.value);
         console.log("Added: " + title.value + " " + author.value);
         shake("shakeMe");
+        removeBooksFromLibrary();
+        retrieveBooks(0);
     });
 
     /* adding eventListener to saveActiveKey & retrieveOurKey */
@@ -86,8 +88,8 @@ window.addEventListener('load', function (event) {
     let statsBtn = document.getElementById('statsBtn');
     statsBtn.addEventListener('click', function (event) {
 
-      /* STATS FUNCTION CALL*/
-      displayStats();
+        /* STATS FUNCTION CALL*/
+        displayStats();
 
     });
 
@@ -97,17 +99,17 @@ window.addEventListener('load', function (event) {
     const fetchKey = document.getElementById('fetchKey');
 
     fetchKey.addEventListener('click', function (event) {
-        if(saveKey(inputFetch.value)){
-          logActive.innerHTML = `Active Key: ${inputFetch.value}`;
-          // Reloads the window
-          //window.location.href = window.location.href
-          printMsg('Inventory fetched with key: '+ inputFetch.value, 'success');
-          inputFetch.value = "";
+        if (saveKey(inputFetch.value)) {
+            logActive.innerHTML = `Active Key: ${inputFetch.value}`;
+            // Reloads the window
+            //window.location.href = window.location.href
+            printMsg('Inventory fetched with key: ' + inputFetch.value, 'success');
+            inputFetch.value = "";
         }
     });
 
 
-//End of callback. Put all DOM-related shit above this!
+    //End of callback. Put all DOM-related shit above this!
 });
 
 
@@ -116,44 +118,44 @@ window.addEventListener('load', function (event) {
 //     } else console.log(responseText.status);
 
 /* Functions */
-function addCloseBtnListener(){
-  /*Adding eventListener for the messageCloseButton*/
-  const closeBtnList = document.getElementsByClassName('msgCloseBtn');
+function addCloseBtnListener() {
+    /*Adding eventListener for the messageCloseButton*/
+    const closeBtnList = document.getElementsByClassName('msgCloseBtn');
 
-  for(let btn of closeBtnList){
-    btn.addEventListener('click', function(event){
-      event.target.parentNode.style.display = 'none';
-    });
-  }
+    for (let btn of closeBtnList) {
+        btn.addEventListener('click', function (event) {
+            event.target.parentNode.style.display = 'none';
+        });
+    }
 }
 
-function changeLibraryHeader(left, middle, right){
-  const libraryDiv = document.getElementById('library');
-  const headerDiv = libraryDiv.children[0];
+function changeLibraryHeader(left, middle, right) {
+    const libraryDiv = document.getElementById('library');
+    const headerDiv = libraryDiv.children[0];
 
-  head1 = headerDiv.children[0].innerText;
-  head2 = headerDiv.children[2].innerText;
-  head3 = headerDiv.children[4].innerText;
+    head1 = headerDiv.children[0].innerText;
+    head2 = headerDiv.children[2].innerText;
+    head3 = headerDiv.children[4].innerText;
 
-  if(head1 != left || head2 != middle || head3 != right){
-    headerDiv.children[0].innerText = left;
-    headerDiv.children[2].innerText = middle;
-    headerDiv.children[4].innerText = right;
-    console.log('Changed libraryHeader to: '+left + ' - ' + middle + ' - ' + right);
-  }
+    if (head1 != left || head2 != middle || head3 != right) {
+        headerDiv.children[0].innerText = left;
+        headerDiv.children[2].innerText = middle;
+        headerDiv.children[4].innerText = right;
+        console.log('Changed libraryHeader to: ' + left + ' - ' + middle + ' - ' + right);
+    }
 
 }
 
-function displayStats(){
-  /* Change the ID, Author, Title */
-  changeLibraryHeader('Total', 'Successful requests', 'Failed requests');
-  let successful = localStorage.getItem('successRequests')-0;
-  let failed = localStorage.getItem('failedRequests')-0;
-  let total = successful + failed;
-  addStats(total, successful, failed);
+function displayStats() {
+    /* Change the ID, Author, Title */
+    changeLibraryHeader('Total', 'Successful requests', 'Failed requests');
+    let successful = localStorage.getItem('successRequests') - 0;
+    let failed = localStorage.getItem('failedRequests') - 0;
+    let total = successful + failed;
+    addStats(total, successful, failed);
 }
 
-function printMsg(message, type){
+function printMsg(message, type) {
 
     let messages = document.getElementsByClassName('messageDiv');
 
@@ -165,91 +167,91 @@ function printMsg(message, type){
     let uniqueID = guid();
     msgDiv.setAttribute('uniqueID', uniqueID);
 
-  if(type == 'error'){
-    msgDiv.className = 'errorMsg messageDiv';
-  } else if (type == 'success'){
-    msgDiv.className = 'successMsg messageDiv';
+    if (type == 'error') {
+        msgDiv.className = 'errorMsg messageDiv';
+    } else if (type == 'success') {
+        msgDiv.className = 'successMsg messageDiv';
 
-  } else if (type == 'warning'){
-    msgDiv.className = 'warningMsg messageDiv';
-  } else {
-    msgDiv.className = 'commonMsg messageDiv';
-  }
-  msgDiv.style.transition = '1s ease';
-  msgDiv.style.display = 'inline-block';
-  msgDiv.innerHTML = '<span> '+message+' </span><span class="msgCloseBtn"> &times;</span>';
-
-  /* Check how many messages there are showing already. */
-  let main = document.getElementsByTagName('main')[0];
-  let activeKeyElement = document.getElementsByClassName('apiKeyDisplay')[0];
-
-  if(messages.length >= 3){
-    main.removeChild(main.children[1]);
-    main.insertBefore(msgDiv, activeKeyElement);
-  } else {
-    main.insertBefore(msgDiv, activeKeyElement);
-  }
-
-  setTimeout(function(){
-    if(main.children[1].getAttribute('class') != 'apiKeyDisplay'){
-      if(main.children[1].getAttribute('uniqueID') == uniqueID){
-        main.removeChild(main.children[1]);
-        console.log('Removed msgDiv where uniqueID was correct.');
-      } else {
-        console.log('Pfft, almost removed another msgDiv than original!');
-      }
+    } else if (type == 'warning') {
+        msgDiv.className = 'warningMsg messageDiv';
     } else {
-      console.log('main.children[1].nodeName = ' + main.children[1].nodeName + '.\n'
-      + 'Some messages has probably been closed due to it being too many or manually');
+        msgDiv.className = 'commonMsg messageDiv';
+    }
+    msgDiv.style.transition = '1s ease';
+    msgDiv.style.display = 'inline-block';
+    msgDiv.innerHTML = '<span> ' + message + ' </span><span class="msgCloseBtn"> &times;</span>';
+
+    /* Check how many messages there are showing already. */
+    let main = document.getElementsByTagName('main')[0];
+    let activeKeyElement = document.getElementsByClassName('apiKeyDisplay')[0];
+
+    if (messages.length >= 3) {
+        main.removeChild(main.children[1]);
+        main.insertBefore(msgDiv, activeKeyElement);
+    } else {
+        main.insertBefore(msgDiv, activeKeyElement);
     }
 
-  }, 5000);
+    setTimeout(function () {
+        if (main.children[1].getAttribute('class') != 'apiKeyDisplay') {
+            if (main.children[1].getAttribute('uniqueID') == uniqueID) {
+                main.removeChild(main.children[1]);
+                console.log('Removed msgDiv where uniqueID was correct.');
+            } else {
+                console.log('Pfft, almost removed another msgDiv than original!');
+            }
+        } else {
+            console.log('main.children[1].nodeName = ' + main.children[1].nodeName + '.\n' +
+                'Some messages has probably been closed due to it being too many or manually');
+        }
+
+    }, 5000);
 
 
-  /* Finally add a eventListener to the close btn */
-  addCloseBtnListener();
+    /* Finally add a eventListener to the close btn */
+    addCloseBtnListener();
 }
 
-function addStats(total, successful, failed){
+function addStats(total, successful, failed) {
 
-  let listItem = document.createElement('div');
-  listItem.innerHTML = '<span stats="true" class="spanID">'+total+'</span> <hr> <span>'+successful+'</span> <hr> <span>'+failed+'</span> <hr> <button rmvBtn="true"><i class="fa fa-times"></i></button> <button class="hoverGold" refresh="true"><i class="fa fa-refresh"></i></button>'
+    let listItem = document.createElement('div');
+    listItem.innerHTML = '<span stats="true" class="spanID">' + total + '</span> <hr> <span>' + successful + '</span> <hr> <span>' + failed + '</span> <hr> <button rmvBtn="true"><i class="fa fa-times"></i></button> <button class="hoverGold" refresh="true"><i class="fa fa-refresh"></i></button>'
 
-  const libraryDiv = document.getElementById('library');
+    const libraryDiv = document.getElementById('library');
 
 
-  if(libraryDiv.children[1] == null){
-    libraryDiv.appendChild(listItem);
-    btnAddEventListeners(listItem);
-    console.log('Added stats for the first time.');
-  } else if(libraryDiv.children[1].children[0].getAttribute('stats') != undefined){
+    if (libraryDiv.children[1] == null) {
+        libraryDiv.appendChild(listItem);
+        btnAddEventListeners(listItem);
+        console.log('Added stats for the first time.');
+    } else if (libraryDiv.children[1].children[0].getAttribute('stats') != undefined) {
 
-    libraryDiv.removeChild(libraryDiv.children[1]);
-    libraryDiv.appendChild(listItem);
-    btnAddEventListeners(listItem);
-    console.log('Stats refreshed.');
-    printMsg('Stats refreshed.', 'success');
+        libraryDiv.removeChild(libraryDiv.children[1]);
+        libraryDiv.appendChild(listItem);
+        btnAddEventListeners(listItem);
+        console.log('Stats refreshed.');
+        printMsg('Stats refreshed.', 'success');
 
-  } else {
-    /* There is a book at this location! */
-    /* Remove all books then display stats */
-    removeBooksFromLibrary();
-    libraryDiv.appendChild(listItem);
-    btnAddEventListeners(listItem);
-  }
-}
-
-function removeBooksFromLibrary(){
-const libraryDiv = document.getElementById('library');
-let length = libraryDiv.children.length;
-  console.log('Library Length is: ' + length);
-  for(let i = length; i > 0; i--){
-    var currentChild = libraryDiv.children[i-1];
-
-    if(currentChild != libraryDiv.children[0]){
-      libraryDiv.removeChild(currentChild);
+    } else {
+        /* There is a book at this location! */
+        /* Remove all books then display stats */
+        removeBooksFromLibrary();
+        libraryDiv.appendChild(listItem);
+        btnAddEventListeners(listItem);
     }
-  }
+}
+
+function removeBooksFromLibrary() {
+    const libraryDiv = document.getElementById('library');
+    let length = libraryDiv.children.length;
+    console.log('Library Length is: ' + length);
+    for (let i = length; i > 0; i--) {
+        var currentChild = libraryDiv.children[i - 1];
+
+        if (currentChild != libraryDiv.children[0]) {
+            libraryDiv.removeChild(currentChild);
+        }
+    }
 }
 
 function shake(idToShake) {
@@ -259,15 +261,16 @@ function shake(idToShake) {
         assShake.removeAttribute('class', "vibe");
     }, 1500)
 }
-function shakeElement(element) {
-  let oldClass = element.className;
 
-  /* Om det är en knapp, gör den guld när man vibbar */
-  if(element.nodeName == 'BUTTON'){
-    element.className = 'vibe libraryRemoveBtn hoverGold';
-  } else {
-    element.className = 'vibe';
-  }
+function shakeElement(element) {
+    let oldClass = element.className;
+
+    /* Om det är en knapp, gör den guld när man vibbar */
+    if (element.nodeName == 'BUTTON') {
+        element.className = 'vibe libraryRemoveBtn hoverGold';
+    } else {
+        element.className = 'vibe';
+    }
     setTimeout(function () {
         element.className = oldClass;
     }, 1500)
@@ -291,16 +294,16 @@ function retrieveObject() {
 
 function saveKey(keyToSave) {
     /* Save the key to local storage */
-    if(keyToSave == undefined){
-      printMsg('Invalid API Key', 'warning');
-    } else if (keyToSave == ""){
-      printMsg('Invalid API Key', 'warning');
-    } else if (keyToSave.length != 5){
-      printMsg('Invalid API Key', 'warning');
+    if (keyToSave == undefined) {
+        printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave == "") {
+        printMsg('Invalid API Key', 'warning');
+    } else if (keyToSave.length != 5) {
+        printMsg('Invalid API Key', 'warning');
     } else {
-      printMsg('Active key changed to: '+keyToSave,'success')
-      localStorage.setItem('apiKey', keyToSave);
-      return true;
+        printMsg('Active key changed to: ' + keyToSave, 'success')
+        localStorage.setItem('apiKey', keyToSave);
+        return true;
     }
     return false;
 }
@@ -321,50 +324,50 @@ function retrieveOurKey() {
 }
 
 function addBook(counter, title, author, dbApiKey) {
-    if(counter > 10){
-      return printMsg('Failed after 10 retries','error');
+    if (counter > 10) {
+        return printMsg('Failed after 10 retries', 'error');
     } else {
 
-      const addBookRequest = new XMLHttpRequest();
-      let responseText = null;
-      let addUser = false;
+        const addBookRequest = new XMLHttpRequest();
+        let responseText = null;
+        let addUser = false;
 
-      /* If the dbApiKey is undefined. This is a book being added. */
-      console.log(dbApiKey);
-      console.log(retrieveDatabaseKey());
+        /* If the dbApiKey is undefined. This is a book being added. */
+        console.log(dbApiKey);
+        console.log(retrieveDatabaseKey());
 
-      if(dbApiKey == retrieveDatabaseKey()){
-        addUser = true;
-      } else {
-        dbApiKey = retrieveKey();
-      }
+        if (dbApiKey == retrieveDatabaseKey()) {
+            addUser = true;
+        } else {
+            dbApiKey = retrieveKey();
+        }
 
-      addBookRequest.onreadystatechange = function (event) {
+        addBookRequest.onreadystatechange = function (event) {
 
-          if (addBookRequest.readyState === 4 && addBookRequest.status === 200) {
+            if (addBookRequest.readyState === 4 && addBookRequest.status === 200) {
 
-              /* Parse JSON to JavaScript */
-              responseData = JSON.parse(addBookRequest.responseText);
+                /* Parse JSON to JavaScript */
+                responseData = JSON.parse(addBookRequest.responseText);
 
-              if (responseData.status == 'error') {
-                /* IF ERROR, CALL MYSELF */
-                return addBook(counter+1, title, author, dbApiKey);
+                if (responseData.status == 'error') {
+                    /* IF ERROR, CALL MYSELF */
+                    return addBook(counter + 1, title, author, dbApiKey);
 
-              } else {
-                  console.log(responseData.status);
-                  if(addUser){
-                    printMsg('User created!', 'success');
-                  } else {
-                    printMsg('Book added!', 'success');
-                  }
-              }
-              console.log(responseData.id);
-          }
-      }
+                } else {
+                    console.log(responseData.status);
+                    if (addUser) {
+                        printMsg('User created!', 'success');
+                    } else {
+                        printMsg('Book added!', 'success');
+                    }
+                }
+                console.log(responseData.id);
+            }
+        }
 
-      addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${dbApiKey}&title=${title}&author=${author}`);
-      addBookRequest.send();
-  }
+        addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${dbApiKey}&title=${title}&author=${author}`);
+        addBookRequest.send();
+    }
 }
 
 function retrieveKey() {
