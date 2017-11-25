@@ -77,7 +77,7 @@ function editBookInputFields(event){
   /* Change author to input field */
   let authorSpan = listItem.children[4];
   let authorText = authorSpan.innerText;
-  authorSpan.innerHTML = '<input class="inputPassword" type="text" value="'+authorText+'" placeholder="Enter an author..">';
+  authorSpan.innerHTML = '<input class="inputPassword" type="text" value="'+authorText+'" placeholder="Enter an authors name..">';
 
   /* Change the icon to a save icon */
   event.target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
