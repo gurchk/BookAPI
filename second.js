@@ -448,7 +448,12 @@
   /* Function to remove the book from the api */
   function removeBookFromApi(bookID, counter, user) {
       if (counter >= 10) {
+        if(user){
+          printMsg('Failed to remove user after 10 retries.', 'error');
+        } else {
           printMsg('Failed to remove book after 10 retries.', 'error');
+        }
+
       } else {
 
           /* REMOVE THE BOOK FROM THE API */
