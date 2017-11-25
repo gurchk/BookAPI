@@ -17,15 +17,6 @@
       /* End of callback */
   });
 
-  document.getElementById('settingsBtn').addEventListener('click', function () {
-  printMsg('Settings are not implemented yet. Stay tuned tho!', 'warning');
-  });
-  //Uncomment to retrieve books on load.
-  //retrieveBooks(0);
-
-  /* End of callback */
-  });
-
   /* Adding eventListeners to the buttons */
   function btnAddEventListeners(listItem) {
       for (let element of listItem.children) {
@@ -387,150 +378,151 @@
               console.log('Stats removed to display books!');
           }
       }
+  }
 
-      function editBook(bookID, title, author, counter) {
+  function editBook(bookID, title, author, counter) {
 
-          if (counter > 10) {
-              return;
-          } else {
+      if (counter > 10) {
+          return;
+      } else {
 
-              /* Make the request to the API */
-              let xhr = new XMLHttpRequest();
+          /* Make the request to the API */
+          let xhr = new XMLHttpRequest();
 
-              xhr.onreadystatechange = function () {
+          xhr.onreadystatechange = function () {
 
-                  /* We've got a response! */
-                  if (xhr.readyState === 4 && xhr.status === 200) {
+              /* We've got a response! */
+              if (xhr.readyState === 4 && xhr.status === 200) {
 
-                      /* Convert JSON to JavaScript object. Save it in responseData */
-                      let responseData = JSON.parse(xhr.responseText);
+                  /* Convert JSON to JavaScript object. Save it in responseData */
+                  let responseData = JSON.parse(xhr.responseText);
 
-                      if (responseData.status == 'error') {
-                          increaseFailed();
-                          return editBook(bookID, title, author, counter + 1);
-                      } else {
-                          increaseSuccess();
-                          /* The request was successful! */
-                          printMsg('Edit book request was successful', 'success');
-                      }
+                  if (responseData.status == 'error') {
+                      increaseFailed();
+                      return editBook(bookID, title, author, counter + 1);
+                  } else {
+                      increaseSuccess();
+                      /* The request was successful! */
+                      printMsg('Edit book request was successful', 'success');
                   }
               }
-
-              xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key=${retrieveKey()}&id=${bookID}&title=${title}&author=${author}`);
-              xhr.send();
           }
+
+          xhr.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key=${retrieveKey()}&id=${bookID}&title=${title}&author=${author}`);
+          xhr.send();
+      }
+  }
+
+  /* Function to remove a book */
+  function removeBook(event) {
+
+      let parent = event.target.parentNode;
+      let libraryDiv = document.getElementById('library');
+      /* Parent should always be the listItem */
+      if (event.target.nodeName == 'I') {
+          parent = event.target.parentNode.parentNode;
       }
 
-      /* Function to remove a book */
-      function removeBook(event) {
-
-          let parent = event.target.parentNode;
-          let libraryDiv = document.getElementById('library');
-          /* Parent should always be the listItem */
-          if (event.target.nodeName == 'I') {
-              parent = event.target.parentNode.parentNode;
-          }
-
-          let bookID = parent.children[0];
+      let bookID = parent.children[0];
 
 
-          libraryDiv.removeChild(parent);
+      libraryDiv.removeChild(parent);
 
 
-          /* REMOVE THE BOOK FROM THE API, unless it is a statsListItem.  */
+      /* REMOVE THE BOOK FROM THE API, unless it is a statsListItem.  */
 
-          if (bookID.getAttribute('stats') == undefined) {
-              if (bookID.getAttribute('user') == undefined) {
-                  removeBookFromApi(bookID.innerText, 0);
-                  console.log('Removed book with ID: ' + bookID.innerText);
-              } else {
-                  removeBookFromApi(bookID.innerText, 0, true);
-                  console.log('Removed user with ID: ' + bookID.innerText);
-              }
+      if (bookID.getAttribute('stats') == undefined) {
+          if (bookID.getAttribute('user') == undefined) {
+              removeBookFromApi(bookID.innerText, 0);
+              console.log('Removed book with ID: ' + bookID.innerText);
           } else {
-              console.log('Did not remove stats from the api.');
+              removeBookFromApi(bookID.innerText, 0, true);
+              console.log('Removed user with ID: ' + bookID.innerText);
           }
-
+      } else {
+          console.log('Did not remove stats from the api.');
       }
 
-      /* Function to remove the book from the api */
-      function removeBookFromApi(bookID, counter, user) {
-          if (counter >= 10) {
-              printMsg('Failed to remove book after 10 retries.', 'error');
-          } else {
+  }
 
-              /* REMOVE THE BOOK FROM THE API */
-              const removeBookRequest = new XMLHttpRequest();
+  /* Function to remove the book from the api */
+  function removeBookFromApi(bookID, counter, user) {
+      if (counter >= 10) {
+          printMsg('Failed to remove book after 10 retries.', 'error');
+      } else {
 
-              removeBookRequest.onreadystatechange = function (event) {
-                  if (removeBookRequest.readyState === 4 && removeBookRequest.status === 200) {
-                      responseData = JSON.parse(removeBookRequest.responseText);
+          /* REMOVE THE BOOK FROM THE API */
+          const removeBookRequest = new XMLHttpRequest();
 
-                      if (responseData.status == 'error') {
-                          console.log(responseData.message);
-                          return removeBookFromApi(bookID, counter + 1, user);
+          removeBookRequest.onreadystatechange = function (event) {
+              if (removeBookRequest.readyState === 4 && removeBookRequest.status === 200) {
+                  responseData = JSON.parse(removeBookRequest.responseText);
 
+                  if (responseData.status == 'error') {
+                      console.log(responseData.message);
+                      return removeBookFromApi(bookID, counter + 1, user);
+
+                  } else {
+                      if (user) {
+                          printMsg('User removed from the database', 'success');
                       } else {
-                          if (user) {
-                              printMsg('User removed from the database', 'success');
-                          } else {
-                              printMsg('Book removed from the database', 'success');
-                          }
-
-                          console.log(responseData.status);
+                          printMsg('Book removed from the database', 'success');
                       }
+
+                      console.log(responseData.status);
                   }
               }
-
-              removeBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${retrieveKey()}&id=${bookID}`);
-              removeBookRequest.send();
-
           }
+
+          removeBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${retrieveKey()}&id=${bookID}`);
+          removeBookRequest.send();
+
       }
+  }
 
-      /* Statistics functions for API-requests. */
+  /* Statistics functions for API-requests. */
 
-      function increaseSuccess() {
-          let storageRequests = localStorage.getItem('successRequests');
+  function increaseSuccess() {
+      let storageRequests = localStorage.getItem('successRequests');
 
-          if (storageRequests == undefined || isNaN(storageRequests)) {
-              localStorage.setItem('successRequests', 1);
-          } else {
-              localStorage.setItem('successRequests', parseInt(storageRequests) + 1);
-          }
+      if (storageRequests == undefined || isNaN(storageRequests)) {
+          localStorage.setItem('successRequests', 1);
+      } else {
+          localStorage.setItem('successRequests', parseInt(storageRequests) + 1);
       }
+  }
 
-      function increaseFailed() {
-          let storageRequests = localStorage.getItem('failedRequests');
-          if (storageRequests == undefined || isNaN(storageRequests)) {
-              localStorage.setItem('failedRequests', 1);
-          } else {
-              localStorage.setItem('failedRequests', parseInt(storageRequests) + 1);
-          }
+  function increaseFailed() {
+      let storageRequests = localStorage.getItem('failedRequests');
+      if (storageRequests == undefined || isNaN(storageRequests)) {
+          localStorage.setItem('failedRequests', 1);
+      } else {
+          localStorage.setItem('failedRequests', parseInt(storageRequests) + 1);
       }
+  }
 
-      function totalRequests() {
-          let failedRequests = localStorage.getItem('failedRequests');
-          let successRequests = localStorage.getItem('successRequests');
+  function totalRequests() {
+      let failedRequests = localStorage.getItem('failedRequests');
+      let successRequests = localStorage.getItem('successRequests');
 
-          console.log(successRequests, failedRequests);
+      console.log(successRequests, failedRequests);
 
-          if (failedRequests == undefined || isNaN(failedRequests)) {
-              localStorage.setItem('failedRequests', 0);
-          }
-          if (successRequests == undefined || isNaN(successRequests)) {
-              localStorage.setItem('successRequests', 0);
-          }
-          return (failedRequests - 0) + (successRequests - 0);
+      if (failedRequests == undefined || isNaN(failedRequests)) {
+          localStorage.setItem('failedRequests', 0);
       }
-
-      /* Guid function */
-      function guid() {
-          function s4() {
-              return Math.floor((1 + Math.random()) * 0x10000)
-                  .toString(16)
-                  .substring(1);
-          }
-          return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-              s4() + '-' + s4() + s4() + s4();
+      if (successRequests == undefined || isNaN(successRequests)) {
+          localStorage.setItem('successRequests', 0);
       }
+      return (failedRequests - 0) + (successRequests - 0);
+  }
+
+  /* Guid function */
+  function guid() {
+      function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+  }
