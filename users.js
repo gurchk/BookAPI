@@ -250,7 +250,7 @@ function addEventListenersForRegisterPage(){
 
     loginInputs[4].value = retrieveKey();
 
-  }, 2000);
+  }, 1000);
 
   loginInputs[0].addEventListener('change', function(event){ // USERNAME
     loginInputCheck(event, 2);
@@ -389,15 +389,18 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
 function spinIcon(inputObj){
   let icon = inputObj.nextSibling.children[0];
   let oldIconClassName = icon.className;
+  let oldText = icon.nextSibling.innerHTML;
   icon.className = "fa fa-spinner fa-spin";
 
   icon.parentNode.style.padding = "8px 8.4px 9px";
   icon.parentNode.style.margin = "-10px 25px -10px -59px";
   icon.parentNode.style.left = "2px";
+  icon.nextSibling.innerHTML = '<p>Retrieving..</p>';
   setTimeout(function(){
     icon.parentNode.style.padding = "8px 10px 9px";
     icon.className = oldIconClassName;
-  },2000);
+    icon.nextSibling.innerHTML = oldText;
+  },1000);
 }
 
 function returnRegisterToLogin(){
@@ -430,7 +433,10 @@ function createUser(name, key, hashed, email = 'none'){
   if(!hashed || hashed == 'd41d8cd98f00b204e9800998ecf8427e'){
     hashed = false;
   }
-
+  if(!name){
+    printMsg('You can\'t create a user without a name!','error');
+    return;
+  }
   /* Skapar användaren */
   let userObject = {
     name: name,
@@ -513,7 +519,7 @@ function displayUser(id, username, userKey, hashedPassword){
     upload = false;
   }
 
-  listItem.innerHTML = '<span user="true" class="spanID" hp="'+hashedPassword+'">'+id+'</span> <hr> <span>'+username+'</span> <hr> <span class="userKey">'+userKey+'</span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button upload="'+upload+'" class="hoverGrey libraryRemoveBtn"><i class="fa fa-upload" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-user-times" aria-hidden="true"></i></button>';
+  listItem.innerHTML = '<span user="true" class="spanID" hp="'+hashedPassword+'">'+id+'</span> <hr> <span>'+username+'</span> <hr> <span class="userKey">'+userKey+'</span> <hr><button upload="'+upload+'" class="hoverGrey libraryRemoveBtn"><i class="fa fa-upload" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-user-times" aria-hidden="true"></i></button>';
 
 
   let exists = false;
