@@ -93,6 +93,10 @@ window.addEventListener('load', function (event) {
 
     });
 
+    let settingsBtn = document.getElementById('settingsBtn');
+    settingsBtn.addEventListener('click', displaySettings);
+
+
     // Fetch Key
 
     const inputFetch = document.getElementById('apiInputKey');
@@ -112,6 +116,13 @@ window.addEventListener('load', function (event) {
 //     } else console.log(responseText.status);
 
 /* Functions */
+
+function displaySettings(event){
+
+  printMsg('Settings is not yet implemented, stay tuned!','warning');
+
+}
+
 function addCloseBtnListener() {
     /*Adding eventListener for the messageCloseButton*/
     const closeBtnList = document.getElementsByClassName('msgCloseBtn');
@@ -296,11 +307,9 @@ function saveKey(keyToSave) {
         printMsg('Invalid API Key', 'warning');
     } else {
       /* Verify the key, create user? NO.
-
-      function verifyKey(key, name, hashed, create = false, setKey = false)
-
+      function verifyKey(key, name, email, hashed, create = false, setKey = false)
       */
-      verifyKey(keyToSave, undefined, undefined, false, true);
+      verifyKey(keyToSave, undefined, undefined, undefined, false, true);
       return true;
     }
     return false;
@@ -331,7 +340,6 @@ function addBook(counter, title, author, dbApiKey) {
         let addUser = false;
 
         /* If the dbApiKey is undefined. This is a book being added. */
-        console.log(dbApiKey);
         console.log(retrieveDatabaseKey());
 
         if (dbApiKey == retrieveDatabaseKey()) {
@@ -365,8 +373,13 @@ function addBook(counter, title, author, dbApiKey) {
         }
 
         addBookRequest.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${dbApiKey}&title=${title}&author=${author}`);
+        addBookRequest.addEventListener('load', alertShit);
         addBookRequest.send();
     }
+}
+
+function alertShit(event){
+  console.log(event.target.responseText);
 }
 
 function retrieveKey() {

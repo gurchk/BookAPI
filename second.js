@@ -40,9 +40,11 @@
                   /* Add eventListener for function refreshStats*/
                   element.addEventListener('click', expandBookInfo);
               } else if (element.getAttribute('addbooker') != undefined) {
+
                   /* Add eventListener for function refreshStats*/
                   element.addEventListener('click', bookAdd);
               } else if (element.getAttribute('upload') != undefined) {
+
                   /* Kolla om den är true/false */
                   if (element.getAttribute('upload') == 'true') {
                       /* Add eventListener for function uploadKey*/
@@ -55,6 +57,7 @@
               }
           } else if (element.className == 'userKey') {
               if (element.children[0] != undefined) {
+
                   /* Means it contains a button */
                   element.children[0].addEventListener('click', unlockProtected);
 
@@ -69,9 +72,18 @@
 
   function editBookInputFields(event) {
       let listItem = event.target.parentNode;
+      let target = event.target;
+
+      /* If you click the I, Fix */
+      if(event.target.nodeName == 'I'){
+        listItem = event.target.parentNode.parentNode;
+        target = target.parentNode;
+      }
+
       /* Change title to input field */
       let titleSpan = listItem.children[2];
       let titleText = titleSpan.innerText;
+
       titleSpan.innerHTML = '<input class="inputPassword" type="text" value="' + titleText + '" placeholder="Enter a title..">';
       titleSpan.children[0].focus();
       /* Change author to input field */
@@ -80,23 +92,32 @@
       authorSpan.innerHTML = '<input class="inputPassword" type="text" value="' + authorText + '" placeholder="Enter an authors name..">';
 
       /* Change the icon to a save icon */
-      event.target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
+
+
+      target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
+
+
 
 
       // This will always only be one or two. Two in this case.
       let inputFields = document.getElementsByClassName('inputPassword');
 
       /* Verify inputs before saving */
-      inputFields[0].addEventListener('keypress', verifyInput);
-      inputFields[1].addEventListener('keypress', verifyInput);
+      inputFields[0].addEventListener('keyup', function(event){
+        verifyInput(event, 5, 10);
+      });
+      inputFields[1].addEventListener('keyup', verifyInput);
 
       /* Make it possible to run this outside eventListener */
       //verifyInput(inputFields[0], true);
       //verifyInput(inputFields[1], true);
 
 
+      /* If you click icon fix.. */
+
+
       /* Remove old eventListener and add a new one. */
-      event.target.removeEventListener('click', editBookInputFields);
+      target.removeEventListener('click', editBookInputFields);
 
 
       /* SAVE ICON EVENT LISTENER BELOW */
@@ -104,7 +125,7 @@
       /* SAVE ICON EVENT LISTENER BELOW */
 
       /* Save the input, and modify the old book data */
-      event.target.addEventListener('click', function tempFunction(event) {
+      target.addEventListener('click', function tempFunction(event) {
 
 
 
@@ -156,68 +177,83 @@
 
 
           /* Change the icon back to a pencil icon */
-          event.target.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
 
+          /* If you click the I fix icon.*/
+          let target = event.target;
+          if(event.target.nodeName == 'I'){
+            target = target.parentNode;
+          }
 
-          /* Change the eventListener back aswell! */
-          event.target.addEventListener('click', editBookInputFields);
-          /* And remove the old one */
-          event.target.removeEventListener('click', tempFunction);
+            target.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+            /* Change the eventListener back aswell! */
+            target.addEventListener('click', editBookInputFields);
+            /* And remove the old one */
+            target.removeEventListener('click', tempFunction);
       });
   }
 
   /* Advanced check for input field. This takes a HTML object as parameter.*/
-  function verifyInput(event, notEvent) {
+  function verifyInput(event, minLength = 3, maxLength = 32, notEvent) {
       if (notEvent) {
           console.log('This ran outside an event.');
       }
 
-      let parent = event.target.parentNode;
-      let lastChild = parent.lastChild;
 
-      let errorMessageElement = document.createElement('span');
-      let successMessageElement = document.createElement('span');
-      errorMessageElement.setAttribute('error', 'true');
-      successMessageElement.setAttribute('success', 'true');
-      successMessageElement.innerHTML = '<span class="inputSuccess"><i class="fa fa-check" aria-hidden="true"></i></span>';
-
-      /* Start by adding the Check if no check is displaying. */
-      if (parent.lastChild == event.target) {
-          parent.appendChild(successMessageElement);
-      }
       /* Make some checks. */
 
-      if (event.target.value.length < 3) {
-          /* Field less than 3 characters */
+      if (event.target.value.length < minLength) {
 
-          /* If X is already there. Don't append another one. */
-          console.log(parent.lastChild.innerHTML);
-          if (parent.lastChild.getAttribute('error') != 'true') {
-              errorMessageElement.innerHTML = '<span class="inputError"><i class="fa fa-times" aria-hidden="true"></i><span class="hoverText">Input too short!</span></span>';
+      /* Field less than 3 characters */
+      setInputMessage(event.target, 'Input too short', 'error');
 
-              /* Success is active! Remove it. */
-              if (parent.lastChild.getAttribute('success') == 'true') {
-                  parent.removeChild(parent.lastChild);
-              }
-              parent.appendChild(errorMessageElement);
+      } else if (event.target.value.length > maxLength) {
 
-          }
+      /* Field longer than 3 characters */
+      setInputMessage(event.target, 'Input too long', 'error');
 
-      } else if (event.target.value.length > 64) {
-          if (parent.lastChild.getAttribute('success') == 'true') {
-              parent.removeChild(parent.lastChild);
-          } else if (parent.lastChild.getAttribute('error') != 'true') {
-              /* Error message already displaying */
-              errorMessageElement.innerHTML = '<span class="inputError"><i class="fa fa-times" aria-hidden="true"></i><span class="hoverText">Input too long.</span></span>';
-
-              parent.appendChild(errorMessageElement);
-          }
       } else {
-          if (parent.lastChild.getAttribute('error') == 'true') {
-              parent.removeChild(parent.lastChild);
-              parent.appendChild(successMessageElement);
-          }
+
+      /* Field is good! */
+      setInputMessage(event.target, 'Input is good!', 'success');
       }
+  }
+
+
+
+  function setInputMessage(inputObj, message, type){
+    let messageObj = document.createElement('span');
+    let parent = inputObj.parentNode;
+    let typeClass = 'inputError';
+    let icon = 'fa-times';
+
+    if(type == 'success'){
+      typeClass = 'inputSuccess';
+      icon = 'fa-check';
+      messageObj.setAttribute('success', 'true');
+    } else if(type == 'error'){
+      typeClass = 'inputError';
+      icon = 'fa-times';
+      messageObj.setAttribute('error', 'true');
+    } else if(type == 'info'){
+      typeClass = 'inputInfo';
+      icon = 'fa-info';
+      messageObj.setAttribute('info', 'true');
+    }
+
+    messageObj.innerHTML = '<span class="'+typeClass+'"><i class="fa '+icon+'" aria-hidden="true"></i><span class="hoverText">'+message+'</span></span>';
+
+    console.log('THIS IS THE MESSAGEOBJ: '+messageObj.innerHTML);
+    console.log('THIS IS THE LASTCHILD: '+parent.lastChild.innerHTML);
+    /* Check if last object is error, or succes. Then remove it and append new message */
+    if(parent.lastChild.getAttribute('success') != undefined || parent.lastChild.getAttribute('error') != undefined || parent.lastChild.getAttribute('info') != undefined){
+      parent.removeChild(parent.lastChild);
+      parent.appendChild(messageObj);
+
+      /* Else if, last object is event.target, we append anyway! */
+    } else if(parent.lastChild == inputObj){
+      parent.appendChild(messageObj);
+      console.log('WE ARE THE LAST OBJECT');
+    }
   }
 
   /* Add fetchBooks eventListener Searchid: 42D*/
@@ -265,7 +301,7 @@
 
 
   /* Function to retrieve books */
-  function retrieveBooks(counter) {
+  function retrieveBooks(counter = 0) {
       console.log('COUNTER IS NOW: ' + counter);
 
       /* Change the headers */

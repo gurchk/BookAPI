@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Style sheets -->
+    <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Dosis:400,700|Montserrat|Oswald|PT+Sans|Raleway|Roboto|Roboto+Slab|Ubuntu" rel="stylesheet">
     <link href="bookAPI.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -43,6 +44,9 @@
                 <div>
                     <button id="removeUserById">Remove user</button>
                 </div>
+                <div>
+                    <button id="openLoginPageBtn">Login</button>
+                </div>
                 <div class="userModal">
                     <input type="text" placeholder="Name">
                     <input type="text" placeholder="Key">
@@ -53,6 +57,7 @@
                 </div>
                 <div class="userModal">
                     <input type="text" placeholder="Name">
+                    <input type="checkbox" checked><span>Exact match</span>
                     <button class="apiBtn">Retrieve</button>
                     <button class="apiBtn">Retrieve All</button>
                     <span><span><span class="close">&times;</span></span>
@@ -92,24 +97,8 @@
 
             </div>
         </div>
-
-        <!-- The StatsModal -->
-        <div class="statsModal">
-            <!-- Modal content -->
-            <div>
-                <div>
-                    <span class="close">&times;</span>
-                </div>
-                <h1>Statistics</h1>
-                <ul>
-                    <li>Stats</li>
-                    <li>Stats</li>
-                    <li>Stats</li>
-                    <li>Stats</li>
-                </ul>
-            </div>
-        </div>
     </main>
+
     <!-- The Modal -->
     <div id="addBookModal" class="modal">
         <!-- Modal content -->
@@ -132,7 +121,21 @@
         </div>
     </div>
 
-
+    <div id="loginModalWrapper">
+      <div class="loginModal">
+        <div id="loginDiv">
+          <span class="closeBtn"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span>
+          <h2>Login Page</h2>
+          <input class="loginUserDivInput" type="text" placeholder="Username">
+          <input class="loginUserDivInput" type="password" placeholder="Password">
+          <button id="loginDivBtn"> Login <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+          <div>
+            <span class="line"></span><p> or </p><span class="line"></span>
+          </div>
+          <button id="registerDivBtn"> Register <i class="fa fa-user-plus" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
 
     <!--
     <aside class="left">
