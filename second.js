@@ -66,14 +66,15 @@
                   element.children[0].addEventListener('mouseleave', changeUnlockIcon);
               }
           } else if (element.nodeName == 'SPAN' && localStorage.getItem('editWhenPressed') == 'true'){
-            console.log('The value of localStorage is: '+localStorage.getItem('editWhenPressed'));
               if(element.children[0] != undefined){
                 element.children[0].addEventListener('click', function(event){
                   editBookInputFields(event, true);
                 });
               }
-          } else {
-            console.log('The value of localStorage is: '+localStorage.getItem('editWhenPressed'));
+          } else if(localStorage.getItem('editWhenPressed') == 'false'){
+            element.children[0].removeEventListener('click', function(event){
+              editBookInputFields(event, true);
+            });
           }
       }
   }
