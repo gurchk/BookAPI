@@ -206,9 +206,10 @@ function loginUser(userObj){
 function addEventListenersForLoginPage(){
 
     /* Close Login page */
-    document.getElementsByClassName('fa fa-window-close fa-lg')[0].addEventListener('click', function(event){
+    document.getElementsByClassName('fa fa-window-close fa-lg')[1].addEventListener('click', function(event){
       document.getElementById('loginModalWrapper').style.display = 'none';
       document.getElementById('openLoginPageBtn').className = '';
+
     });
 
 
@@ -220,7 +221,7 @@ function addEventListenersForLoginPage(){
 
     let loginDiv = document.getElementById('loginDiv');
     loginDiv.innerHTML =
-    '<span class="closeBtn closeBtnArrow"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></span>'+
+    '<span class="closeBtnLogin closeBtnArrow"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></span>'+
     '<h2>Register</h2>'+
     '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="Username"></div>'+
     '<div><input class="loginDivInput smallerBecauseInfo" type="password" placeholder="Password"></div>'+
@@ -405,7 +406,7 @@ function spinIcon(inputObj){
 
 function returnRegisterToLogin(){
   let loginDiv = document.getElementById('loginDiv');
-  loginDiv.innerHTML = '<span class="closeBtn"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span><h2>Login Page</h2><input class="loginUserDivInput" type="text" placeholder="Username"><input class="loginUserDivInput" type="password" placeholder="Password"><button id="loginDivBtn"> Login <i class="fa fa-sign-in" aria-hidden="true"></i></button><div><span class="line"></span><p> or </p><span class="line"></span></div> <button id="registerDivBtn"> Register <i class="fa fa-user-plus" aria-hidden="true"></i></button>';
+  loginDiv.innerHTML = '<span class="closeBtnLogin"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span><h2>Login Page</h2><input class="loginUserDivInput" type="text" placeholder="Username"><input class="loginUserDivInput" type="password" placeholder="Password"><button id="loginDivBtn"> Login <i class="fa fa-sign-in" aria-hidden="true"></i></button><div><span class="line"></span><p> or </p><span class="line"></span></div> <button id="registerDivBtn"> Register <i class="fa fa-user-plus" aria-hidden="true"></i></button>';
 
   addEventListenersForLoginPage();
 }
@@ -471,6 +472,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
       if(xhr.readyState === 4 && bad){
         printMsg('Bad API key', 'error');
       } else if(xhr.readyState === 4 && !bad){
+        /* The request was successful! */
         if(create){
           /* function createUser(name, key, hashed, email = 'none') ;*/
           createUser(name, key, hashed, email);
@@ -478,6 +480,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
           printMsg('Active key changed to: ' + key, 'success');
           localStorage.setItem('apiKey', key);
         }
+        updateSettings();
       }
     }
     xhr.addEventListener('load', updateActive);
