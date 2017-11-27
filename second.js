@@ -65,69 +65,134 @@
                   element.children[0].addEventListener('mouseenter', changeUnlockIcon);
                   element.children[0].addEventListener('mouseleave', changeUnlockIcon);
               }
-
+          } else if (element.nodeName == 'SPAN' && localStorage.getItem('editWhenPressed') == 'true'){
+            console.log('The value of localStorage is: '+localStorage.getItem('editWhenPressed'));
+              if(element.children[0] != undefined){
+                element.children[0].addEventListener('click', function(event){
+                  editBookInputFields(event, true);
+                });
+              }
+          } else {
+            console.log('The value of localStorage is: '+localStorage.getItem('editWhenPressed'));
           }
       }
   }
 
-  function editBookInputFields(event) {
+  function editBookInputFields(event, onText) {
       let listItem = event.target.parentNode;
       let target = event.target;
 
-      /* If you click the I, Fix */
-      if(event.target.nodeName == 'I'){
+      if(listItem == null){
+        return;
+      }
+      /* If you click the I or OnText, Fix */
+      if(event.target.nodeName == 'I') {
         listItem = event.target.parentNode.parentNode;
         target = target.parentNode;
+      } else if(onText){
+
+          listItem = listItem.parentNode;
+          console.log('ListItem after change is now: '+listItem.innerHTML);
+          console.log('Target after change is now: '+target.innerHTML);
       }
 
-      /* Change title to input field */
+
+
+      /* Title Variables */
       let titleSpan = listItem.children[2];
       let titleText = titleSpan.innerText;
 
-      titleSpan.innerHTML = '<input class="inputPassword" type="text" value="' + titleText + '" placeholder="Enter a title..">';
-      titleSpan.children[0].focus();
-      /* Change author to input field */
+      /* Author variables */
       let authorSpan = listItem.children[4];
       let authorText = authorSpan.innerText;
-      authorSpan.innerHTML = '<input class="inputPassword" type="text" value="' + authorText + '" placeholder="Enter an authors name..">';
+
+      /* True / False variable */
+      let changedTitle = true;
+      if(onText){
+        /* Figure out which text was clicked. */
+        console.log('is this true?'+event.target.innerHTML);
+        /* Change correct field to input Field */
+        if(titleSpan.innerHTML == '<p>'+event.target.innerText+'</p>'){
+          titleSpan.innerHTML = '<input class="inputPassword" type="text" value="' + titleText + '" placeholder="Enter a title..">';
+          titleSpan.children[0].focus();
+
+        } else {
+          authorSpan.innerHTML = '<input class="inputPassword" type="text" value="' + authorText + '" placeholder="Enter an authors name..">';
+          authorSpan.children[0].focus();
+          changedTitle = false;
+        }
+      } else {
+        titleSpan.innerHTML = '<input class="inputPassword" type="text" value="' + titleText + '" placeholder="Enter a title..">';
+        titleSpan.children[0].focus();
+
+        authorSpan.innerHTML = '<input class="inputPassword" type="text" value="' + authorText + '" placeholder="Enter an authors name..">';
+      }
+      /* Change title to input field */
+
+
+
 
       /* Change the icon to a save icon */
-
-
-      target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
-
+      console.log('So faR soo good? '+authorText,titleText);
+      if(!onText){
+        target.innerHTML = '<i save="true" class="fa fa-floppy-o" aria-hidden="true"></i>';
+      }
 
 
 
       // This will always only be one or two. Two in this case.
       let inputFields = document.getElementsByClassName('inputPassword');
 
-      /* Verify inputs before saving */
-      inputFields[0].addEventListener('keyup', function(event){
-        verifyInput(event, 5, 10);
-      });
-      inputFields[1].addEventListener('keyup', verifyInput);
+      /* Verify inputs before saving / Add eventListener to correct input field.*/
+      if(onText){
+        inputFields[0].addEventListener('keyup', verifyInput);
+      } else {
+        inputFields[0].addEventListener('keyup', verifyInput);
+        inputFields[1].addEventListener('keyup', verifyInput);
+      }
 
-      /* Make it possible to run this outside eventListener */
-      //verifyInput(inputFields[0], true);
-      //verifyInput(inputFields[1], true);
-
-
-      /* If you click icon fix.. */
 
 
       /* Remove old eventListener and add a new one. */
+      console.log('Inner html of target is: ' + target.innerHTML);
+
+
       target.removeEventListener('click', editBookInputFields);
 
 
+      function onTextTemp(event){
+                    /* Create the actual values from inside the listItem */
+                    let bookID = listItem.children[0].innerText;
+                    let title = inputFields[0].value;
+                    let author = listItem.children[4].innerText;
+
+                    console.log('author shit '+ title, author, bookID);
+
+                      editBook(bookID, title, author);
+                      /* Change the eventListener back aswell! */
+                      console.log('Target is: ' + target.innerHTML);
+                      target.addEventListener('click', editBookInputFields);
+                      /* And remove the old one */
+                      target.removeEventListener('click', onTextTemp);
+
+                      inputFields[0].parentNode.innerHTML = '<p>'+inputFields[0].value+'</p>';
+                      //inputFields[0].parentNode.innerHTML = '<p>'+inputFields[0].value+'</p>';
+
+                      btnAddEventListeners(listItem);
+
+      }
       /* SAVE ICON EVENT LISTENER BELOW */
       /* SAVE ICON EVENT LISTENER BELOW */
       /* SAVE ICON EVENT LISTENER BELOW */
 
       /* Save the input, and modify the old book data */
+      if(onText){
+
+        inputFields[0].addEventListener('change', onTextTemp);
+        //inputFields[1].addEventListener('change', onTextTemp);
+
+      } else {
       target.addEventListener('click', function tempFunction(event) {
-
-
 
 
           /* Create the actual values from inside the listItem */
@@ -190,6 +255,9 @@
             /* And remove the old one */
             target.removeEventListener('click', tempFunction);
       });
+
+    }
+
   }
 
   /* Advanced check for input field. This takes a HTML object as parameter.*/
@@ -242,8 +310,6 @@
 
     messageObj.innerHTML = '<span class="'+typeClass+'"><i class="fa '+icon+'" aria-hidden="true"></i><span class="hoverText">'+message+'</span></span>';
 
-    console.log('THIS IS THE MESSAGEOBJ: '+messageObj.innerHTML);
-    console.log('THIS IS THE LASTCHILD: '+parent.lastChild.innerHTML);
     /* Check if last object is error, or succes. Then remove it and append new message */
     if(parent.lastChild.getAttribute('success') != undefined || parent.lastChild.getAttribute('error') != undefined || parent.lastChild.getAttribute('info') != undefined){
       parent.removeChild(parent.lastChild);
@@ -381,7 +447,7 @@
 
       let listItem = document.createElement('div');
 
-      listItem.innerHTML = '<span class="spanID">' + id + '</span> <hr> <span>' + title + '</span> <hr> <span>' + author + '</span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button expand="true" class="hoverGrey libraryRemoveBtn"><i class="fa fa-expand" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button>';
+      listItem.innerHTML = '<span class="spanID">' + id + '</span> <hr> <span><p>' + title + '</p></span> <hr> <span><p>' + author + '</p></span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button expand="true" class="hoverGrey libraryRemoveBtn"><i class="fa fa-expand" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button>';
 
 
 
@@ -402,7 +468,7 @@
           console.log('This book already exists');
       }
   }
-  /* Function to remove books */
+  /* Function to remove the stats */
   function removeStats() {
       let libraryDiv = document.getElementById('library');
       let listItem = libraryDiv.children[1];
@@ -411,7 +477,9 @@
           /* There is a listItem under the header, look after stats attribute*/
           if (listItem.children[0].getAttribute('stats') != undefined) {
               libraryDiv.removeChild(libraryDiv.children[1]);
-              console.log('Stats removed to display books!');
+          } else {
+            /* There is something else here. */
+
           }
       }
   }

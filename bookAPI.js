@@ -8,23 +8,8 @@ window.addEventListener('load', function (event) {
     printMsg('This is our welcome message!', 'success');
 
 
-    requestAPIbtn.addEventListener('click', function (event) {
-        const requestedAPI = new XMLHttpRequest();
-        var ourNiceKey = null;
-        requestedAPI.onreadystatechange = function (event) {
-            if (requestedAPI.readyState === 4) {
-                ourNiceKey = JSON.parse(requestedAPI.responseText);
-                //logActive.innerHTML = ourNiceKey.key;
-                if(ourNiceKey != null || ourNiceKey != undefined){
-                  saveKey(ourNiceKey.key);
-                } else {
-                  printMsg('Failed to require a API Key','error');
-                }
-            }
-        }
-        requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
-        requestedAPI.send();
-    });
+    requestAPIbtn.addEventListener('click', requestKeyFromApi);
+
 
     // Add a book
     const addBookBtn = document.getElementById('addBookBtn');
@@ -108,9 +93,27 @@ window.addEventListener('load', function (event) {
 
 
     retrieveBooks();
+    addSettingsListeners();
     //End of callback. Put all DOM-related shit above this!
 });
 
+function requestKeyFromApi(){
+    const requestedAPI = new XMLHttpRequest();
+    var responseData = null;
+    requestedAPI.onreadystatechange = function (event) {
+        if (requestedAPI.readyState === 4) {
+            responseData = JSON.parse(requestedAPI.responseText);
+            //logActive.innerHTML = ourNiceKey.key;
+            if(responseData != null || responseData != undefined){
+              saveKey(responseData.key);
+            } else {
+              printMsg('Failed to require a API Key','error');
+            }
+        }
+    }
+    requestedAPI.open('GET', `https://www.forverkliga.se/JavaScript/api/crud.php?requestKey`)
+    requestedAPI.send();
+}
 
 //    if(responseText.status == 'error'){
 //        console.log(responseText.message);
@@ -119,15 +122,71 @@ window.addEventListener('load', function (event) {
 /* Functions */
 
 function displaySettings(event){
-
-  printMsg('Settings is not yet implemented, stay tuned!','warning');
   let smw = document.getElementById('settingsModalWrapper');
-  smw.style.visibility = 'hidden';
   smw.style.display = 'flex';
 
-  setTimeout(function(){
-    smw.style.visibility = 'visible';
-  }, 1000);
+  /* Add eventListener for the close btn */
+  document.getElementsByClassName('fa fa-window-close fa-lg')[0].addEventListener('click', function(event){
+    smw.style.display = 'none';
+  });
+
+  /* Add eventListeners Settings page */
+  addSettingsListeners();
+}
+
+
+function addSettingsListeners(){
+  let smw = document.getElementById('settingsModalWrapper');
+
+  let keySettingsDiv = document.getElementById('keySettingsDiv');
+  let apiSettingsDiv = document.getElementById('apiSettingsDiv');
+  let userSettingsDiv = document.getElementById('userSettingsDiv');
+
+  /* Add events for Key settings */
+  console.log(keySettingsDiv.innerHTML);
+  let inputNewKey = keySettingsDiv.children[1].children[0];
+  let btnNewKey = keySettingsDiv.children[1].children[1];
+  /* Set value to the input fields */
+  updateSettings();
+
+  btnNewKey.addEventListener('click', requestKeyFromApi);
+
+  /* Add events for API Settings */
+  let checkBoxApi1 = document.getElementById('editWhenPressed');
+  let checkBoxApi2 = document.getElementById('showDetailedStats');
+  let checkBoxApi1Label = document.getElementById('editWhenPressedLabel');
+  let checkBoxApi2Label = document.getElementById('showDetailedStatsLabel');
+
+
+  checkBoxApi1.addEventListener('change',function(event){
+    /* Scope variable for easier usage (?) */
+    let label = checkBoxApi1Label;
+
+    if(checkBoxApi1.checked){
+      label.innerHTML = '<i class="fa fa-check"></i>';
+      localStorage.setItem('editWhenPressed', 'true');
+    } else {
+      label.innerHTML = '<i class="fa fa-times"></i>'
+      localStorage.setItem('editWhenPressed', 'false');
+    }
+
+  });
+
+  checkBoxApi2.addEventListener('change',function(event){
+    /* Scope variable for easier usage (?) */
+    let label = checkBoxApi2Label;
+
+    if(checkBoxApi2.checked){
+      label.innerHTML = '<i class="fa fa-check"></i>';
+    } else {
+      label.innerHTML = '<i class="fa fa-times"></i>'
+    }
+
+  });
+
+  /* Add events for User Settings */
+
+
 }
 
 function addCloseBtnListener() {
@@ -320,6 +379,29 @@ function saveKey(keyToSave) {
       return true;
     }
     return false;
+}
+
+/* This function will update the settings to the latest values! */
+function updateSettings(){
+  /* Define some variables first. */
+  let keySettingsDiv = document.getElementById('keySettingsDiv');
+  let inputNewKey = keySettingsDiv.children[1].children[0];
+  /* Set inputValue at key "newKey" to current key! */
+  inputNewKey.setAttribute('value', retrieveKey());
+
+  /* editWhenPressed */
+  let apiSettingsDiv = document.getElementById('apiSettingsDiv');
+  let editWhenPressedLabel = apiSettingsDiv.children[1].children[0].children[1];
+  let editWhenPressedBox = apiSettingsDiv.children[1].children[0].children[0];
+
+  if(localStorage.getItem('editWhenPressed') == 'true'){
+    editWhenPressedLabel.innerHTML = '<i class="fa fa-check"></i>';
+    editWhenPressedBox.checked = true;
+  } else {
+    editWhenPressedLabel.innerHTML = '<i class="fa fa-times"></i>';
+    editWhenPressedBox.checked = false;
+  }
+
 }
 
 function saveActiveKey() {

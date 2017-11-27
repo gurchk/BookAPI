@@ -101,29 +101,42 @@
                   <div id="settingsModalWrapper">
                     <div>
                       <h1>Settings</h1>
+                      <span class="closeBtnSettings"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span>
                     </div>
                     <div>
-                      <div>
-                        <h3>Key Settings<h3>
+                      <div id="keySettingsDiv">
+                        <h3>Key Settings</h3>
                         <div class="inputWithButton">
                           <input type="text" placeholder="Inventory key.."><button>New key</button>
                         </div>
                         <div class="inputWithButton">
-                          <button><i class="fa fa-hdd-o fa-2x" aria-hidden="true"></i></button><button><i class="fa fa-hdd-o fa-2x" aria-hidden="true"></i></button>
+                          <input type="text" placeholder="Fetch inventory"><button>Set key</button>
                         </div>
                         <button> Save </button>
                       </div>
-                      <div>
+                      <div id="apiSettingsDiv">
                         <h3>API Settings<h3>
+                        <div class="inputWithButton">
+                          <input id="editWhenPressed" value="testid" type="checkbox">
+                          <label id="editWhenPressedLabel" for="editWhenPressed"><i class="fa fa-times"></i></label>
+                          <span>Edit books by pressing text</span>
+                        </div>
+                        <div class="inputWithButton">
+                          <input id="showDetailedStats" value="testid" type="checkbox">
+                          <label id="showDetailedStatsLabel" for="showDetailedStats"><i class="fa fa-times"></i></label>
+                          <span>Show detailed request stats</span>
+                        </div>
                         <button> Save </button>
                       </div>
-                      <div>
+                      <div id="userSettingsDiv">
                         <h3>User Settings<h3>
                         <button> Save </button>
                       </div>
                     </div>
                   </div>
-        <div>
+
+          </div>
+        </div>
     </main>
     <footer>
       <div class="nyhetsBrev">
@@ -165,7 +178,7 @@
     <div id="loginModalWrapper">
       <div class="loginModal">
         <div id="loginDiv">
-          <span class="closeBtn"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span>
+          <span class="closeBtnLogin"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span>
           <h2>Login Page</h2>
           <input class="loginUserDivInput" type="text" placeholder="Username">
           <input class="loginUserDivInput" type="password" placeholder="Password">
