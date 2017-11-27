@@ -107,6 +107,7 @@ window.addEventListener('load', function (event) {
     });
 
 
+    retrieveBooks();
     //End of callback. Put all DOM-related shit above this!
 });
 
@@ -120,7 +121,13 @@ window.addEventListener('load', function (event) {
 function displaySettings(event){
 
   printMsg('Settings is not yet implemented, stay tuned!','warning');
+  let smw = document.getElementById('settingsModalWrapper');
+  smw.style.visibility = 'hidden';
+  smw.style.display = 'flex';
 
+  setTimeout(function(){
+    smw.style.visibility = 'visible';
+  }, 1000);
 }
 
 function addCloseBtnListener() {
