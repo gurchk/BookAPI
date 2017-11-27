@@ -22,6 +22,9 @@
 </head>
 
 <body>
+    <header>
+      <h1>The Book Api</h1>
+    </header>
     <nav>
         <button id="requestAPI">Get a new inventory</button>
 
@@ -78,26 +81,64 @@
         <div class="apiKeyDisplay">
             <span id="apiKEY"></span>
         </div>
-        <div id="library">
-            <!--<span class="libraryTitle">Retrieving books <i class="fa fa-spinner" aria-hidden="true"></i></span>-->
-            <div id="header">
-                <span class="spanID">ID</span>
-                <hr> <span>Title</span>
-                <hr> <span>Author</span>
-                <hr>
+        <div class="libraryWrapper">
+          <div id="library">
+              <!--<span class="libraryTitle">Retrieving books <i class="fa fa-spinner" aria-hidden="true"></i></span>-->
+              <div id="header">
+                  <span class="spanID">ID</span>
+                  <hr> <span>Title</span>
+                  <hr> <span>Author</span>
+                  <hr>
 
-                <button id="addBookBtn" class="libraryAddBtn"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></button>
+                  <button id="addBookBtn" class="libraryAddBtn"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></button>
 
-                <button id="fetchBooks" class="libraryAddBtn"><i class="fa fa-download fa-2x" aria-hidden="true"></i></button>
+                  <button id="fetchBooks" class="libraryAddBtn"><i class="fa fa-download fa-2x" aria-hidden="true"></i></button>
 
-                <button id="settingsBtn" class="libraryAddBtn"><i class="fa fa-cog fa-2x" aria-hidden="true"></i></button>
+                  <button id="statsBtn" class="libraryAddBtn"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></button>
 
-                <button id="statsBtn" class="libraryAddBtn"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></button>
+                  <button id="settingsBtn" class="libraryAddBtn"><i class="fa fa-cog fa-2x" aria-hidden="true"></i></button>
 
-
-            </div>
-        </div>
+                  <div id="settingsModalWrapper">
+                    <div>
+                      <h1>Settings</h1>
+                    </div>
+                    <div>
+                      <div>
+                        <h3>Key Settings<h3>
+                        <div class="inputWithButton">
+                          <input type="text" placeholder="Inventory key.."><button>New key</button>
+                        </div>
+                        <div class="inputWithButton">
+                          <button><i class="fa fa-hdd-o fa-2x" aria-hidden="true"></i></button><button><i class="fa fa-hdd-o fa-2x" aria-hidden="true"></i></button>
+                        </div>
+                        <button> Save </button>
+                      </div>
+                      <div>
+                        <h3>API Settings<h3>
+                        <button> Save </button>
+                      </div>
+                      <div>
+                        <h3>User Settings<h3>
+                        <button> Save </button>
+                      </div>
+                    </div>
+                  </div>
+        <div>
     </main>
+    <footer>
+      <div class="nyhetsBrev">
+        <div>
+          <p>Footer is love, footer is life</p>
+        </div>
+      </div>
+      <div class="nyhetsBrev">
+        <p>Subscribe to our news letter</p>
+        <div>
+          <input type="text" placeholder="Enter your email..">
+          <button>Subscribe</button>
+        </div>
+      </div>
+    </footer>
 
     <!-- The Modal -->
     <div id="addBookModal" class="modal">
