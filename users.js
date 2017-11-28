@@ -126,7 +126,6 @@ apiBtn4.addEventListener('click', function(event){
 });
 
   /* Testing functions in callback */
-  changeLibraryHeader('UserID','Username','Key');
   //removeBookFromApi(10889, 0);
   //retrieveUser(0, 'Anton');
   createDatabaseKey();

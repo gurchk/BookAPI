@@ -63,7 +63,7 @@ main {
     position: relative;
     margin: 0 auto;
     padding-top: 15px;
-    background-color: rgba(218, 194, 146, 0.6);
+    background-color: rgba(218, 194, 146, 0.85);
 }
 
 main button {
@@ -254,6 +254,13 @@ input:focus {
     flex: 0 0 5%;
 }
 
+#library > div > span {
+    font-family: sans-serif;
+    display: inline-block;
+    flex: 3 1 30%;
+    padding: 10px 5px;
+}
+
 #library > div {
     display: flex;
     position: relative flex: 2 2 auto;
@@ -289,12 +296,7 @@ input:focus {
   background-color: #e6e2d3;
 }
 
-#library > div > span {
-    font-family: sans-serif;
-    display: inline-block;
-    flex: 0 0 30%;
-    padding: 10px 5px;
-}
+
 #keyBtn {
   border: none;
   background-color: inherit;
@@ -308,10 +310,12 @@ input:focus {
     border-radius: 5px;
     border: none;
     margin: 0px 9px;
-    flex: 0 0 5%;
+    flex: 100 100 5%;
     background-color: #444;
     color: #fff;
     padding: 10px;
+    min-width: 50px;
+    max-height: 40px;
 }
 
 #library > div > button:hover {
@@ -330,6 +334,7 @@ input:focus {
 
 #library > div > .libraryAddBtn {
     font-size: 1em;
+    vertical-align: middle;
     border-radius: 7px;
     border: none;
     margin: 0 5px;
@@ -342,6 +347,12 @@ input:focus {
 #library > div > .libraryAddBtn:hover {
     background-color: inherit;
     color: #dac292;
+}
+#library > div > button.libraryRemoveBtn:nth-child(7) {
+  margin-left: 2.5%;
+}
+#library > div > button.libraryRemoveBtn:nth-child(9) {
+  margin-right: 2.5%;
 }
 
 /* Stats Modal */
@@ -408,7 +419,7 @@ input:focus {
 
 .inputPassword {
     display: inline-block;
-    padding: 10px 12px;
+    padding: 10px 34px 10px 12px;
     width: 50%;
     margin: -10px auto;
     line-height: 0px;
@@ -682,6 +693,7 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"] + label {
+  cursor: pointer;
   background-color: #ff5757;
   color: #fff;
   border-radius: 5px;
