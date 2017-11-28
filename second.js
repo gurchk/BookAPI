@@ -71,10 +71,6 @@
                   editBookInputFields(event, true);
                 });
               }
-          } else if(localStorage.getItem('editWhenPressed') == 'false'){
-            element.children[0].removeEventListener('click', function(event){
-              editBookInputFields(event, true);
-            });
           }
       }
   }
@@ -309,7 +305,7 @@
       messageObj.setAttribute('info', 'true');
     }
 
-    messageObj.innerHTML = '<span class="'+typeClass+'"><i class="fa '+icon+'" aria-hidden="true"></i><span class="hoverText">'+message+'</span></span>';
+    messageObj.innerHTML = '<span class="'+typeClass+'"><i class="fa '+icon+'"></i><span class="hoverText">'+message+'</span></span>';
 
     /* Check if last object is error, or succes. Then remove it and append new message */
     if(parent.lastChild.getAttribute('success') != undefined || parent.lastChild.getAttribute('error') != undefined || parent.lastChild.getAttribute('info') != undefined){
@@ -325,9 +321,70 @@
 
   /* Add fetchBooks eventListener Searchid: 42D*/
   function expandBookInfo(event) {
-      alert('This is the expandBookInfo function. Search for me: 42D' + event.target.innerText);
+
+      let listItem = event.target.parentNode;
+      /* Chrome on click I fix. */
+      if(event.target.nodeName == 'I'){
+        listItem = listItem.parentNode;
+      }
+      let bookID = listItem.children[0].innerText;
+      let title = listItem.children[2].innerText;
+      let author = listItem.children[4].innerText;
+      let languageList = ['Eng', ' Swe', ' Dan', ' Nor'];
+      let publishYear = '1975';
+      console.log(bookID,title,author);
+
+      let oldListItem = listItem.innerHTML;
+
+      listItem.innerHTML =
+      '<div class="expandedObject">'+
+        '<div>'+
+          '<img src="images/book-cover.gif"></img>'+
+          '<p>Some useful information about this book is written here!</p>'+ // First div.
+        '</div>'+
+        '<hr>'+ // Divider
+        '<div>'+
+          '<h3><strong>Written by:</strong> '+author+'</h3>'+ // Second div.
+          '<h3><strong>Title:</strong> '+title+'</h3>'+ // Second div.
+          '<h3><strong>Published:</strong> '+publishYear+'</h3>'+ // Second div.
+        '</div>'+
+        '<hr>'+ // Divider
+        '<div>'+
+          '<div>'+ // Third div.
+            '<h3><strong>Languages:</strong> '+languageList+'</h3>'+
+            '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
+          '</div>'+
+          '<div>'+
+            '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
+            '<button class="trashcan"><i class="fa fa-trash fa-lg"></i></button>'+ // Remove Button
+          '</div>'+
+        '</div>'+
+      '</div>';
+
+      let buttonDiv = listItem.children[0].lastChild.lastChild // This is the buttonDiv
+
+      for(let button of buttonDiv.children){
+
+        if(button.getAttribute('minimize') != undefined){
+          button.addEventListener('click',function(){
+            listItem.innerHTML = oldListItem;
+            btnAddEventListeners(listItem);
+          });
+        } else {
+          button.addEventListener('click', function(event){
+            printMsg('I remove books!', 'warning');
+            promptRemoveBook(event);
+          });
+        }
+      }
   }
 
+
+function promptRemoveBook(event){
+
+  event.target.parentNode.innerHTML = 'Yes / no';
+
+}
   /* unlockProtected function */
   function unlockProtected(event) {
       let listItem = event.target.parentNode;
@@ -523,6 +580,7 @@
 
       let parent = event.target.parentNode;
       let libraryDiv = document.getElementById('library');
+
       /* Parent should always be the listItem */
       if (event.target.nodeName == 'I') {
           parent = event.target.parentNode.parentNode;
