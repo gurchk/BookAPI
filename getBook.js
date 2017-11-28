@@ -86,3 +86,10 @@ function bookAdd(event) {
         addToTop(title, author, uniqueID);
     }, 1500)
 }
+
+function getBookOlid (Title){
+    fetch(`https://openlibrary.org/search.json?q=${Title}`)
+        .then((objs) => objs.json()) 
+        .then((books) => console.log(books.docs))
+}
+
