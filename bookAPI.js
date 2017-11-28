@@ -51,7 +51,8 @@ window.addEventListener('load', function (event) {
         addBook(0, title.value, author.value);
         console.log("Added: " + title.value + " " + author.value);
         shake("shakeMe");
-        addToTop(title.value, author.value);
+        let uniqueID = guid();
+        addToTop(title.value, author.value, uniqueID);
     });
 
     /* adding eventListener to saveActiveKey & retrieveOurKey */

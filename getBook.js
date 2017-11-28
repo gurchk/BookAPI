@@ -41,7 +41,7 @@ window.addEventListener('load', function (event) {
 })
 
 // Functions
-/* Adding eventListeners to the buttons */
+
 
 function refreshSearch() {
     const docLog = document.getElementById('docLog')
@@ -52,7 +52,7 @@ function insertPlus(aString) {
     return aString.split(" ").join("+");
 }
 
-function addToTop(title, author) {
+function addToTop(title, author, uniqueID) {
     const libraryDiv = document.getElementById('library');
 
     const topElement = document.createElement("div");
@@ -60,18 +60,28 @@ function addToTop(title, author) {
     libraryDiv.insertBefore(topElement, libraryDiv.children[1]);
     btnAddEventListeners(libraryDiv.children[1]);
     libraryDiv.children[1].setAttribute('class', "newIn")
+    libraryDiv.children[1].setAttribute('uniqueID', uniqueID);
+
+    setTimeout(function () {
+        if (libraryDiv.children[1].getAttribute('uniqueID') == uniqueID) {
+            libraryDiv.children[1].removeAttribute('class', "newIn")
+            console.log('Removed msgDiv where uniqueID was correct.');
+        } else {
+            console.log('Pfft, almost removed another msgDiv than original!');
+        }
+    }, 2500);
 }
-//        removeBooksFromLibrary();
-//    retrieveBooks(0);
+
 function bookAdd(event) {
     let author = event.target.previousSibling.previousSibling.innerText;
     let title = event.target.previousSibling.previousSibling.previousSibling.innerText;
     let target = event.target;
+     let uniqueID = guid();
     target.setAttribute('class', 'onclic animateBtn addFromLibrary');
     setTimeout(function () {
         target.removeAttribute('class', "onclic");
         target.setAttribute('class', 'afterClick');
         addBook(0, title, author);
-        addToTop(title, author);
+        addToTop(title, author, uniqueID);
     }, 1500)
 }
