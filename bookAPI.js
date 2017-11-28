@@ -5,7 +5,15 @@ window.addEventListener('load', function (event) {
     updateSaved();
     updateActive();
 
-    printMsg('This is our welcome message!', 'success');
+
+    if(localStorage.getItem('loggedIn') == 'true'){
+      let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+
+      printMsg('Welcome,'+userObj.name, 'success');
+    } else {
+      printMsg('This is our welcome message!', 'success');
+    }
+
 
 
     requestAPIbtn.addEventListener('click', requestKeyFromApi);
@@ -384,6 +392,7 @@ function saveKey(keyToSave) {
 
 /* This function will update the settings to the latest values! */
 function updateSettings(){
+
   /* Define some variables first. */
   let keySettingsDiv = document.getElementById('keySettingsDiv');
   let inputNewKey = keySettingsDiv.children[1].children[0];
@@ -402,6 +411,8 @@ function updateSettings(){
     editWhenPressedLabel.innerHTML = '<i class="fa fa-times"></i>';
     editWhenPressedBox.checked = false;
   }
+
+  /* User logged in stuff */
 
 }
 
