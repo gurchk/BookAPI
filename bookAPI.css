@@ -248,7 +248,7 @@ input:focus {
     display: inline-flex;
     padding: 10px 0px;
     margin: 10px;
-}
+}q
 
 #library > div > .spanID {
     flex: 0 0 5%;
@@ -267,6 +267,69 @@ input:focus {
     padding: 20px;
     margin: 0px;
 }
+
+#library > div > .expandedObject {
+  display: flex;
+  justify-content: space-between;
+  /*height: 200px;*/
+  width: 100%;
+}
+
+#library > div > .expandedObject > div {
+  display: flex;
+  flex: 1 1 auto;
+}
+/* Try to make the dividers line up!!! */
+#library > div > .expandedObject > div:not(:first-child){
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 100 100 50px;
+}
+#library > div > .expandedObject > div:not(:last-child){
+  flex: 100 100 50px;
+}
+
+/* Image on expandedObject */
+#library > div > .expandedObject > div > img {
+  max-width: 120px;
+  background-color: #b9936c;
+  height: auto;
+  padding: 5px;
+  box-shadow: 1px 1px 4px #222;
+}
+#library > div > .expandedObject > div > p {
+  padding: 5px;
+  margin: 10px 5px 10px 5px;
+}
+#library > div > .expandedObject > div h3 {
+  text-align: left;
+  font-family: 'Lora', serif;
+  padding: 5px 10px;
+  font-weight: normal;
+  margin: 0;
+}
+
+#library > div > .expandedObject > div button {
+  border: none;
+  background-color: #555;
+  padding: 7px 10px;
+  margin: 10px 3px;
+}
+#library > div > .expandedObject > div button.trashcan:hover {
+  background-color: #f16060;
+}
+/*#library > div > .expandedObject > div button:not(.trashcan):hover {
+  background-color: #e4cf80;
+}*/
+
+#library > div > .expandedObject > div:last-child {
+  justify-content: space-between;
+}
+
+#library > div > .expandedObject > div:last-child > div:last-child {
+  align-self: flex-end;
+}
+
 #library > div p {
     padding: 0px;
     margin: 0px;
@@ -319,10 +382,14 @@ input:focus {
 }
 
 #library > div > button:hover {
-    background-color: #f14848;
+    background-color: #f16060;
 }
 
 #library > div > button:hover.hoverGold {
+    background-color: #faffdb;
+    color: #222;
+}
+#library > div button:hover.hoverGold {
     background-color: #faffdb;
     color: #222;
 }
