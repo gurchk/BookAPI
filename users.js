@@ -195,10 +195,14 @@ function loginUser(userObj){
 
   /* When the user actually logs in! */
   printMsg('Welcome ' + userObj.name + '!','success');
-  alert('Is your email: '+userObj.email+'?');
+  console.log('Logged in as user: '+userObj);
+  localStorage.setItem('loggedIn', 'true');
+  localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+
   saveKey(userObj.key);
   let loginDiv = document.getElementById('loginDiv');
   loginDiv.parentNode.parentNode.style.display = 'none';
+  updateSettings();
 }
 
 
