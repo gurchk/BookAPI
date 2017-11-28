@@ -62,21 +62,22 @@ function addToTop(title, author, uniqueID) {
     libraryDiv.children[1].setAttribute('class', "newIn")
     libraryDiv.children[1].setAttribute('uniqueID', uniqueID);
 
-    setTimeout(function () {
-        if (libraryDiv.children[1].getAttribute('uniqueID') == uniqueID) {
-            libraryDiv.children[1].removeAttribute('class', "newIn")
-            console.log('Removed msgDiv where uniqueID was correct.');
+    for (let book of libraryDiv.children) {
+        if (book.getAttribute('uniqueID') == uniqueID) {
+            setTimeout(function () {
+                book.removeAttribute('class', 'newIn')
+            }, 2500);
         } else {
             console.log('Pfft, almost removed another msgDiv than original!');
         }
-    }, 2500);
+    }
 }
 
 function bookAdd(event) {
     let author = event.target.previousSibling.previousSibling.innerText;
     let title = event.target.previousSibling.previousSibling.previousSibling.innerText;
     let target = event.target;
-     let uniqueID = guid();
+    let uniqueID = guid();
     target.setAttribute('class', 'onclic animateBtn addFromLibrary');
     setTimeout(function () {
         target.removeAttribute('class', "onclic");
