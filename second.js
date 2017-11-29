@@ -332,23 +332,21 @@
       let author = listItem.children[4].innerText;
 
 
-      /* Function to be used in promise */
-      function executor(success, failed){
+      /* Check inputs */
+      if(bookObj.lang == undefined){
+        bookObj.lang = 'Not found';
+      }
+      if(bookObj.year == undefined){
+        bookObj.year = 'Not found';
+      }
+      if(bookObj.bookUrl == undefined){
+        bookObj.bookUrl = 'Not found';
+      }
 
-      let languageList = ['Eng', ' Swe', ' Dan', ' Nor'];
-      let publishYear = '1975';
-
-      if(bookObj.year != undefined){
-        publishYear = bookObj.year;
-      }
-      if(bookObj.lang != undefined){
-        languageList = lang;
-      }
-      if(bookObj.bookUrl != undefined){
-        imageLink = bookObj.bookUrl;
-      }
-      
-      console.log(bookID,title,author);
+      let languageList = bookObj.lang;
+      let publishYear = bookObj.year;
+      let imageLink = bookObj.bookUrl;
+      let isbn = bookObj.isbn;
 
       let oldListItem = listItem.innerHTML;
 
@@ -369,6 +367,7 @@
           '<div>'+ // Third div.
             '<h3><strong>Languages:</strong> '+languageList+'</h3>'+
             '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
+            '<h3><strong>Isbn:</strong> '+isbn+'</h3>'+
           '</div>'+
           '<div>'+
             '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
