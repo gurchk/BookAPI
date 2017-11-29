@@ -100,9 +100,9 @@ window.addEventListener('load', function (event) {
         saveKey(inputFetch.value);
     });
 
-
+    localStorage.setItem('settingsOpen', 'false'); // It can't be open when we load the site.
     retrieveBooks();
-    addSettingsListeners();
+    //addSettingsListeners(); // This is used when testing settings page.
     //End of callback. Put all DOM-related shit above this!
 });
 
@@ -134,9 +134,13 @@ function displaySettings(event){
   let smw = document.getElementById('settingsModalWrapper');
   smw.style.display = 'flex';
 
+  /* Add localStorage value */
+  localStorage.setItem('settingsOpen', 'true');
   /* Add eventListener for the close btn */
   document.getElementsByClassName('fa fa-window-close fa-lg')[0].addEventListener('click', function(event){
     smw.style.display = 'none';
+    localStorage.setItem('settingsOpen', 'false');
+    removeSettingsListeners();
   });
 
   /* Add eventListeners Settings page */
@@ -155,10 +159,22 @@ function addSettingsListeners(){
   console.log(keySettingsDiv.innerHTML);
   let inputNewKey = keySettingsDiv.children[1].children[0];
   let btnNewKey = keySettingsDiv.children[1].children[1];
-  /* Set value to the input fields */
+
   updateSettings();
 
   btnNewKey.addEventListener('click', requestKeyFromApi);
+
+
+  /* EventListener for fetchKey */
+  let inputFetchkey = keySettingsDiv.children[2].children[0];
+  let btnFetchkey = keySettingsDiv.children[2].children[1];
+
+  btnFetchkey.addEventListener('click', function(){
+    /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
+    saveKey(inputFetchkey.value);
+  });
+
+
 
   /* Add events for API Settings */
   let checkBoxApi1 = document.getElementById('editWhenPressed');
@@ -167,7 +183,7 @@ function addSettingsListeners(){
   let checkBoxApi2Label = document.getElementById('showDetailedStatsLabel');
 
 
-  checkBoxApi1.addEventListener('change',function(event){
+  checkBoxApi1.addEventListener('change', function(event){
     /* Scope variable for easier usage (?) */
     let label = checkBoxApi1Label;
 
@@ -194,8 +210,14 @@ function addSettingsListeners(){
   });
 
   /* Add events for User Settings */
+}
 
+function removeSettingsListeners(){
+  let settings = document.getElementById('settingsModalWrapper');
+  let oldHTML = settings.innerHTML;
 
+  settings.innerHTML = '';
+  settings.innerHTML = oldHTML;
 }
 
 function addCloseBtnListener() {
@@ -235,10 +257,12 @@ function displayStats() {
     addStats(total, successful, failed);
 }
 
-function printMsg(message, type) {
+function printMsg(message, type, location = 'default') {
 
     let messages = document.getElementsByClassName('messageDiv');
-
+    if(localStorage.getItem('settingsOpen') == 'true'){
+      location = 'settings';
+    }
     /* Set exsists to true and create a new msgDiv*/
     msgDiv = document.createElement('div');
 
@@ -261,32 +285,41 @@ function printMsg(message, type) {
     msgDiv.style.display = 'inline-block';
     msgDiv.innerHTML = '<span> ' + message + ' </span><span class="msgCloseBtn"> &times;</span>';
 
-    /* Check how many messages there are showing already. */
-    let main = document.getElementsByTagName('main')[0];
-    let activeKeyElement = document.getElementsByClassName('apiKeyDisplay')[0];
+    /* Set the location to display messages */
+    let messageContainer = document.getElementsByTagName('main')[0];
+    let stopElement = document.getElementsByClassName('apiKeyDisplay')[0];
+    let skip = 1;
+    let maxMessages = 3;
+    if(location == 'default'){
+      messageContainer = document.getElementsByTagName('main')[0];
+      stopElement = document.getElementsByClassName('apiKeyDisplay')[0];
+      skip = 1;
+      maxMessages = 3;
+    } else if(location == 'settings'){
+      messageContainer = document.getElementsByClassName('msgContainer')[0];
+      stopElement = messageContainer.lastChild;
+      skip = 0;
+      maxMessages = 2;
+    }
 
-    if (messages.length >= 3) {
-        main.removeChild(main.children[1]);
-        main.insertBefore(msgDiv, activeKeyElement);
+    /* Check how many messages there are showing already. */
+
+    if (messages.length >= maxMessages) {
+        if(messageContainer.children[skip] != undefined){
+          messageContainer.removeChild(messageContainer.children[skip]);
+          messageContainer.insertBefore(msgDiv, stopElement);
+        }
     } else {
-        main.insertBefore(msgDiv, activeKeyElement);
+        messageContainer.insertBefore(msgDiv, stopElement);
     }
 
     setTimeout(function () {
-        if (main.children[1].getAttribute('class') != 'apiKeyDisplay') {
-            if (main.children[1].getAttribute('uniqueID') == uniqueID) {
-                main.removeChild(main.children[1]);
+            if (messageContainer.children[skip].getAttribute('uniqueID') == uniqueID) {
+                messageContainer.removeChild(messageContainer.children[skip]);
                 console.log('Removed msgDiv where uniqueID was correct.');
-            } else {
-                console.log('Pfft, almost removed another msgDiv than original!');
             }
-        } else {
-            console.log('main.children[1].nodeName = ' + main.children[1].nodeName + '.\n' +
-                'Some messages has probably been closed due to it being too many or manually');
-        }
 
     }, 5000);
-
 
     /* Finally add a eventListener to the close btn */
     addCloseBtnListener();
