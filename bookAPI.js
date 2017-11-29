@@ -15,10 +15,6 @@
     }
 
 
-
-    requestAPIbtn.addEventListener('click', requestKeyFromApi);
-
-
     // Add a book
     const addBookBtn = document.getElementById('addBookBtn');
     // Get the button that opens the modal
@@ -70,12 +66,12 @@
         updateSaved();
     });
 
-    let goBackBtn = document.getElementById('returnKey');
-    goBackBtn.addEventListener('click', function (e) {
-        saveKey(retrieveOurKey());
-        updateActive();
-        // Reloads the window
-        window.location.href = window.location.href
+    /* Set saved key to current key */
+    let useSavedKeyBtn = document.getElementById('useSavedKeyBtn');
+    useSavedKeyBtn.addEventListener('click', function () {
+        /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
+        verifyKey(retrieveOurKey(), undefined, undefined, undefined, undefined, true);
+        updateSaved();
     });
 
     /* Add eventListeners to statsBtn and settingsBtn */
@@ -94,11 +90,6 @@
     // Fetch Key
 
     const inputFetch = document.getElementById('apiInputKey');
-    const fetchKey = document.getElementById('fetchKey');
-
-    fetchKey.addEventListener('click', function (event) {
-        saveKey(inputFetch.value);
-    });
 
     localStorage.setItem('settingsOpen', 'false'); // It can't be open when we load the site.
     retrieveBooks();
@@ -394,7 +385,7 @@ function updateActive() {
 }
 
 function updateSaved() {
-    currentSavedKey.innerHTML = `Saved Key: <strong>${retrieveOurKey()}</strong>`;
+    currentSavedKey.setAttribute('placeholder', `Saved Key: ${retrieveOurKey()}`);
 }
 
 function saveObject(obj) {
@@ -434,8 +425,8 @@ function updateSettings(){
 
   /* editWhenPressed */
   let apiSettingsDiv = document.getElementById('apiSettingsDiv');
-  let editWhenPressedLabel = apiSettingsDiv.children[1].children[0].children[1];
-  let editWhenPressedBox = apiSettingsDiv.children[1].children[0].children[0];
+  let editWhenPressedLabel = document.getElementById('editWhenPressedLabel');
+  let editWhenPressedBox = document.getElementById('editWhenPressed');
 
   if(localStorage.getItem('editWhenPressed') == 'true'){
     editWhenPressedLabel.innerHTML = '<i class="fa fa-check"></i>';

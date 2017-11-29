@@ -23,58 +23,24 @@
 
 <body>
     <header>
-      <h1>The Book Api</h1>
+      <h1>Api-Biblioteket</h1>
     </header>
     <nav>
-        <button id="requestAPI">Get a new inventory</button>
+        <!-- <button id="requestAPI">Get a new inventory</button> -->
 
-        <span id="currentSavedKey"></span>
+
+        <!-- <span id="currentSavedKey"></span>
         <input type="text" id="apiInputKey" placeholder="Inventory Key" />
-        <button id="fetchKey">Fetch Inventory</button>
-        <button id="userPanelBtn"><i class="fa fa-user fa-2x"></i></button>
-        <button id="saveCurrent"><i class="fa fa-hdd-o fa-2x"></i></button>
-        <button id="returnKey"><i class="fa fa-mail-reply fa-2x"></i></button>
-
-        <div class="userPanel">
-            <div>
-                <h2>User Panel</h2>
-                <div>
-                    <button id="createUserBtn">Create user</button>
-                </div>
-                <div>
-                    <button id="retrieveUserBtn">Retrieve user</button>
-                </div>
-                <div>
-                    <button id="removeUserById">Remove user</button>
-                </div>
-                <div>
-                    <button id="openLoginPageBtn">Login</button>
-                </div>
-                <div class="userModal">
-                    <input type="text" placeholder="Name">
-                    <input type="text" placeholder="Key">
-                    <input type="password" placeholder="Password">
-                    <button class="apiBtn">Create</button>
-                    <span><span><span class="close">&times;</span></span>
-                    </span>
-                </div>
-                <div class="userModal">
-                    <input type="text" placeholder="Name">
-                    <input type="checkbox" checked><span>Exact match</span>
-                    <button class="apiBtn">Retrieve</button>
-                    <button class="apiBtn">Retrieve All</button>
-                    <span><span><span class="close">&times;</span></span>
-                    </span>
-                </div>
-                <div class="userModal">
-                    <input type="text" placeholder="User ID">
-                    <button class="apiBtn">Remove</button>
-                    <span><span><span class="close">&times;</span></span>
-                    </span>
-                </div>
-                <span><span class="close">&times;</span></span>
-            </div>
+        <button id="fetchKey">Fetch Inventory</button> -->
+        <div>
+          <p class="navLogin">Welcome, Guest!</p>
+          <button class="navLogin"> Login <i class="fa fa-sign-in"></i></button>
+          <button class="navLogin"> Register <i class="fa fa-user-plus"></i></button>
         </div>
+        <!-- <button id="saveCurrent"><i class="fa fa-hdd-o fa-2x"></i></button>
+        <button id="returnKey"><i class="fa fa-mail-reply fa-2x"></i></button> -->
+
+
     </nav>
     <main>
         <h1>Your book inventory</h1>
@@ -101,14 +67,13 @@
 
                   <div id="settingsModalWrapper">
                     <div>
-                      <h1>Settings</h1>
                       <span class="closeBtnSettings"><i class="fa fa-window-close fa-lg" aria-hidden="true"></i></span>
 
                     </div>
                     <div class="msgContainer">
 
                     </div>
-                    <div>
+                    <div class="settingsDivs">
                       <div id="keySettingsDiv">
                         <h3>Key Settings</h3>
                         <div class="inputWithButton">
@@ -117,10 +82,12 @@
                         <div class="inputWithButton">
                           <input type="text" placeholder="Fetch inventory"><button>Set key</button>
                         </div>
-                        <button> Save </button>
+                        <div class="inputWithButton">
+                          <input id="currentSavedKey" type="text" placeholder="Save key"><button id="saveCurrent">Save key</button><button id="useSavedKeyBtn">Use key</button>
+                        </div>
                       </div>
                       <div id="apiSettingsDiv">
-                        <h3>API Settings<h3>
+                        <h3>API Settings</h3>
                         <div class="inputWithButton">
                           <input id="editWhenPressed" value="testid" type="checkbox">
                           <label id="editWhenPressedLabel" for="editWhenPressed"><i class="fa fa-times"></i></label>
@@ -131,11 +98,9 @@
                           <label id="showDetailedStatsLabel" for="showDetailedStats"><i class="fa fa-times"></i></label>
                           <span>Show detailed request stats</span>
                         </div>
-                        <button> Save </button>
                       </div>
                       <div id="userSettingsDiv">
-                        <h3>User Settings<h3>
-                        <button> Save </button>
+                        <h3>User Settings</h3>
                       </div>
                     </div>
                   </div>
