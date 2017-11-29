@@ -38,7 +38,7 @@
               } else if (element.getAttribute('expand') != undefined) {
 
                   /* Add eventListener for function refreshStats*/
-                  element.addEventListener('click', expandBookInfo);
+                  element.addEventListener('click', getBookInfo);
               } else if (element.getAttribute('addbooker') != undefined) {
 
                   /* Add eventListener for function refreshStats*/
@@ -320,7 +320,7 @@
   }
 
   /* Add fetchBooks eventListener Searchid: 42D*/
-  function expandBookInfo(event) {
+  function expandBookInfo(event, bookObj) {
 
       let listItem = event.target.parentNode;
       /* Chrome on click I fix. */
@@ -330,8 +330,24 @@
       let bookID = listItem.children[0].innerText;
       let title = listItem.children[2].innerText;
       let author = listItem.children[4].innerText;
+
+
+      /* Function to be used in promise */
+      function executor(success, failed){
+
       let languageList = ['Eng', ' Swe', ' Dan', ' Nor'];
       let publishYear = '1975';
+
+      if(bookObj.year != undefined){
+        publishYear = bookObj.year;
+      }
+      if(bookObj.lang != undefined){
+        languageList = lang;
+      }
+      if(bookObj.bookUrl != undefined){
+        imageLink = bookObj.bookUrl;
+      }
+      
       console.log(bookID,title,author);
 
       let oldListItem = listItem.innerHTML;
@@ -339,7 +355,7 @@
       listItem.innerHTML =
       '<div class="expandedObject">'+
         '<div>'+
-          '<img src="images/book-cover.gif"></img>'+
+          '<img src="'+imageLink+'"></img>'+
           '<p>Some useful information about this book is written here!</p>'+ // First div.
         '</div>'+
         '<hr>'+ // Divider
