@@ -182,7 +182,7 @@ function loginUserStart(event){
 
   /* We want to log the user in if the user with that
   name has that password specified */
-  /* retrieveUser(counter, name, id, all, hashedPassword, login, precise) */
+  /* retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise) */
 
   if(password == "" || username == ""){
     printMsg('Empty field!', 'error')
@@ -580,8 +580,8 @@ function protectEventListener(protectHtmlObj){
 
 /* If the password was correct */
 function passwordWasCorrect(userID){
-  /* Set active key from the user ID, retrieveUser(counter, name, id, all, hashedPassword, login){ */
-  retrieveUser(undefined, undefined, userID, false);
+  /* Set active key from the user ID, retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise){ */
+  retrieveUser(undefined, undefined, userID, false, undefined, false, false);
   console.log('Password was correct. Trying to retrieve user from database with ID.');
 }
 
@@ -613,7 +613,7 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
               console.log(responseData.message);
               increaseFailed();
               /* Try to retrieve user again, plus one to counter */
-              return retrieveUser((counter+1), name, id, all, hashedPassword, login);
+              return retrieveUser((counter+1), name, id, all, hashedPassword, login, precise);
 
             } else {
               /* THE REQUEST IS SUCCESSFUL, WE HAVE RETRIEVED THE DATA */
@@ -672,7 +672,7 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                       /* Check if the user is found! But only if useid is false*/
                         console.log(userObj.name.toString(), name.toString());
 
-                        if(!precise && userObj.name.toString().toLowerCase().includes(name.toString().toLowerCase()) && !useID){
+                        if(userObj.name.toString().toLowerCase().includes(name.toString().toLowerCase()) && !useID && !precise){ //If precise is true. Don't look for users.
                             found = true;
                             if(userObj.password){
                               printMsg('This user is password protected!', 'warning');
@@ -695,8 +695,6 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                                 } else {
                                   printMsg('Correct password!', 'success');
                                 }
-                              } else if(hashedPassword){
-                                printMsg('Wrong username or password','warning');
                               }
                             }
                           }
@@ -709,10 +707,8 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                 }
               }
 
-              if(!all && !found && !useID){
+              if(!all && !found && !useID && !precise){
                 if(hashedPassword){
-                  printMsg('Wrong username or password','warning');
-                } else {
                   printMsg('User not found.', 'error');
                 }
                 //printMsg('User found! Name:' + userObj.name + 'Key: '+userObj.key, 'success');

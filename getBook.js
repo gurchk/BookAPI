@@ -22,11 +22,23 @@ window.addEventListener('load', function (event) {
                 let headerElement = document.createElement("li");
                 headerElement.innerHTML = `<span>Title</span><span>Author</span><span>Date</span>`
                 docLog.appendChild(headerElement);
+
                 for (let i = 0; i < 12; i++) {
                     let newElement = document.createElement("li");
-                    newElement.innerHTML = `<span>${ans.docs[i].title}</span><span>${ans.docs[i].author_name[0]}</span><span>${ans.docs[i].publish_year[0]}</span><button addbooker="true" class="addFromLibrary animateBtn" ></button>`
+                    console.log(ans);
+
+                    /* If the book has a subtitle, display it aswell! */
+                    let bookTitle = ans.docs[i].title;
+                    if(ans.docs[i].subtitle != undefined){
+                      bookTitle += (' - ' + ans.docs[i].subtitle);
+                    }
+
+                    newElement.innerHTML = `<span>${bookTitle}</span><span>${ans.docs[i].author_name[0]}</span><span>${ans.docs[i].first_publish_year}</span><button addbooker="true" class="addFromLibrary animateBtn" ></button>`
+
+                    /* Append the search result */
                     docLog.appendChild(newElement);
 
+                    /* Add EventListeners to the result */
                     for (let item of docLog.children) {
                         btnAddEventListeners(item);
                     }
@@ -104,50 +116,52 @@ let getBookInfo = function (event) {
 
     /* End of settings */
 
-    fetch(`http://openlibrary.org/search.json?title=${title}`)
+    fetch(`http://openlibrary.org/search.json?title=${title}&jscmd=details`)
         .then((response) => {
             let resp = response.json();
+            console.log(resp);
             return resp;
         }).then(function (response) {
             response = response.docs[0];
+            console.log(response);
             let bookUrl = getPicUrl(response.isbn[0])
             let bookObj = {
                 bookUrl: bookUrl,
-                theme: response.subject[0],
+                theme: response.subject != undefined ? response.subject[0] : 'Not found',
+                first_sentance: response.first_sentence != undefined ? response.first_sentence[0] : 'Not found',
                 title: response.title,
-                author: response.author_name[0],
+                author: response.author_name[0] ,
                 excerpt: response.first_publish_year,
                 pages: response.text.length,
                 isbn: response.isbn[1],
                 year: response.first_publish_year,
-                lang: response.language,
+                lang: response.language != undefined ? response.language : 'Not found',
                 find: false,
             };
 
-
+            expandBookInfo(event, bookObj);
             /* Settings */
-            let myHeaders = new Headers();
-            myHeaders.append('Accept', 'application/json');
-
-            var fetchSettings = { method: 'GET',
-                           headers: myHeaders,
-                           mode: 'cors',
-                           cache: 'default' };
-                           console.log(bookObj.isbn);
-            fetch('https://reststop.randomhouse.com/resources/titles/' + 9781400079148 ,fetchSettings)
-            .then((respo) => {
-              let resp = respo.json();
-              return resp;
-            })
-            .then(function (response) {
-
-              if (bookUrl != 'undefined') {
-                  bookObj.find = true;
-                  expandBookInfo(event, bookObj);
-              } else {
-                  expandBookInfo(event, bookObj);
-              }
-            });
+            // let myHeaders = new Headers();
+            // myHeaders.append('Accept', 'application/json');
+            //
+            // var fetchSettings = { method: 'GET',
+            //                headers: myHeaders,
+            //                mode: 'cors',
+            //                cache: 'default' };
+            //                console.log(bookObj.isbn);
+            // fetch('https://reststop.randomhouse.com/resources/titles/' + 9781400079148 ,fetchSettings)
+            // .then((respo) => {
+            //   let resp = respo.json();
+            //   return resp;
+            // })
+            // .then(function (response) {
+            //   if (bookUrl != 'undefined') {
+            //       bookObj.find = true;
+            //       expandBookInfo(event, bookObj);
+            //   } else {
+            //       expandBookInfo(event, bookObj);
+            //   }
+            // });
 
 
         });

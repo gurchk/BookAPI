@@ -349,7 +349,7 @@
       '<div class="expandedObject">'+
         '<div>'+
           '<img src="'+bookObj.bookUrl+'"></img>'+
-          '<p>'+bookObj.excerpt+'</p>'+ // First div.
+          '<p>'+bookObj.first_sentance+'</p>'+ // First div.
         '</div>'+
         '<hr>'+ // Divider
         '<div>'+
@@ -361,7 +361,7 @@
         '<hr>'+ // Divider
         '<div>'+
           '<div>'+ // Third div.
-            '<h3><strong>Theme:</strong> '+bookObj.theme+'</h3>'+
+            '<h3><strong>Language:</strong> '+bookObj.lang+'</h3>'+
             '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
             '<h3><strong>Isbn:</strong> '+bookObj.isbn+'</h3>'+
           '</div>'+
