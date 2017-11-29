@@ -93,12 +93,12 @@ function getPicUrl(olid) {
 }
 let getBookInfo = function (event) {
     let listItem = event.target.parentNode;
-    /* Chrome on click I fix. */
+
     if (event.target.nodeName == 'I') {
         listItem = listItem.parentNode;
     }
+    
     let title = listItem.children[2].innerText
-
     fetch(`https://openlibrary.org/search.json?q=${title}`)
         .then((response) => {
             let resp = response.json();
@@ -108,8 +108,14 @@ let getBookInfo = function (event) {
             let bookObj = {
                 bookUrl: bookUrl,
                 lang: svaret.docs[0].language,
-                year: svaret.docs[0].first_publish_year
+                year: svaret.docs[0].first_publish_year,
+                find: false,
             };
-            expandBookInfo(event, bookObj);
+            if (bookUrl != 'undefined') {
+                bookObj.find = true;
+                expandBookInfo(event, bookObj);
+            } else {
+                expandBookInfo(event, bookObj);
+            }
         });
 }
