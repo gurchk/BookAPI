@@ -88,8 +88,8 @@ function bookAdd(event) {
 }
 
 
-function getPicUrl(olid) {
-    return `http://covers.openlibrary.org/b/olid/${olid}-L.jpg`
+function getPicUrl(isbn) {
+    return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
 }
 let getBookInfo = function (event) {
     let listItem = event.target.parentNode;
@@ -97,25 +97,58 @@ let getBookInfo = function (event) {
     if (event.target.nodeName == 'I') {
         listItem = listItem.parentNode;
     }
-    
+
     let title = listItem.children[2].innerText
-    fetch(`https://openlibrary.org/search.json?q=${title}`)
+
+
+
+    /* End of settings */
+
+    fetch(`http://openlibrary.org/search.json?title=${title}`)
         .then((response) => {
             let resp = response.json();
             return resp;
-        }).then(function (svaret) {
-            let bookUrl = getPicUrl(svaret.docs[0].edition_key[0])
+        }).then(function (response) {
+            response = response.docs[0];
+            let bookUrl = getPicUrl(response.isbn[0])
             let bookObj = {
                 bookUrl: bookUrl,
-                lang: svaret.docs[0].language,
-                year: svaret.docs[0].first_publish_year,
+                theme: response.subject[0],
+                title: response.title,
+                author: response.author_name[0],
+                excerpt: response.first_publish_year,
+                pages: response.text.length,
+                isbn: response.isbn[1],
+                year: response.first_publish_year,
+                lang: response.language,
                 find: false,
             };
-            if (bookUrl != 'undefined') {
-                bookObj.find = true;
-                expandBookInfo(event, bookObj);
-            } else {
-                expandBookInfo(event, bookObj);
-            }
+
+
+            /* Settings */
+            let myHeaders = new Headers();
+            myHeaders.append('Accept', 'application/json');
+
+            var fetchSettings = { method: 'GET',
+                           headers: myHeaders,
+                           mode: 'cors',
+                           cache: 'default' };
+                           console.log(bookObj.isbn);
+            fetch('https://reststop.randomhouse.com/resources/titles/' + 9781400079148 ,fetchSettings)
+            .then((respo) => {
+              let resp = respo.json();
+              return resp;
+            })
+            .then(function (response) {
+
+              if (bookUrl != 'undefined') {
+                  bookObj.find = true;
+                  expandBookInfo(event, bookObj);
+              } else {
+                  expandBookInfo(event, bookObj);
+              }
+            });
+
+
         });
 }
