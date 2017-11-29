@@ -273,7 +273,7 @@ input:focus {
   justify-content: space-between;
   /*height: 200px;*/
   width: 100%;
-  height: 180px;
+  height: 200px;
 }
 
 #library > div > .expandedObject > div {
@@ -289,10 +289,12 @@ input:focus {
 #library > div > .expandedObject > div:not(:last-child){
   flex: 100 100 50px;
 }
-
+.removeBook {
+  display: inline;
+}
 /* Image on expandedObject */
 #library > div > .expandedObject > div > img {
-  max-height: 180px;
+  max-height: 200px;
   background-color: #b9936c;
   height: auto;
   padding: 5px;

@@ -343,31 +343,27 @@
         bookObj.bookUrl = 'Not found';
       }
 
-      let languageList = bookObj.lang;
-      let publishYear = bookObj.year;
-      let imageLink = bookObj.bookUrl;
-      let isbn = bookObj.isbn;
-
       let oldListItem = listItem.innerHTML;
 
       listItem.innerHTML =
       '<div class="expandedObject">'+
         '<div>'+
-          '<img src="'+imageLink+'"></img>'+
-          '<p>Some useful information about this book is written here!</p>'+ // First div.
+          '<img src="'+bookObj.bookUrl+'"></img>'+
+          '<p>'+bookObj.excerpt+'</p>'+ // First div.
         '</div>'+
         '<hr>'+ // Divider
         '<div>'+
-          '<h3><strong>Written by:</strong> '+author+'</h3>'+ // Second div.
-          '<h3><strong>Title:</strong> '+title+'</h3>'+ // Second div.
-          '<h3><strong>Published:</strong> '+publishYear+'</h3>'+ // Second div.
+          '<h3><strong>Written by:</strong> '+bookObj.author+'</h3>'+ // Second div.
+          '<h3><strong>Title:</strong> '+bookObj.title+'</h3>'+ // Second div.
+          '<h3><strong>Published:</strong> '+bookObj.year+'</h3>'+
+          '<h3><strong>Pages:</strong> '+bookObj.pages+'</h3>'+ // Second div.
         '</div>'+
         '<hr>'+ // Divider
         '<div>'+
           '<div>'+ // Third div.
-            '<h3><strong>Languages:</strong> '+languageList+'</h3>'+
+            '<h3><strong>Theme:</strong> '+bookObj.theme+'</h3>'+
             '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
-            '<h3><strong>Isbn:</strong> '+isbn+'</h3>'+
+            '<h3><strong>Isbn:</strong> '+bookObj.isbn+'</h3>'+
           '</div>'+
           '<div>'+
             '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
@@ -409,7 +405,7 @@ function promptRemoveBook(event, listItem, oldListItem, bookID = 20){
 
   /* Save old innerHtml to return to. */
   let oldHTML = parent.innerHTML;
-  parent.innerHTML = '<h3>Remove this book?</h3><button class="hoverRed">Yes</button> <button class="hoverGold">No</button>';
+  parent.innerHTML = '<h3 class="removeBook">Remove this book?</h3><button class="hoverRed">Yes</button> <button class="hoverGold">No</button>';
 
   /* Add some eventListeners */
   parent.children[1].addEventListener('click', function(){
