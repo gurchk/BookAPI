@@ -91,20 +91,25 @@ function bookAdd(event) {
 function getPicUrl(olid) {
     return `http://covers.openlibrary.org/b/olid/${olid}-L.jpg`
 }
-let getBookInfo = function (Title) {
-    fetch(`https://openlibrary.org/search.json?q=${Title}`)
-        .then((response) => {
-        let resp = response.json();
-        return resp;
-    }).then(function(svaret) {
-        console.log(svaret);
-        let bookUrl = getPicUrl(svaret.docs[0].edition_key[0])
-        let bookObj = {
-            bookUrl: bookUrl,
-            lang: svaret.docs[0].language,
-            year: svaret.docs[0].first_publish_year
-        };
-        console.log(bookObj)
-    });
-}
+let getBookInfo = function (event) {
+    let listItem = event.target.parentNode;
+    /* Chrome on click I fix. */
+    if (event.target.nodeName == 'I') {
+        listItem = listItem.parentNode;
+    }
+    let title = listItem.children[2].innerText
 
+    fetch(`https://openlibrary.org/search.json?q=${title}`)
+        .then((response) => {
+            let resp = response.json();
+            return resp;
+        }).then(function (svaret) {
+            let bookUrl = getPicUrl(svaret.docs[0].edition_key[0])
+            let bookObj = {
+                bookUrl: bookUrl,
+                lang: svaret.docs[0].language,
+                year: svaret.docs[0].first_publish_year
+            };
+            expandBookInfo(event, bookObj);
+        });
+}
