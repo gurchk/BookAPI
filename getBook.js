@@ -116,25 +116,25 @@ let getBookInfo = function (event) {
 
     /* End of settings */
 
-    fetch(`http://openlibrary.org/search.json?title=${title}&jscmd=details`)
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${title}&&printType=books&maxResults=1&apiKey=AIzaSyCusky2_T8WFISpIkMTm0QuKhz5xW5B1iI`)
         .then((response) => {
             let resp = response.json();
             console.log(resp);
             return resp;
         }).then(function (response) {
-            response = response.docs[0];
+            let googleID = response.items[0].id;
+            response = response.items[0].volumeInfo;
             console.log(response);
-            let bookUrl = getPicUrl(response.isbn[0])
+            let bookUrl = response.imageLinks.thumbnail;
             let bookObj = {
                 bookUrl: bookUrl,
-                theme: response.subject != undefined ? response.subject[0] : 'Not found',
-                first_sentance: response.first_sentence != undefined ? response.first_sentence[0] : 'Not found',
+                theme: response.categories != undefined ? response.categories[0] : 'Not found',
                 title: response.title,
-                author: response.author_name[0] ,
-                excerpt: response.first_publish_year,
-                pages: response.text.length,
-                isbn: response.isbn[1],
-                year: response.first_publish_year,
+                author: response.authors != undefined ? response.authors[0] : 'Not found',
+                description: response.description != undefined ? response.description : 'Not found',
+                pages: response.pageCount != undefined ? response.pageCount : 'Not found',
+                isbn: googleID,
+                year: response.publishedDate,
                 lang: response.language != undefined ? response.language : 'Not found',
                 find: false,
             };

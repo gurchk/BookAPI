@@ -345,11 +345,15 @@
 
       let oldListItem = listItem.innerHTML;
 
+      /* Limit text, this should be based on screenWidth! */
+      let bookDescription = bookObj.description;
+
       listItem.innerHTML =
       '<div class="expandedObject">'+
         '<div>'+
           '<img src="'+bookObj.bookUrl+'"></img>'+
-          '<p>'+bookObj.first_sentance+'</p>'+ // First div.
+          '<div><div class="bookDescription"><p>'+bookDescription+'</p></div>'+
+          '<span class="readMore">... read more</span></div>'+ // First div.
         '</div>'+
         '<hr>'+ // Divider
         '<div>'+
@@ -363,7 +367,7 @@
           '<div>'+ // Third div.
             '<h3><strong>Language:</strong> '+bookObj.lang+'</h3>'+
             '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
-            '<h3><strong>Isbn:</strong> '+bookObj.isbn+'</h3>'+
+            '<h3><strong>GoogleID:</strong> '+bookObj.isbn+'</h3>'+
           '</div>'+
           '<div>'+
             '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
@@ -371,6 +375,7 @@
           '</div>'+
         '</div>'+
       '</div>';
+
 
       let buttonDiv = listItem.children[0].lastChild.lastChild // This is the buttonDiv
       buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID);
@@ -394,7 +399,7 @@ function buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID){
   }
 }
 
-function promptRemoveBook(event, listItem, oldListItem, bookID = 20){
+function promptRemoveBook(event, listItem, oldListItem, bookID = 1337){
   /* Chrome fix... */
   let parent = event.target.parentNode;
 
