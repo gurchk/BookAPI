@@ -362,30 +362,62 @@
       '</div>';
 
       let buttonDiv = listItem.children[0].lastChild.lastChild // This is the buttonDiv
+      buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID);
 
-      for(let button of buttonDiv.children){
+  }
 
-        if(button.getAttribute('minimize') != undefined){
-          button.addEventListener('click',function(){
-            listItem.innerHTML = oldListItem;
-            btnAddEventListeners(listItem);
-          });
-        } else {
-          button.addEventListener('click', function(event){
-            printMsg('I remove books!', 'warning');
-            promptRemoveBook(event);
-          });
-        }
-      }
+function buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID){
+  console.log('BUTTONDIV: ' + buttonDiv.innerHTML);
+  for(let button of buttonDiv.children){
+    if(button.getAttribute('minimize') != undefined){
+      button.addEventListener('click',function(){
+        listItem.innerHTML = oldListItem;
+        btnAddEventListeners(listItem);
+      });
+    } else {
+      button.addEventListener('click', function(event){
+        /* PROMT the user. You're about to remove a book. */
+        promptRemoveBook(event, listItem, oldListItem, bookID);
+      });
+    }
+  }
+}
+
+function promptRemoveBook(event, listItem, oldListItem, bookID = 20){
+  /* Chrome fix... */
+  let parent = event.target.parentNode;
+
+  if(event.target.nodeName == 'I'){
+    parent = parent.parentNode;
   }
 
 
-function promptRemoveBook(event){
+  /* Save old innerHtml to return to. */
+  let oldHTML = parent.innerHTML;
+  parent.innerHTML = '<h3>Remove this book?</h3><button class="hoverRed">Yes</button> <button class="hoverGold">No</button>';
 
-  event.target.parentNode.innerHTML = 'Yes / no';
+  /* Add some eventListeners */
+  parent.children[1].addEventListener('click', function(){
+    removeBookFromApi(bookID);
 
+    /* Function to remove Listitem from view */
+    removeListItem(listItem);
+  });
+
+  parent.lastChild.addEventListener('click', function(){
+    parent.innerHTML = oldHTML;
+    buttonDivEventListeners(parent, listItem, oldListItem);
+  });
 }
   /* unlockProtected function */
+
+  function removeListItem(listItem){
+    shakeElement(listItem);
+    setTimeout(function(){
+      listItem.parentNode.removeChild(listItem);
+    }, 600);
+  }
+
   function unlockProtected(event) {
       let listItem = event.target.parentNode;
 

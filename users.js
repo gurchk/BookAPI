@@ -137,6 +137,8 @@ apiBtn4.addEventListener('click', function(event){
   document.getElementById('openLoginPageBtn').addEventListener('click', function(event){
     let loginModalWrapper = document.getElementById('loginModalWrapper');
     loginModalWrapper.style.display = 'flex';
+    //loginModalWrapper.children[0].style.alignSelf = 'center';
+    loginModalWrapper.style.position = 'absolute';
 
     userModal1.style.display = 'none';
     userModal2.style.display = 'none';
@@ -339,7 +341,7 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   let parent = inputObj.parentNode; // Parent is the DIV containing <input> and <span>.
   let icon = document.createElement('span'); // Icon is going to go inside the <span>
   let iconType = 'fa-question fa-lg'; // Default iconType is a question mark.
-  let padding = '8px 8.4px 9.4px';
+  let padding = '7px 10px 6.4px';
   let rbc, rc, hoverMessage = "";
   if(backgroundColor != '#222'){
     rbc = backgroundColor;
@@ -350,17 +352,17 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   /* Styling for type SUCCESS */
   if(type == 'success'){
     iconType = 'fa-check';
-    padding = '8px 8.4px 9.4px';
+    padding = '6.4px 8.6px 6.5px';
     backgroundColor = '#599965';
 
   /* Styling for type ERROR */
   } else if (type == 'error'){
     iconType = 'fa-times';
-    padding = '8px 10px 9.4px';
+    padding = '7px 10px 6.5px';
     backgroundColor = '#d64c4c';
   } else if (type == 'spin'){
     iconType = 'fa-spinner fa-spin';
-    padding = '8px 8.4px 9px';
+    padding = '6.4px 8.2px 7px';
     backgroundColor = '#6e9578';
   }
 
@@ -396,12 +398,12 @@ function spinIcon(inputObj){
   let oldText = icon.nextSibling.innerHTML;
   icon.className = "fa fa-spinner fa-spin";
 
-  icon.parentNode.style.padding = "8px 8.4px 9px";
-  icon.parentNode.style.margin = "-10px 25px -10px -59px";
+  icon.parentNode.style.padding = "6.5px 7.8px 6.4px";
+  icon.parentNode.style.margin = "-10px 25px -10px -58.5px";
   icon.parentNode.style.left = "2px";
   icon.nextSibling.innerHTML = '<p>Retrieving..</p>';
   setTimeout(function(){
-    icon.parentNode.style.padding = "8px 10px 9px";
+    icon.parentNode.style.padding = "6.5px 10px 6.4px";
     icon.className = oldIconClassName;
     icon.nextSibling.innerHTML = oldText;
   },1000);
