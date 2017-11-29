@@ -378,28 +378,29 @@
 
 
       let buttonDiv = listItem.children[0].lastChild.lastChild // This is the buttonDiv
-      buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID);
-      addReadMoreListeners();
-  }
-  function addReadMoreListeners(){
-    for(let readMore of document.getElementsByClassName('readMore')){
 
-      readMore.addEventListener('click', function(event){
-        let bookDescription = event.target.previousSibling.innerText;
-        event.target.parentNode.parentNode.parentNode.innerHTML = bookDescription;
-      });
-    }
+      /* This also adds eventListeners to readMore! */
+      addButtonDivEventListeners(buttonDiv, listItem, oldListItem, bookID, bookObj);
+      addReadMoreListeners(bookObj, bookID, oldListItem);
   }
 
-function buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID){
-  console.log('BUTTONDIV: ' + buttonDiv.innerHTML);
+function addButtonDivEventListeners(buttonDiv, listItem, oldListItem, bookID, bookObj){
   for(let button of buttonDiv.children){
     if(button.getAttribute('minimize') != undefined){
+
+      /* Add eventListener */
       button.addEventListener('click',function(){
         listItem.innerHTML = oldListItem;
+
         btnAddEventListeners(listItem);
+
+        if(bookObj != undefined){
+          addReadMoreListeners(bookObj, bookID);
+        }
       });
+
     } else {
+      /* Add eventListener */
       button.addEventListener('click', function(event){
         /* PROMT the user. You're about to remove a book. */
         promptRemoveBook(event, listItem, oldListItem, bookID);
@@ -408,7 +409,75 @@ function buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID){
   }
 }
 
-function promptRemoveBook(event, listItem, oldListItem, bookID = 1337){
+
+function addReadMoreListeners(bookObj, bookID, veryOldListItem){
+
+  for(let readMore of document.getElementsByClassName('readMore')){
+
+    readMore.addEventListener('click', function(event){
+      let bookDescription = event.target.previousSibling.innerText;
+      let listItem = event.target.parentNode.parentNode.parentNode;
+      let oldHtml = listItem.innerHTML;
+
+      listItem.innerHTML =
+      '<div class="expandedObject">'+
+        '<div>'+
+          '<div class="inlineImage"><img src="'+bookObj.bookUrl+'"></img>'+
+          '<p class="increasedPadding">'+bookDescription+
+          '<span class="readLess">Read less</span></p>'+
+          '</div>'+// First div.
+        '</div>'+
+        '<hr>'+ // Divider
+        '<div class="expandedAside">'+
+          '<div>'+ // Third div.
+            '<h3><strong>Written by:</strong> '+bookObj.author+'</h3>'+ // Second div.
+            '<h3><strong>Title:</strong> '+bookObj.title+'</h3>'+ // Second div.
+            '<h3><strong>Published:</strong> '+bookObj.year+'</h3>'+
+            '<h3><strong>Pages:</strong> '+bookObj.pages+'</h3>'+ // Second div.
+            '<hr>'+
+            '<h3><strong>Language:</strong> '+bookObj.lang+'</h3>'+
+            '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
+            '<h3><strong>Isbn:</strong> '+bookObj.isbn+'</h3>'+
+          '</div>'+
+          '<div>'+
+            '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
+            '<button class="trashcan"><i class="fa fa-trash fa-lg"></i></button>'+ // Remove Button
+          '</div>'+
+        '</div>'+
+      '</div>';
+
+      let buttonDiv = listItem.firstChild.lastChild.lastChild;
+      /* Takes params: buttonDiv, listItem, oldListItem, bookID, bookObj */
+      addButtonDivEventListeners(buttonDiv, listItem, oldHtml, bookID, bookObj);
+      addReadLessListeners(oldHtml, bookID, bookObj);
+    });
+  }
+}
+
+  function addReadLessListeners(oldHtml, bookID, bookObj){
+
+  for(let readLess of document.getElementsByClassName('readLess')){
+
+    readLess.addEventListener('click', function(event){
+      let listItem = event.target.parentNode.parentNode.parentNode.parentNode.parentNode;
+      console.log('FIND THIS:'+listItem.innerHTML);
+      listItem.innerHTML = oldHtml;
+
+      let buttonDiv = listItem.parentNode.firstChild.lastChild.lastChild;
+      console.log('FIND THIS:' + buttonDiv.innerHTML);
+      /* Takes params: buttonDiv, listItem, oldListItem, bookID, bookObj */
+      //addButtonDivEventListeners(buttonDiv, listItem, oldHtml, bookID);
+      addReadMoreListeners(bookObj, bookID);
+
+      let listItemHtml = '<span class="spanID">' + bookID + '</span> <hr> <span><p>' + bookObj.title + '</p></span> <hr> <span><p>' + bookObj.author + '</p></span> <hr> <button pen="true" class="libraryRemoveBtn hoverGold"><i class="fa fa-pencil" aria-hidden="true"></i></button><button expand="true" class="hoverGrey libraryRemoveBtn"><i class="fa fa-expand" aria-hidden="true"></i></button><button rmvBtn="true" class="libraryRemoveBtn"><i class="fa fa-times" aria-hidden="true"></i></button>';
+
+      addButtonDivEventListeners(buttonDiv, listItem.parentNode, listItemHtml, bookID);
+
+    });
+  }
+}
+
+  function promptRemoveBook(event, listItem, oldListItem, bookID = 1337){
   /* Chrome fix... */
   let parent = event.target.parentNode;
 
@@ -431,7 +500,7 @@ function promptRemoveBook(event, listItem, oldListItem, bookID = 1337){
 
   parent.lastChild.addEventListener('click', function(){
     parent.innerHTML = oldHTML;
-    buttonDivEventListeners(parent, listItem, oldListItem);
+    addButtonDivEventListeners(parent, listItem, oldListItem);
   });
 }
   /* unlockProtected function */
@@ -479,7 +548,6 @@ function promptRemoveBook(event, listItem, oldListItem, bookID = 1337){
           i.parentNode.className = 'lockBtn'
       }
   }
-
 
   /* Function to retrieve books */
   function retrieveBooks(counter = 0) {
