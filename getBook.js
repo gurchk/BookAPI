@@ -122,7 +122,6 @@ let getBookInfo = function (event) {
             console.log(resp);
             return resp;
         }).then(function (response) {
-            let googleID = response.items[0].id;
             response = response.items[0].volumeInfo;
             console.log(response);
             let bookUrl = response.imageLinks.thumbnail;
@@ -133,7 +132,7 @@ let getBookInfo = function (event) {
                 author: response.authors != undefined ? response.authors[0] : 'Not found',
                 description: response.description != undefined ? response.description : 'Not found',
                 pages: response.pageCount != undefined ? response.pageCount : 'Not found',
-                isbn: googleID,
+                isbn: response.industryIdentifiers != undefined ? response.industryIdentifiers[0].identifier : 'Not found',
                 year: response.publishedDate,
                 lang: response.language != undefined ? response.language : 'Not found',
                 find: false,

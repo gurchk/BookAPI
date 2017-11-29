@@ -367,7 +367,7 @@
           '<div>'+ // Third div.
             '<h3><strong>Language:</strong> '+bookObj.lang+'</h3>'+
             '<h3><strong>BookID:</strong> '+bookID+'</h3>'+
-            '<h3><strong>GoogleID:</strong> '+bookObj.isbn+'</h3>'+
+            '<h3><strong>Isbn:</strong> '+bookObj.isbn+'</h3>'+
           '</div>'+
           '<div>'+
             '<button minimize="true" class="hoverGold"><i class="fa fa-window-minimize"></i></button>'+ // Minimize button
@@ -379,7 +379,16 @@
 
       let buttonDiv = listItem.children[0].lastChild.lastChild // This is the buttonDiv
       buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID);
+      addReadMoreListeners();
+  }
+  function addReadMoreListeners(){
+    for(let readMore of document.getElementsByClassName('readMore')){
 
+      readMore.addEventListener('click', function(event){
+        let bookDescription = event.target.previousSibling.innerText;
+        event.target.parentNode.parentNode.parentNode.innerHTML = bookDescription;
+      });
+    }
   }
 
 function buttonDivEventListeners(buttonDiv, listItem, oldListItem, bookID){
