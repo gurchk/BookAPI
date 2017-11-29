@@ -16,6 +16,15 @@ body {
     background-position: bottom;
     background-size: cover;
 }
+.bookDescription {
+  overflow: hidden;
+  height: 80%;
+  padding: 0 10px;
+}
+span.readMore {
+  font-weight: bold;
+  cursor: pointer;
+}
 
 h1,
 h2,
