@@ -87,19 +87,24 @@ function bookAdd(event) {
     }, 1500)
 }
 
+
 function getPicUrl(olid) {
-    fetch(`http://covers.openlibrary.org/b/olid/${olid}-L.jpg`)
-        .then(function (response) {
-            if (response.ok) {
-                console.log(response.json());
-            }
-            throw new Error('Network response was not ok.');
-        })
+    return `http://covers.openlibrary.org/b/olid/${olid}-L.jpg`
 }
-let getBookOlid = function (Title) {
+let getBookInfo = function (Title) {
     fetch(`https://openlibrary.org/search.json?q=${Title}`)
-        .then((objs) => objs.json())
-        .then(function (books) {
-            getPicUrl(books.docs[0].edition_key[0])
-        });
+        .then((response) => {
+        let resp = response.json();
+        return resp;
+    }).then(function(svaret) {
+        console.log(svaret);
+        let bookUrl = getPicUrl(svaret.docs[0].edition_key[0])
+        let bookObj = {
+            bookUrl: bookUrl,
+            lang: svaret.docs[0].language,
+            year: svaret.docs[0].first_publish_year
+        };
+        console.log(bookObj)
+    });
 }
+
