@@ -11,7 +11,7 @@ window.addEventListener('load', function (event) {
 
       printMsg('Welcome,'+userObj.name, 'success');
     } else {
-      printMsg('This is our welcome message!', 'success');
+      printMsg('This is our welcome message!!', 'success');
     }
 
 
