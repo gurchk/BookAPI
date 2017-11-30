@@ -489,7 +489,7 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
   /* Save old innerHtml to return to. */
   let oldHTML = parent.innerHTML;
   parent.innerHTML = '<h3 class="removeBook">Remove this book?</h3><button class="hoverRed">Yes</button> <button class="hoverGold">No</button>';
-
+  parent.lastChild.style.margin = '0';
   /* Add some eventListeners */
   parent.children[1].addEventListener('click', function(){
     removeBookFromApi(bookID);

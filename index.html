@@ -33,9 +33,9 @@
         <input type="text" id="apiInputKey" placeholder="Inventory Key" />
         <button id="fetchKey">Fetch Inventory</button> -->
         <div>
-          <p class="navLogin">Welcome, Guest!</p>
-          <button class="navLogin"> Login <i class="fa fa-sign-in"></i></button>
-          <button class="navLogin"> Register <i class="fa fa-user-plus"></i></button>
+          <p id="welcomeMsg" class="navLogin">Welcome, Guest!</p>
+          <button id="loginButtonNavLogin" class="navLogin"> Login <i class="fa fa-sign-in"></i></button>
+          <button id="registerButtonNavLogin" class="navLogin"> Register <i class="fa fa-user-plus"></i></button>
         </div>
         <!-- <button id="saveCurrent"><i class="fa fa-hdd-o fa-2x"></i></button>
         <button id="returnKey"><i class="fa fa-mail-reply fa-2x"></i></button> -->
@@ -71,7 +71,7 @@
 
                     </div>
                     <div class="msgContainer">
-
+                      <span></span>
                     </div>
                     <div class="settingsDivs">
                       <div id="keySettingsDiv">
@@ -80,10 +80,13 @@
                           <input type="text" placeholder="Inventory key.."><button>New key</button>
                         </div>
                         <div class="inputWithButton">
-                          <input type="text" placeholder="Fetch inventory"><button>Set key</button>
+                          <input type="text" placeholder="Retrieve inventory"><button>Set key</button>
                         </div>
                         <div class="inputWithButton">
                           <input id="currentSavedKey" type="text" placeholder="Save key"><button id="saveCurrent">Save key</button><button id="useSavedKeyBtn">Use key</button>
+                        </div>
+                        <div class="inputWithButton">
+                          <input id="importKeyInput" type="text" placeholder="Merge library into this"><button id="importKeyBtn">Import</button>
                         </div>
                       </div>
                       <div id="apiSettingsDiv">
@@ -101,6 +104,9 @@
                       </div>
                       <div id="userSettingsDiv">
                         <h3>User Settings</h3>
+                        <div class="inputWithButton">
+                          <button id="retrieveAllUsersBtn">Retrieve all users</button>
+                        </div>
                       </div>
                     </div>
                   </div>

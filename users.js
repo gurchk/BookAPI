@@ -1,11 +1,36 @@
+function loggedIn(){
+  return localStorage.getItem('loggedIn') == 'true';
+}
 window.addEventListener('load', function (event) {
 
-/* EventListeners */
+/* Login stuff! */
 
-/* User panel Button EVENTLISTENER*/
-document.getElementById('userPanelBtn').addEventListener('click', function(){
-  document.getElementsByClassName('userPanel')[0].style.display = 'block';
-});
+if(loggedIn()){
+    /* Create the userObject! */
+    let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    /* Print a message! */
+    printMsg('Welcome, '+ userObj.name+'!', 'success');
+
+    /* Change Welcome Title */
+    let welcomeMsg = document.getElementById('welcomeMsg');
+    welcomeMsg.innerHTML = 'Welcome, '+userObj.name+'!';
+
+    /* Remove login/register buttons! */
+    let parent = welcomeMsg.parentNode;
+    parent.removeChild(parent.children[1]);
+    parent.removeChild(parent.children[1]);
+
+    /* Add logout button */
+    let logoutButton = document.createElement('BUTTON');
+    logoutButton.innerHTML = 'Logout <i class="fa fa-sign-out"></i>'
+    logoutButton.className = 'navLogout';
+    parent.style.width = '100%';
+    parent.appendChild(logoutButton);
+  }
+
+
+/* EventListeners */
 
 let userModal1 = document.getElementsByClassName('userModal')[0];
 let userModal2 = document.getElementsByClassName('userModal')[1];
@@ -15,115 +40,109 @@ let userModal3 = document.getElementsByClassName('userModal')[2];
   let createUserBtn = document.getElementById('createUserBtn');
   let retrieveUserBtn = document.getElementById('retrieveUserBtn');
   let removeUserBtn = document.getElementById('removeUserById');
-  createUserBtn.addEventListener('click', function(){
-    userModal1.style.display = 'block';
-    userModal2.style.display = 'none';
-    userModal3.style.display = 'none';
 
-    /* Set active to createUser btn */
-    createUserBtn.className = 'userPanelBtnActive';
+//   createUserBtn.addEventListener('click', function(){
+//     userModal1.style.display = 'block';
+//     userModal2.style.display = 'none';
+//     userModal3.style.display = 'none';
+//
+//     /* Set active to createUser btn */
+//     createUserBtn.className = 'userPanelBtnActive';
+//
+//     /* Remove from the other two */
+//     removeUserBtn.className = '';
+//     retrieveUserBtn.className = '';
+//   });
+//
+// /* Retrieve User Button EVENTLISTENER*/
+// retrieveUserBtn.addEventListener('click', function(){
+//   userModal1.style.display = 'none';
+//   userModal2.style.display = 'block';
+//   userModal3.style.display = 'none';
+//   /* Set active to Retrieve btn */
+//   retrieveUserBtn.className = 'userPanelBtnActive';
+//
+//   /* Remove from the other two */
+//   createUserBtn.className = '';
+//   removeUserBtn.className = '';
+// });
 
-    /* Remove from the other two */
-    removeUserBtn.className = '';
-    retrieveUserBtn.className = '';
-  });
+// removeUserBtn.addEventListener('click', function(){
+//   userModal1.style.display = 'none';
+//   userModal2.style.display = 'none';
+//   userModal3.style.display = 'block';
+//   /* Set active to Remove btn */
+//   removeUserBtn.className = 'userPanelBtnActive';
+//
+//   /* Remove from the other two */
+//   createUserBtn.className = '';
+//   retrieveUserBtn.className = '';
+// });
 
-/* Retrieve User Button EVENTLISTENER*/
-retrieveUserBtn.addEventListener('click', function(){
-  userModal1.style.display = 'none';
-  userModal2.style.display = 'block';
-  userModal3.style.display = 'none';
-  /* Set active to Retrieve btn */
-  retrieveUserBtn.className = 'userPanelBtnActive';
-
-  /* Remove from the other two */
-  createUserBtn.className = '';
-  removeUserBtn.className = '';
-});
-
-removeUserBtn.addEventListener('click', function(){
-  userModal1.style.display = 'none';
-  userModal2.style.display = 'none';
-  userModal3.style.display = 'block';
-  /* Set active to Remove btn */
-  removeUserBtn.className = 'userPanelBtnActive';
-
-  /* Remove from the other two */
-  createUserBtn.className = '';
-  retrieveUserBtn.className = '';
-});
-
-let apiBtn1 = document.getElementsByClassName('apiBtn')[0];
-let apiBtn2 = document.getElementsByClassName('apiBtn')[1];
-let apiBtn3 = document.getElementsByClassName('apiBtn')[2];
-let apiBtn4 = document.getElementsByClassName('apiBtn')[3];
+// let apiBtn1 = document.getElementsByClassName('apiBtn')[0];
+// let apiBtn2 = document.getElementsByClassName('apiBtn')[1];
+// let apiBtn4 = document.getElementsByClassName('apiBtn')[3];
 
 /* Create user eventListener */
-apiBtn1.addEventListener('click', function(event){
-
-  /* Create user */
-  let parent = event.target.parentNode;
-  let name = parent.children[0].value;
-  let key = parent.children[1].value;
-  let password = parent.children[2].value;
-  let hashed;
-
-  if(password != ""){
-    hashed = md5(password);
-  }
-
-
-  /* If name field is empty */
-  if(name == ""){
-    printMsg('Empty name field!', 'error');
-  } else if(key != ""){
-    verifyKey(key, name, 'none', hashed, true);
-  } else {
-
-    key = retrieveKey();
-    console.log('Creating user!');
-    parent.children[0].value = "";
-    parent.children[1].value = "";
-    parent.children[2].value = "";
-
-    createUser(name, key, hashed);
-    console.log('hashed is: '+ hashed);
-  }
-});
+// apiBtn1.addEventListener('click', function(event){
+//
+//   /* Create user */
+//   let parent = event.target.parentNode;
+//   let name = parent.children[0].value;
+//   let key = parent.children[1].value;
+//   let password = parent.children[2].value;
+//   let hashed;
+//
+//   if(password != ""){
+//     hashed = md5(password);
+//   }
+//
+//
+//   /* If name field is empty */
+//   if(name == ""){
+//     printMsg('Empty name field!', 'error');
+//   } else if(key != ""){
+//     verifyKey(key, name, 'none', hashed, true);
+//   } else {
+//
+//     key = retrieveKey();
+//     console.log('Creating user!');
+//     parent.children[0].value = "";
+//     parent.children[1].value = "";
+//     parent.children[2].value = "";
+//
+//     createUser(name, key, hashed);
+//     console.log('hashed is: '+ hashed);
+//   }
+// });
 
 /* Retrieve user eventListener */
-apiBtn2.addEventListener('click', function(event){
-  /* Retrieve user */
-  let parent = event.target.parentNode;
-  let name = parent.children[0].value;
-  if(name == ""){
-    printMsg('Empty field!', 'error');
-  } else{
+// apiBtn2.addEventListener('click', function(event){
+//   /* Retrieve user */
+//   let parent = event.target.parentNode;
+//   let name = parent.children[0].value;
+//   if(name == ""){
+//     printMsg('Empty field!', 'error');
+//   } else{
+//
+//     removeBooksFromLibrary();
+//     retrieveUser(0, name, undefined, false);
+//     console.log('Retrieving user!');
+//     parent.children[0].value = "";
+//     parent.children[1].value = "";
+//   }
+// });
 
-    removeBooksFromLibrary();
-    retrieveUser(0, name, undefined, false);
-    console.log('Retrieving user!');
-    parent.children[0].value = "";
-    parent.children[1].value = "";
-  }
-});
 
-apiBtn3.addEventListener('click', function(event){
-  /* Retrieve ALL USERS & display*/
-    removeBooksFromLibrary();
-    /* retrieveUser(counter, name, id, all) */
-    retrieveUser(0, 'all', undefined, true);
-    console.log('Retrieving all users!');
-});
 
-apiBtn4.addEventListener('click', function(event){
-
-    /* Remove user by ID */
-
-    let parent = event.target.parentNode;
-    removeBookFromApi(parent.children[0].value, 0, true);
-    parent.children[0].value = "";
-});
+// apiBtn4.addEventListener('click', function(event){
+//
+//     /* Remove user by ID */
+//
+//     let parent = event.target.parentNode;
+//     removeBookFromApi(parent.children[0].value, 0, true);
+//     parent.children[0].value = "";
+// });
 
   /* Testing functions in callback */
   //removeBookFromApi(10889, 0);
@@ -132,38 +151,92 @@ apiBtn4.addEventListener('click', function(event){
 
 
   /* Login EventListeners */
+  let loginBtn = document.getElementById('loginButtonNavLogin');
+  let registerBtn = document.getElementById('registerButtonNavLogin');
 
   /* Open Login page */
-  document.getElementById('openLoginPageBtn').addEventListener('click', function(event){
-    let loginModalWrapper = document.getElementById('loginModalWrapper');
-    loginModalWrapper.style.display = 'flex';
-    //loginModalWrapper.children[0].style.alignSelf = 'center';
-    loginModalWrapper.style.position = 'absolute';
+    loginBtn.addEventListener('click', function(event){
 
-    userModal1.style.display = 'none';
-    userModal2.style.display = 'none';
-    userModal3.style.display = 'none';
-    /* Set active to Remove btn */
-    document.getElementById('openLoginPageBtn').className = 'userPanelBtnActive';
+      displayLogin();
 
-    /* Remove from the other two */
-    createUserBtn.className = '';
-    retrieveUserBtn.className = '';
-    removeUserBtn.className = '';
+      /* Add eventListener to close when clicking outside */
+      addOutSideClick();
+    });
 
-    /* Add eventListener to close when clicking outside */
-    window.onclick = function (event) {
-        if (event.target == loginModalWrapper) {
-            loginModalWrapper.style.display = "none";
-            document.getElementById('openLoginPageBtn').className = '';
-            returnRegisterToLogin();
-        }
-    }
-  });
+    /* Open register Page */
+    registerBtn.addEventListener('click', function() {
+      displayLogin();
+      addOutSideClick();
+      setUpRegister();
+    });
 
-  addEventListenersForLoginPage();
+    addEventListenersForLoginPage();
   /* End of callback */
 });
+
+var recursiveFetch = (url, limit = 10) =>
+  fetch(url)
+  .then(response => {
+    if(response.status != 200 && --limit){
+        return recursiveFetch(url, limit);
+    }
+    return response.json();
+  })
+  .then(responseData => {
+    if(responseData.status == 'error'){
+      return recursiveFetch(url, limit);
+    }
+    return responseData;
+  })
+
+
+
+function verifyUserName(username, password, email, inputApiKey){
+
+  recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=' + retrieveDatabaseKey())
+    .then(responseData => {
+      let found = false;
+      for(let dataObj of responseData.data){
+        let userObj = JSON.parse(dataObj.author);
+
+        if(userObj.name != undefined){
+          console.log(userObj.name)
+          if(username.toLowerCase() == userObj.name.toLowerCase()){
+            found = true;
+          }
+        }
+      }
+
+      if(found){
+        printMsg('Username already taken!','error');
+      } else {
+        verifyKey(inputApiKey, username, md5(password), email, true, true);
+      }
+
+
+    });
+
+
+  //verifyKey(inputApiKey, username, md5(password2), email, true, true);
+
+}
+
+
+function displayLogin(){
+  let loginModalWrapper = document.getElementById('loginModalWrapper');
+  loginModalWrapper.style.display = 'flex';
+  loginModalWrapper.children[0].style.alignSelf = 'center';
+  loginModalWrapper.style.position = 'absolute';
+}
+
+function addOutSideClick() {
+  window.onclick = function (event) {
+      if (event.target == loginModalWrapper) {
+          loginModalWrapper.style.display = "none";
+          returnRegisterToLogin();
+      }
+  }
+}
 
 /* Users JavaScript file */
 
@@ -213,10 +286,7 @@ function addEventListenersForLoginPage(){
     /* Close Login page */
     document.getElementsByClassName('fa fa-window-close fa-lg')[1].addEventListener('click', function(event){
       document.getElementById('loginModalWrapper').style.display = 'none';
-      document.getElementById('openLoginPageBtn').className = '';
-
     });
-
 
     /* Login Button on Login Page */
     document.getElementById('loginDivBtn').addEventListener('click', loginUserStart);
@@ -224,23 +294,29 @@ function addEventListenersForLoginPage(){
     /* Register Button on Login Page */
     document.getElementById('registerDivBtn').addEventListener('click', function(event){
 
-    let loginDiv = document.getElementById('loginDiv');
-    loginDiv.innerHTML =
-    '<span class="closeBtnLogin closeBtnArrow"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></span>'+
-    '<h2>Register</h2>'+
-    '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="Username"></div>'+
-    '<div><input class="loginDivInput smallerBecauseInfo" type="password" placeholder="Password"></div>'+
-    '<div><input class="loginDivInput smallerBecauseInfo" type="password" placeholder="Repeat password"></div>'+
-    '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="Email"></div>'+
-    '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="API Key"><span class="inputInfo"><i class="fa fa-question fa-lg" aria-hidden="true"></i><span class="hoverText"><p>If you already have an API Key you can put it here. (Optional)</p></span></span></div>'+
-    '<button id="registerDivBtn"> Register <i class="fa fa-user-plus" aria-hidden="true"></i></button>';
-
-    addEventListenersForRegisterPage();
+      setUpRegister();
 
   });
 }
 
+function setUpRegister(){
+
+  let loginDiv = document.getElementById('loginDiv');
+  loginDiv.innerHTML =
+  '<span class="closeBtnLogin closeBtnArrow"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></span>'+
+  '<h2>Register</h2>'+
+  '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="Username"></div>'+
+  '<div><input class="loginDivInput smallerBecauseInfo" type="password" placeholder="Password"></div>'+
+  '<div><input class="loginDivInput smallerBecauseInfo" type="password" placeholder="Repeat password"></div>'+
+  '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="Email"></div>'+
+  '<div><input class="loginDivInput smallerBecauseInfo" type="text" placeholder="API Key"><span class="inputInfo"><i class="fa fa-question fa-lg" aria-hidden="true"></i><span class="hoverText"><p>If you already have an API Key you can put it here. (Optional)</p></span></span></div>'+
+  '<button id="registerDivBtn"> Register <i class="fa fa-user-plus" aria-hidden="true"></i></button>';
+
+  addEventListenersForRegisterPage();
+}
+
 function addEventListenersForRegisterPage(){
+
   /* Declare the LoginDiv */
   let loginDiv = document.getElementById('loginDiv');
 
@@ -251,6 +327,7 @@ function addEventListenersForRegisterPage(){
   /* Create advanced fucking amazing input Checks */
   let loginInputs = document.getElementsByClassName('loginDivInput');
 
+  /* Pretend we're getting the ApiKey from somwhere awesome */
   spinIcon(loginInputs[4]);
   setTimeout(function(){
 
@@ -262,10 +339,10 @@ function addEventListenersForRegisterPage(){
     loginInputCheck(event, 2);
   });
   loginInputs[1].addEventListener('change', function(event){ // PASSWORD ONE
-    loginInputCheck(event, 8);
+    loginInputCheck(event, 5);
   });
   loginInputs[2].addEventListener('change', function(event){ // PASSWORD TWO
-    loginInputCheck(event, undefined, undefined, 'same', 'Passwords doesn\'t match.');
+    loginInputCheck(event, 5, undefined, 'same', 'Passwords doesn\'t match.');
   });
   loginInputs[3].addEventListener('change', function(event){ // EMAIL
     loginInputCheck(event);
@@ -275,33 +352,58 @@ function addEventListenersForRegisterPage(){
     loginInputCheck(event);
   });
 
-  /* Create the user with all the info specified */
 
   /* add eventListener for registerBtn */
   /* createUser(name, key, hashed, email = 'none')*/
 
   /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
+  let registerDivBtn = document.getElementById('registerDivBtn');
 
-  document.getElementById('registerDivBtn').addEventListener('click', function(){
+  registerDivBtn.addEventListener('click', function(){
 
-    verifyKey(loginInputs[4].value, loginInputs[0].value, md5(loginInputs[2].value), loginInputs[3].value, true, true);
+    /* Create variables. */
+    let username = loginInputs[0].value;
+    let password1 = loginInputs[1].value;
+    let password2 = loginInputs[2].value;
+    let email = loginInputs[3].value;
+    let inputApiKey = loginInputs[4].value;
 
-    console.log('VALUE OF INPUT[4].children[0] IS: '+loginInputs[4].value);
+    /* This function takes params:  Username, Password, Email, ApiKey */
+    if(advancedInputChecks(username, password1, password2)){
+
+      verifyUserName(username, password2, email, inputApiKey);
+
+
+    } else {
+      printMsg('Failed to create user', 'error');
+    }
+
+
     returnRegisterToLogin();
   });
 
 }
 
+
+
+function advancedInputChecks(username, password1, password2){
+  if(username.length < 3 || password1.length < 5 || password2.length < 5){
+    return false;
+  } else if(password1 != password2){
+    return false;
+  } else {
+    return true;
+  }
+
+}
 function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
 
   let eventValue = event.target.value;
 
   /* Set customCheck to true */
-  let customCheck = true;
+  let customCheck = type == undefined ? true : false;
+
   /* IF there's a customcheck in place set it first to false */
-  if(type){
-    customCheck = false;
-  }
   /* With type you can make different checks.*/
   if(type == 'same'){
     /* Make same type check */
@@ -380,7 +482,6 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   icon.children[0].style.backgroundColor = backgroundColor;
   icon.children[0].style.color = color;
   icon.children[0].style.padding = padding;
-  console.log(parent.lastChild.innerHTML);
 
 
   if(parent.lastChild.children[0]){
