@@ -331,6 +331,7 @@ input:focus {
 }
 .removeBook {
   display: inline;
+  margin: 0;
 }
 /* Image on expandedObject */
 #library > div .expandedObject > div > img {
@@ -358,10 +359,12 @@ input:focus {
 
 #library > div > .expandedObject > div button {
   border: none;
+  display: inline;
   background-color: #555;
-  padding: 7px 10px;
-  margin: 10px 3px;
+  padding: 5px 10px;
+  margin: 6px 3px;
 }
+
 #library > div > .expandedObject > div button.trashcan:hover {
   background-color: #f16060;
 }
@@ -374,7 +377,7 @@ input:focus {
 }
 
 #library > div > .expandedObject > div:last-child > div:last-child {
-  align-self: center;
+  align-self: flex-end;
 }
 
 #library > div p {
@@ -881,6 +884,7 @@ input[type="checkbox"]:checked + label {
 
 /* Nav Login */
 p.navLogin {
+  display: inline;
   font-family: Lora, sans-serif;
   font-size: 1.8em;
   border-radius: 6px;
@@ -892,7 +896,15 @@ button.navLogin {
   border: none;
   margin: 5px;
 }
-button.navLogin:hover {
+button.navLogout {
+  border: none;
+  background-color: #dddddd;
+  margin: 5px;
+  display: inline;
+  margin-left: 100px;
+  margin-right: -220px;
+}
+button.navLogin:hover, button.navLogout:hover {
   background-color: #dac292;
 }
 
@@ -973,6 +985,10 @@ button.navLogin:hover {
   background-color: #b9936c;
   display: flex;
   flex-direction: column;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 #loginDiv > input {
   padding: 10px;

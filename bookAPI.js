@@ -6,15 +6,6 @@
     updateActive();
 
 
-    if(localStorage.getItem('loggedIn') == 'true'){
-      let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
-
-      printMsg('Welcome,'+userObj.name, 'success');
-    } else {
-      printMsg('This is our welcome message!!', 'success');
-    }
-
-
     // Add a book
     const addBookBtn = document.getElementById('addBookBtn');
     // Get the button that opens the modal
@@ -154,6 +145,16 @@ function addSettingsListeners(){
   updateSettings();
 
   btnNewKey.addEventListener('click', requestKeyFromApi);
+
+  /*EventListener for retrieve all users */
+  let retrieveAllUsersBtn = document.getElementById('retrieveAllUsersBtn');
+  retrieveAllUsersBtn.addEventListener('click', function(event){
+    /* Retrieve ALL USERS & display*/
+      removeBooksFromLibrary();
+      /* retrieveUser(counter, name, id, all) */
+      retrieveUser(0, 'all', undefined, true);
+      console.log('Retrieving all users!');
+  });
 
 
   /* EventListener for fetchKey */
