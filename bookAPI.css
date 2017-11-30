@@ -842,7 +842,7 @@ input[type="checkbox"] + label {
   color: #fff;
   border-radius: 5px;
   padding: 5px 10px;
-  margin: 10px 5px;
+  margin: 10px 0px 10px 30px;
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
@@ -856,6 +856,7 @@ input[type="checkbox"]:checked + label {
 
 #settingsModalWrapper > div .inputWithButton > button, #settingsModalWrapper > div .inputWithButton > input {
   display: inline-block;
+  margin: 10px 7px 10px 16px;
 }
 
 #settingsModalWrapper > div .inputWithButton > button {
@@ -866,6 +867,16 @@ input[type="checkbox"]:checked + label {
   margin: 10px 5px;
   vertical-align: -1px
 }
+#settingsModalWrapper > div .inputWithButton > button.fullDivButton {
+  border: none;
+  background-color: #a1cf7b;
+  font-size: 0.8em;
+  padding: 12px 23px;
+  margin: 10px -50px 8px 15px;
+  vertical-align: -1px;
+  box-shadow: 1px 1px 3px #111;
+}
+
 #settingsModalWrapper > div .inputWithButton > button:hover {
   background-color: #ddd;
   color: #111;
