@@ -895,12 +895,14 @@ input[type="checkbox"]:checked + label {
 
 /* Nav Login */
 p.navLogin {
-  display: inline;
   font-family: Lora, sans-serif;
   font-size: 1.8em;
   border-radius: 6px;
   padding: 4px;
   margin: 0px;
+}
+#welcomeMsg {
+  margin: 5px;
 }
 button.navLogin {
   background-color: #dddddd;

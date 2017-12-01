@@ -14,6 +14,7 @@ function logoutUser(){
   /* Change welcomeMsg */
   let welcomeMsg = document.getElementById('welcomeMsg');
   welcomeMsg.innerHTML = 'Welcome, Guest!';
+  welcomeMsg.style.display = '';
 
   /* Remove the Logout Button */
   let parent = welcomeMsg.parentNode;
@@ -59,6 +60,8 @@ function setUpLogout(userObj){
   /* Change Welcome Title */
   let welcomeMsg = document.getElementById('welcomeMsg');
   welcomeMsg.innerHTML = 'Welcome, '+userObj.name+'!';
+  welcomeMsg.style.display = 'inline';
+  welcomeMsg.style.verticalAlign = '-5px';
 
   /* Remove login/register buttons! */
   let parent = welcomeMsg.parentNode;

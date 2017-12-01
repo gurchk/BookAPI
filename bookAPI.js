@@ -438,6 +438,24 @@ function updateSettings(){
   }
 
   /* User logged in stuff */
+  let userSettingsDiv = document.getElementById('userSettingsDiv');
+
+  if(loggedIn()){
+    let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    let nameElement = document.createElement('H4');
+    nameElement.setAttribute('userName', 'true');
+    nameElement.innerHTML = 'User: '+userObj.name;
+    nameElement.style.margin = '-18px auto 4px';
+
+    /* Check if it already exsists before appending it */
+    if(userSettingsDiv.children[1].getAttribute('userName') != undefined){
+      console.log('Not appending another child since it is already a message showing');
+    } else {
+      userSettingsDiv.insertBefore(nameElement, userSettingsDiv.children[1]);
+    }
+
+  }
 
 }
 
