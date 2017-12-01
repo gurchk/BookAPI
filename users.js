@@ -1,7 +1,85 @@
 function loggedIn(){
   return localStorage.getItem('loggedIn') == 'true';
 }
+
+function logoutUser(){
+
+  /* Printmsg */
+  printMsg('You logged out :(','success');
+  /* Set status to logged Out */
+  localStorage.setItem('loggedIn', 'false');
+  localStorage.setItem('loggedInUser', 'Guest');
+
+
+  /* Change welcomeMsg */
+  let welcomeMsg = document.getElementById('welcomeMsg');
+  welcomeMsg.innerHTML = 'Welcome, Guest!';
+
+  /* Remove the Logout Button */
+  let parent = welcomeMsg.parentNode;
+  parent.removeChild(parent.children[1]);
+
+  /* Add Login and Register buttons back! */
+  let loginBtn = document.createElement('BUTTON');
+  let registerBtn = document.createElement('BUTTON');
+
+  loginBtn.innerHTML = 'Login <i class="fa fa-sign-in"></i>';
+  loginBtn.setAttribute('ID', 'loginButtonNavLogin');
+  loginBtn.className = "navLogin";
+
+  registerBtn.innerHTML = 'Register <i class="fa fa-user-plus"></i>';
+  registerBtn.setAttribute('ID', 'registerButtonNavLogin');
+  registerBtn.className = "navLogin";
+
+
+  /* Open Login page */
+    loginBtn.addEventListener('click', function(event){
+
+      displayLogin();
+
+      /* Add eventListener to close when clicking outside */
+      addOutSideClick();
+
+      addEventListenersForLoginPage();
+    });
+
+    /* Open register Page */
+    registerBtn.addEventListener('click', function() {
+      displayLogin();
+      addOutSideClick();
+      setUpRegister();
+    });
+
+    parent.appendChild(loginBtn);
+    parent.appendChild(registerBtn);
+
+}
+
+function setUpLogout(userObj){
+  /* Change Welcome Title */
+  let welcomeMsg = document.getElementById('welcomeMsg');
+  welcomeMsg.innerHTML = 'Welcome, '+userObj.name+'!';
+
+  /* Remove login/register buttons! */
+  let parent = welcomeMsg.parentNode;
+  parent.removeChild(parent.children[1]);
+  parent.removeChild(parent.children[1]);
+
+  /* Add logout button */
+  let logoutButton = document.createElement('BUTTON');
+  logoutButton.innerHTML = 'Logout <i class="fa fa-sign-out"></i>'
+  logoutButton.className = 'navLogout';
+  parent.style.width = '100%';
+  parent.appendChild(logoutButton);
+
+  /* Add eventListener to the button */
+  logoutButton.addEventListener('click', logoutUser);
+}
+
 window.addEventListener('load', function (event) {
+
+
+
 
 /* Login stuff! */
 
@@ -12,23 +90,8 @@ if(loggedIn()){
     /* Print a message! */
     printMsg('Welcome, '+ userObj.name+'!', 'success');
 
-    /* Change Welcome Title */
-    let welcomeMsg = document.getElementById('welcomeMsg');
-    welcomeMsg.innerHTML = 'Welcome, '+userObj.name+'!';
-
-    /* Remove login/register buttons! */
-    let parent = welcomeMsg.parentNode;
-    parent.removeChild(parent.children[1]);
-    parent.removeChild(parent.children[1]);
-
-    /* Add logout button */
-    let logoutButton = document.createElement('BUTTON');
-    logoutButton.innerHTML = 'Logout <i class="fa fa-sign-out"></i>'
-    logoutButton.className = 'navLogout';
-    parent.style.width = '100%';
-    parent.appendChild(logoutButton);
-  }
-
+    setUpLogout(userObj);
+}
 
 /* EventListeners */
 
@@ -273,6 +336,8 @@ function loginUser(userObj){
   console.log('Logged in as user: '+userObj);
   localStorage.setItem('loggedIn', 'true');
   localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+
+  setUpLogout(userObj);
 
   saveKey(userObj.key);
   let loginDiv = document.getElementById('loginDiv');
