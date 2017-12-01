@@ -2,6 +2,7 @@ function loggedIn(){
   return localStorage.getItem('loggedIn') == 'true';
 }
 
+
 function logoutUser(){
 
   /* Printmsg */
@@ -34,6 +35,7 @@ function logoutUser(){
 
 
   /* Open Login page */
+  if(loginBtn != undefined){
     loginBtn.addEventListener('click', function(event){
 
       displayLogin();
@@ -51,12 +53,21 @@ function logoutUser(){
       setUpRegister();
     });
 
+  }
+
+
+
+
     parent.appendChild(loginBtn);
     parent.appendChild(registerBtn);
+
+    /* Update Settings */
+    updateSettings();
 
 }
 
 function setUpLogout(userObj){
+
   /* Change Welcome Title */
   let welcomeMsg = document.getElementById('welcomeMsg');
   welcomeMsg.innerHTML = 'Welcome, '+userObj.name+'!';
@@ -65,8 +76,11 @@ function setUpLogout(userObj){
 
   /* Remove login/register buttons! */
   let parent = welcomeMsg.parentNode;
-  parent.removeChild(parent.children[1]);
-  parent.removeChild(parent.children[1]);
+  if(document.getElementById('loginButtonNavLogin') != undefined){
+    parent.removeChild(parent.children[1]);
+    parent.removeChild(parent.children[1]);
+  }
+
 
   /* Add logout button */
   let logoutButton = document.createElement('BUTTON');
@@ -80,9 +94,6 @@ function setUpLogout(userObj){
 }
 
 window.addEventListener('load', function (event) {
-
-
-
 
 /* Login stuff! */
 
@@ -101,7 +112,6 @@ if(loggedIn()){
 let userModal1 = document.getElementsByClassName('userModal')[0];
 let userModal2 = document.getElementsByClassName('userModal')[1];
 let userModal3 = document.getElementsByClassName('userModal')[2];
-
   /* Create User Button EVENTLISTENER*/
   let createUserBtn = document.getElementById('createUserBtn');
   let retrieveUserBtn = document.getElementById('retrieveUserBtn');
@@ -221,6 +231,7 @@ let userModal3 = document.getElementsByClassName('userModal')[2];
   let registerBtn = document.getElementById('registerButtonNavLogin');
 
   /* Open Login page */
+  if(loginBtn != undefined){
     loginBtn.addEventListener('click', function(event){
 
       displayLogin();
@@ -236,9 +247,54 @@ let userModal3 = document.getElementsByClassName('userModal')[2];
       setUpRegister();
     });
 
+  }
+
     addEventListenersForLoginPage();
   /* End of callback */
 });
+
+function modifyUser(userObj, successMessage = 'Success', failedMessage = 'failed'){
+
+  if(userObj == undefined){
+    printMsg('UserObject is not defined', 'error');
+    return;
+  }
+
+  /* Start by getting the ID of the user with the userID(guid) */
+  recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key='+retrieveDatabaseKey())
+  .then(responseData => {
+    console.log(responseData);
+    /* Iterate through the responseData */
+    for(let data of responseData.data){
+      /* Parse the Author */
+      let userData = JSON.parse(data.author);
+      /* Return the ID of the data where the USERID matches the responseData userID*/
+      if(userObj.userID == undefined){
+        printMsg('User of the old ObjectModel was found.', 'warning');
+        /* Give them a guid */
+        userObj.userID = guid();
+        return data.id;
+      } else if(userObj.userID == userData.userID){
+        /* We found the user we want to edit! Return their ID */
+        return data.id;
+      }
+    }
+
+  }).then(dataID => {
+    console.log(dataID);
+    /* Modify the user here */
+    /* stringify the object */
+    let authorInput = JSON.stringify(userObj);
+      recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key='+retrieveDatabaseKey()+'&id='+dataID+'&title=user'+'&author='+authorInput)
+      .then(responseData => {
+        printMsg(successMessage,'success');
+      }).catch(responseData => {
+        printMsg(failedMessage,'error');
+      });
+  });
+
+
+}
 
 var recursiveFetch = (url, limit = 10) =>
   fetch(url)
@@ -336,7 +392,7 @@ function loginUser(userObj){
 
   /* When the user actually logs in! */
   printMsg('Welcome ' + userObj.name + '!','success');
-  console.log('Logged in as user: '+userObj);
+  console.log('Logged in as user: ',userObj);
   localStorage.setItem('loggedIn', 'true');
   localStorage.setItem('loggedInUser', JSON.stringify(userObj));
 
@@ -346,6 +402,7 @@ function loginUser(userObj){
   let loginDiv = document.getElementById('loginDiv');
   loginDiv.parentNode.parentNode.style.display = 'none';
   updateSettings();
+
 }
 
 
@@ -467,7 +524,7 @@ function advancedInputChecks(username, password1, password2){
 function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
 
   let eventValue = event.target.value;
-
+  let settings = false;
   /* Set customCheck to true */
   let customCheck = type == undefined ? true : false;
 
@@ -476,35 +533,46 @@ function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
   if(type == 'same'){
     /* Make same type check */
     if(event.target.parentNode.previousSibling.children[0].value == eventValue){
+
       /* If the check passes. Set customCheck to true! */
       customCheck = true;
     }
   }
+  if(type == 'settingsChangePassword'){
+      settings = 'settings';
+      customCheck = true;
+  } else if(type == 'settingsChangePasswordSame'){
+    console.log(eventValue);
+    if(event.target.parentNode.previousSibling.children[0].value == eventValue){
+      customCheck = true;
+    }
+    settings = 'settings';
+  }
 
-  /* addLoginInputIcon(inputObj, type, hoverMessage, backgroundColor = '#222', color = '#fff' */
+  /* addLoginInputIcon(inputObj, type, hoverMessage, backgroundColor = '#222', color = '#fff', inputType = 'default' */
 
   /* Make some checks. */
   if (eventValue.length < minLength) {
 
   /* Field less than 3 characters */
-  addLoginInputIcon(event.target, 'error', 'Input is too short');
+  addLoginInputIcon(event.target, 'error', 'Input is too short', undefined, undefined, settings);
 
   } else if (eventValue.length > maxLength) {
 
     /* Field longer than 3 characters */
-    addLoginInputIcon(event.target, 'error', 'Input is too long');
+    addLoginInputIcon(event.target, 'error', 'Input is too long', undefined, undefined, settings);
 
   } else if(!customCheck){
     /* Field is good! */
-    addLoginInputIcon(event.target, 'error', errorMsg);
+    addLoginInputIcon(event.target, 'error', errorMsg, undefined, undefined, settings);
 
   } else {
-    addLoginInputIcon(event.target, 'success');
+    addLoginInputIcon(event.target, 'success', undefined, undefined, undefined, settings);
   }
 
 }
 
-function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', color = '#fff'){
+function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', color = '#fff', inputType = 'default'){
 
   /* Start by declaring some variables */
   let inputField = inputObj; // InputField or inputObj is the text field.
@@ -513,26 +581,50 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   let iconType = 'fa-question fa-lg'; // Default iconType is a question mark.
   let padding = '7px 10px 6.4px';
   let rbc, rc, hoverMessage = "";
+  icon.className = 'inputCheck';
   if(backgroundColor != '#222'){
     rbc = backgroundColor;
   }
   if(color != '#fff'){
     rc = color;
   }
+
+  console.log('Input type is: '+inputType);
   /* Styling for type SUCCESS */
   if(type == 'success'){
     iconType = 'fa-check';
-    padding = '6.4px 8.6px 6.5px';
     backgroundColor = '#599965';
+
+    /* If this is in settings */
+    if(inputType == 'settings'){
+      padding = '7.4px 10.4px 9.5px';
+    } else {
+      padding = '6.4px 8.6px 6.5px';
+    }
 
   /* Styling for type ERROR */
   } else if (type == 'error'){
+
     iconType = 'fa-times';
-    padding = '7px 10px 6.5px';
     backgroundColor = '#d64c4c';
+
+    /* If this is in settings */
+    if(inputType == 'settings'){
+      padding = '9.1px 12px 8.5px';
+    } else {
+      padding = '7px 10px 6.5px';
+    }
+
   } else if (type == 'spin'){
+
+    /* If this is in settings */
+    if(inputType == 'settings'){
+      padding = '6.4px 8.2px 7px';
+    } else {
+      padding = '6.4px 8.2px 7px';
+    }
+
     iconType = 'fa-spinner fa-spin';
-    padding = '6.4px 8.2px 7px';
     backgroundColor = '#6e9578';
   }
 
@@ -546,7 +638,7 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
     color = rc;
   }
 
-  icon.innerHTML = '<span class="inputNoColor"><i class="fa '+iconType+' " aria-hidden="true"></i>'+hoverMessage+'</span>';
+  icon.innerHTML = '<span class="inputCheck inputNoColor"><i class="fa '+iconType+' " aria-hidden="true"></i>'+hoverMessage+'</span>';
   icon.children[0].style.backgroundColor = backgroundColor;
   icon.children[0].style.color = color;
   icon.children[0].style.padding = padding;
@@ -555,7 +647,6 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   if(parent.lastChild.children[0]){
     if(parent.lastChild.children[0].className.includes('inputNoColor')){
       parent.removeChild(parent.lastChild);
-      printMsg('Removed lastchild!','success');
     }
   }
   parent.appendChild(icon);
@@ -614,6 +705,7 @@ function createUser(name, key, hashed, email = 'none'){
   }
   /* Skapar användaren */
   let userObject = {
+    userID: guid(),
     name: name,
     key: key,
     password: hashed,
@@ -806,7 +898,7 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                   Convert userData to JavaScript object
 
                   */
-
+                  console.log(responseData.data[i]);
                   let userObj= JSON.parse(responseData.data[i].author);
                   let userID = responseData.data[i].id;
 

@@ -24,11 +24,6 @@
         closeBtn.addEventListener('click', function (event) {
             event.target.parentNode.parentNode.parentNode.style.display = 'none';
 
-            if (event.target.parentNode.parentNode.parentNode.className == 'userModal') {
-                createUserBtn.className = '';
-                retrieveUserBtn.className = '';
-                removeUserById.className = '';
-            }
         });
     }
 
@@ -138,6 +133,8 @@ function addSettingsListeners(){
   let userSettingsDiv = document.getElementById('userSettingsDiv');
 
   /* Add events for Key settings */
+  /* -------------------------- */
+
   console.log(keySettingsDiv.innerHTML);
   let inputNewKey = keySettingsDiv.children[1].children[0];
   let btnNewKey = keySettingsDiv.children[1].children[1];
@@ -146,15 +143,6 @@ function addSettingsListeners(){
 
   btnNewKey.addEventListener('click', requestKeyFromApi);
 
-  /*EventListener for retrieve all users */
-  let retrieveAllUsersBtn = document.getElementById('retrieveAllUsersBtn');
-  retrieveAllUsersBtn.addEventListener('click', function(event){
-    /* Retrieve ALL USERS & display*/
-      removeBooksFromLibrary();
-      /* retrieveUser(counter, name, id, all) */
-      retrieveUser(0, 'all', undefined, true);
-      console.log('Retrieving all users!');
-  });
 
 
   /* EventListener for fetchKey */
@@ -166,6 +154,19 @@ function addSettingsListeners(){
     saveKey(inputFetchkey.value);
   });
 
+  /* Import library from other key */
+  let importKeyInput = document.getElementById('importKeyInput');
+  let importKeyBtn = document.getElementById('importKeyBtn');
+
+  importKeyBtn.addEventListener('click', function(){
+
+    if(importKeyInput.value != ""){
+      importLibrary(importKeyInput.value);
+    } else {
+      printMsg('Empty field', 'error');
+    }
+
+  });
 
 
   /* Add events for API Settings */
@@ -202,6 +203,126 @@ function addSettingsListeners(){
   });
 
   /* Add events for User Settings */
+  /* ---------------------------- */
+
+
+  /*EventListener for retrieve all users */
+  let retrieveAllUsersBtn = document.getElementById('retrieveAllUsersBtn');
+  retrieveAllUsersBtn.addEventListener('click', function(event){
+    /* Retrieve ALL USERS & display*/
+      removeBooksFromLibrary();
+      /* retrieveUser(counter, name, id, all) */
+      retrieveUser(0, 'all', undefined, true);
+      console.log('Retrieving all users!');
+  });
+
+    /* Add eventListener to LoginBtn */
+    let settingsLoginBtn = document.getElementById('settingsLoginBtn');
+    if(settingsLoginBtn != undefined){
+      settingsLoginBtn.addEventListener('click', function(event){
+
+        displayLogin();
+
+        /* Add eventListener to close when clicking outside */
+        addOutSideClick();
+
+        addEventListenersForLoginPage();
+      });
+    }
+
+
+    /* Add eventListener to changePasswordbtn */
+    let changePasswordDiv = document.getElementsByClassName('inputWithButton changePasswordDiv');
+    let changePasswordBtn = changePasswordDiv[0].children[0];
+
+    if(changePasswordBtn != undefined){
+      let parent = changePasswordBtn.parentNode;
+
+      /* Defined input variables. */
+      let inputOne = parent.previousSibling.previousSibling.previousSibling.children[0];
+      let inputTwo = inputOne.parentNode.nextSibling.children[0];
+      let inputThree = inputTwo.parentNode.nextSibling.children[0];
+
+
+
+      /* settingsChangePassword */
+      inputOne.addEventListener('keyup', function(event){
+        loginInputCheck(event, 5, 32, 'settingsChangePassword');
+      });
+      inputTwo.addEventListener('keyup', function(event){
+        loginInputCheck(event, 5, 32, 'settingsChangePassword');
+      });
+      inputThree.addEventListener('keyup', function(event){
+        loginInputCheck(event, 5, 32, 'settingsChangePasswordSame', 'Passwords do not match!');
+      });
+
+      /* Add the EventListener */
+      changePasswordBtn.addEventListener('click', function(){
+
+        let loggedInUser = localStorage.getItem('loggedInUser');
+        console.log('Current user:', loggedInUser);
+
+        /* Parse the user */
+        loggedInUser = JSON.parse(loggedInUser);
+
+
+        /* Make some advanced checks */
+        if(inputOne.value == "" || inputTwo.value == "" || inputThree.value == "" ){
+          printMsg('Atleast one empty field', 'error');
+        } else if(inputTwo.value != inputThree.value){
+          printMsg('Password doesn\'t match', 'error');
+        } else if(inputTwo.value.length < 5){
+          printMsg('New password too short', 'error');
+        } else if(md5(inputOne.value) != loggedInUser.password){
+          printMsg('Wrong password','error');
+        } else if(md5(inputOne.value) == loggedInUser.password){
+          loggedInUser.password = md5(inputTwo.value);
+          modifyUser(loggedInUser, 'Password changed!', 'Failed to change password');
+        }
+      });
+    }
+    /* End of changePasswordbtn */
+
+    /* Add eventListener for setApiKeyBtn */
+
+    let changeApiKeyDiv = document.getElementById('changeApiKeyDiv');
+    let changeApiKeyInput = changeApiKeyDiv.children[0];
+    let changeApiKeyBtn = changeApiKeyDiv.children[1];
+
+    changeApiKeyBtn.addEventListener('click', function(){
+      let loggedInUser = localStorage.getItem('loggedInUser');
+
+      /* Parse the user */
+      loggedInUser = JSON.parse(loggedInUser);
+
+      if(changeApiKeyInput.value == ""){
+        printMsg('Empty field.', 'error');
+      } else {
+        verifyUserKey(changeApiKeyInput.value, loggedInUser);
+        changeApiKeyInput.value = "";
+      }
+    });
+
+}
+
+function verifyUserKey(key, userObj){
+  recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key='+key)
+  .then(response => {
+    if(response.status = 'success'){
+      userObj.key = key;
+      modifyUser(userObj);
+
+      localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+
+      let changeApiKeyDiv = document.getElementById('changeApiKeyDiv');
+      let changeApiKeyInput = changeApiKeyDiv.children[0];
+      changeApiKeyInput.setAttribute('placeholder', userObj.key);
+    }
+  })
+  .catch(response => {
+    printMsg('Bad Api key', 'error');
+  })
+
 }
 
 function removeSettingsListeners(){
@@ -238,6 +359,25 @@ function changeLibraryHeader(left, middle, right) {
         console.log('Changed libraryHeader to: ' + left + ' - ' + middle + ' - ' + right);
     }
 
+}
+
+function importLibrary(key){
+
+  recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key='+key)
+  .then(response => {
+    if(response.status == 'success'){
+
+      /* function addBook(counter, title, author, dbApiKey) */
+      console.log(response.data);
+      let newKey = retrieveKey();
+      for(let data of response.data){
+        addBook(0, data.title, data.author, newKey);
+      }
+    }
+  })
+  .catch(badResponse => {
+    printMsg('Bad Api key', 'error');
+  });
 }
 
 function displayStats() {
@@ -440,8 +580,10 @@ function updateSettings(){
   /* User logged in stuff */
   let userSettingsDiv = document.getElementById('userSettingsDiv');
 
+  let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+
   if(loggedIn()){
-    let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+
 
     let nameElement = document.createElement('H4');
     nameElement.setAttribute('userName', 'true');
@@ -455,6 +597,100 @@ function updateSettings(){
       userSettingsDiv.insertBefore(nameElement, userSettingsDiv.children[1]);
     }
 
+    /* Change margin to the retrieveAllUsersBtn */
+    let retrieveAllUsersBtn = document.getElementById('retrieveAllUsersBtn');
+    retrieveAllUsersBtn.style.margin = '10px 6px 8px 16px';
+
+    /* Check if passwordDivs exist. If not, append them! */
+    if(document.getElementsByClassName('inputWithButton passwordDiv').length == 0){
+      let oldPw = document.createElement('DIV');
+      oldPw.innerHTML = '<input type="password" placeholder="Old passsword">';
+      oldPw.className = 'inputWithButton passwordDiv';
+
+      let newPw1 = document.createElement('DIV');
+      newPw1.innerHTML = '<input type="password" placeholder="New passsword">';
+      newPw1.className = 'inputWithButton passwordDiv';
+
+      let newPw2 = document.createElement('DIV');
+      newPw2.innerHTML = '<input type="password" placeholder="Repeat passsword">';
+      newPw2.className = 'inputWithButton passwordDiv';
+
+      userSettingsDiv.appendChild(oldPw);
+      userSettingsDiv.appendChild(newPw1);
+      userSettingsDiv.appendChild(newPw2);
+
+      /* Add Change Password button */
+      let changePasswordDiv = document.createElement('DIV');
+      changePasswordDiv.innerHTML = '<button class="fullDivButton">Change Password</button>';
+      changePasswordDiv.className = 'inputWithButton changePasswordDiv';
+      changePasswordDiv.style.margin = '-8px 3px 0px 10px';
+      userSettingsDiv.appendChild(changePasswordDiv);
+
+    }
+
+    /* Remove login Button */
+    let settingsLoginBtn = document.getElementById('settingsLoginBtn');
+    if(settingsLoginBtn != undefined){
+      userSettingsDiv.removeChild(settingsLoginBtn);
+    }
+
+    /* Add option to edit your APIKEY only if it doesn't exist.*/
+    if(document.getElementById('changeApiKeyDiv') == undefined){
+      let changeApiKeyDiv = document.createElement('DIV');
+      changeApiKeyDiv.innerHTML = '<input type="text" placeholder="Change ApiKey ('+userObj.key+')"><button>Set key</button>'
+      changeApiKeyDiv.className = 'inputWithButton';
+      changeApiKeyDiv.setAttribute('id', 'changeApiKeyDiv');
+
+      /* Append it */
+      userSettingsDiv.appendChild(changeApiKeyDiv);
+    } else {
+      /* Update the key */
+      let changeApiKeyDiv = document.getElementById('changeApiKeyDiv');
+      changeApiKeyDiv.children[0].setAttribute('placeholder', userObj.key);
+    }
+
+    /* No user is logged in! */
+  } else {
+
+    /* remove userName from Settings */
+    if(userSettingsDiv.children[1].getAttribute('userName') != undefined){
+      userSettingsDiv.removeChild(userSettingsDiv.children[1]);
+    }
+
+
+    /* Change margin to the retrieveAllUsersBtn */
+    let retrieveAllUsersBtn = document.getElementById('retrieveAllUsersBtn');
+    retrieveAllUsersBtn.style.margin = '';
+
+
+    /* remove passwordDivs from Settings */
+    let passwordDivs = document.getElementsByClassName('inputWithButton passwordDiv');
+
+    for(let i = passwordDivs.length-1; i >= 0; i--){
+      passwordDivs[i].parentNode.removeChild(passwordDivs[i]);
+    }
+
+
+    /* Remove changePasswordDiv */
+    if(document.getElementsByClassName('inputWithButton changePasswordDiv').length != 0){
+      userSettingsDiv.removeChild(document.getElementsByClassName('inputWithButton changePasswordDiv')[0]);
+    }
+
+    /* Remove changeApiKeyDiv */
+    if(document.getElementById('changeApiKeyDiv') != undefined){
+      userSettingsDiv.removeChild(document.getElementById('changeApiKeyDiv'));
+    }
+
+    /* Add a login Button? Only if it doesn't exist! */
+    if(document.getElementById('settingsLoginBtn') == undefined){
+      let settingsLoginBtn = document.createElement('DIV');
+      settingsLoginBtn.innerHTML = '<button class="fullDivButton">Login to view</button>'
+      settingsLoginBtn.className = 'inputWithButton';
+      settingsLoginBtn.setAttribute('id', 'settingsLoginBtn')
+      userSettingsDiv.appendChild(settingsLoginBtn);
+
+
+    }
   }
 
 }
