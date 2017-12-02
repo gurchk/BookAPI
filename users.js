@@ -697,21 +697,6 @@ function retrieveDatabaseKey(){
   return localStorage.getItem('databaseKey');
 }
 
-/* Stats Database */
-function createStatsKey(){
-  localStorage.setItem('statsDatabaseKey', 'csH2g');
-}
-
-function retrieveStatsKey(){
-  return localStorage.getItem('statsDatabaseKey');
-}
-function setStatsKey(key){
-  if(key != "" && key.length == 5){
-    localStorage.setItem('statsDatabaseKey', key);
-  } else {
-    printMsg('Bad stats key', 'error');
-  }
-}
 
 /* Create user function */
 function createUser(name, key, hashed, email = 'none'){
