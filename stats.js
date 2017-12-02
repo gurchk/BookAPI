@@ -5,7 +5,7 @@ window.addEventListener('load', function(){
 function increaseStat(type = 'success', message = 'None specified'){
 
   let reqList = localStorage.getItem('requestsList');
-  if(reqList != undefined){
+  if(reqList == undefined){
     let obj = {
       id: guid(),
       type: 'First',
