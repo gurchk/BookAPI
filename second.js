@@ -15,7 +15,9 @@
       //retrieveBooks(0);
 
       /* End of callback */
+      //createStatsObject();
   });
+
 
   /* Adding eventListeners to the buttons */
   function btnAddEventListeners(listItem) {
@@ -555,6 +557,7 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
 
       /* Change the headers */
       changeLibraryHeader('ID', 'Title', 'Author');
+
       if (counter > 10) {
           printMsg('Failed after 10 retries.', 'error');
           return;
@@ -572,27 +575,22 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
                   let responseData = JSON.parse(retrieveBooksRequest.responseText);
                   if (responseData.status == "error") {
                       /* Try to retrieve books again, plus one to counter */
-
                       retrieveBooks(counter + 1);
 
                       /* Print errormessage */
                       console.log(responseData.message);
-                      console.log('Error - Log in if');
                       increaseFailed();
+                      increaseStat('failed', responseData.message);
                   } else {
 
                       /* THE REQUEST IS SUCCESSFUL, WE HAVE RETRIEVED THE DATA */
-
-                      console.log('Success - Log in else');
                       /* If the status is success, create JavaScript object */
                       let responseData = JSON.parse(retrieveBooksRequest.responseText);
-                      console.log('Length of responsedata.length is: ' + responseData.data.length);
 
                       /* Iterate through JavaScript object with for loop */
                       let userCount = 0;
                       let bookCount = 0;
                       for (let i = 0; i < responseData.data.length; i++) {
-                          console.log('Calling displayBooks function for the ' + (i + 1) + 'th time.');
 
                           /* If the JavaScript data is a user. Ignore it! */
                           if (responseData.data[i].title != 'user') {
@@ -602,9 +600,9 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
                               userCount++;
                           }
                       }
-                      console.log('Number of users in the api:' + userCount);
                       console.log(retrieveBooksRequest.status);
                       increaseSuccess();
+                      increaseStat('success', 'Retrieved books');
                       printMsg('Successfully retrieved ' + bookCount + ' book(s) on the ' + (counter + 1) + 'th try.', 'success');
 
                       if (bookCount == 0) {
@@ -686,9 +684,11 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
 
                   if (responseData.status == 'error') {
                       increaseFailed();
+                      increaseStat('failed', responseData.message);
                       return editBook(bookID, title, author, counter + 1);
                   } else {
                       increaseSuccess();
+                      increaseStat('success', 'Edited book');
                       /* The request was successful! */
                       printMsg('Edit book request was successful', 'success');
                   }
@@ -752,10 +752,12 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
                   responseData = JSON.parse(removeBookRequest.responseText);
 
                   if (responseData.status == 'error') {
+                    increaseStat('failed', responseData.message);
                       console.log(responseData.message);
                       return removeBookFromApi(bookID, counter + 1, user);
 
                   } else {
+                    increaseStat('success', 'Removed book from the api');
                       if (user) {
                           printMsg('User removed from the database', 'success');
                       } else {
@@ -775,7 +777,7 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
 
   /* Statistics functions for API-requests. */
 
-  function increaseSuccess() {
+  function increaseSuccess(message, time) {
       let storageRequests = localStorage.getItem('successRequests');
 
       if (storageRequests == undefined || isNaN(storageRequests)) {
@@ -783,15 +785,49 @@ function addReadMoreListeners(bookObj, bookID, veryOldListItem){
       } else {
           localStorage.setItem('successRequests', parseInt(storageRequests) + 1);
       }
+
+      if(retrieveStatsKey() != undefined){
+        if(message != undefined || time != undefined){
+          /* Add stats to api-database */
+          addStat(message, time, 'success');
+        }
+      }
   }
 
-  function increaseFailed() {
+  function increaseFailed(message, time) {
       let storageRequests = localStorage.getItem('failedRequests');
       if (storageRequests == undefined || isNaN(storageRequests)) {
           localStorage.setItem('failedRequests', 1);
       } else {
           localStorage.setItem('failedRequests', parseInt(storageRequests) + 1);
       }
+
+      if(retrieveStatsKey() != undefined){
+        if(message != undefined || time != undefined){
+          /* Add stats to api-database */
+          addStat(message, time, 'failed');
+        }
+      }
+  }
+
+  function createStatsObject(){
+
+    let statsObject = {
+      failed: 0,
+      successful: 0,
+    }
+
+    let strObj = JSON.stringify(statsObject);
+
+    recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key='+retrieveStatsKey()+'&title=stats&author='+strObj)
+    .then(response => {
+      increaseStat('success', 'Created statsObject in the API');
+      printMsg('Stats added to database');
+    })
+    .catch(responseError => {
+      increaseStat('failed', response.message);
+      console.log(response.message);
+    })
   }
 
   function totalRequests() {

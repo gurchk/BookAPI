@@ -2,6 +2,8 @@ function loggedIn(){
   return localStorage.getItem('loggedIn') == 'true';
 }
 
+/* Create StatsKey */
+createStatsKey();
 
 function logoutUser(){
 
@@ -264,6 +266,7 @@ function modifyUser(userObj, successMessage = 'Success', failedMessage = 'failed
   recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key='+retrieveDatabaseKey())
   .then(responseData => {
     console.log(responseData);
+    increaseStat('success', responseData.status);
     /* Iterate through the responseData */
     for(let data of responseData.data){
       /* Parse the Author */
@@ -289,6 +292,7 @@ function modifyUser(userObj, successMessage = 'Success', failedMessage = 'failed
       .then(responseData => {
         printMsg(successMessage,'success');
       }).catch(responseData => {
+        increaseStat('failed');
         printMsg(failedMessage,'error');
       });
   });
@@ -318,6 +322,7 @@ function verifyUserName(username, password, email, inputApiKey){
   recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=' + retrieveDatabaseKey())
     .then(responseData => {
       let found = false;
+      increaseStat('success');
       for(let dataObj of responseData.data){
         let userObj = JSON.parse(dataObj.author);
 
@@ -692,6 +697,22 @@ function retrieveDatabaseKey(){
   return localStorage.getItem('databaseKey');
 }
 
+/* Stats Database */
+function createStatsKey(){
+  localStorage.setItem('statsDatabaseKey', 'csH2g');
+}
+
+function retrieveStatsKey(){
+  return localStorage.getItem('statsDatabaseKey');
+}
+function setStatsKey(key){
+  if(key != "" && key.length == 5){
+    localStorage.setItem('statsDatabaseKey', key);
+  } else {
+    printMsg('Bad stats key', 'error');
+  }
+}
+
 /* Create user function */
 function createUser(name, key, hashed, email = 'none'){
 
@@ -733,6 +754,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
     xhr.onreadystatechange = function(){
       if(xhr.responseText.toString().includes('Bad API key')){
         bad = true;
+        increaseStat('failed');
       }
 
       if(xhr.readyState === 4 && bad){
@@ -745,6 +767,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
         } else if (setKey){
           printMsg('Active key changed to: ' + key, 'success');
           localStorage.setItem('apiKey', key);
+          increaseStat('success');
         }
         updateSettings();
       }
@@ -873,12 +896,13 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
               /* Print errormessage */
               console.log(responseData.message);
               increaseFailed();
+              increaseStat('failed');
               /* Try to retrieve user again, plus one to counter */
               return retrieveUser((counter+1), name, id, all, hashedPassword, login, precise);
 
             } else {
               /* THE REQUEST IS SUCCESSFUL, WE HAVE RETRIEVED THE DATA */
-
+              increaseStat('success');
               /* Iterate through JavaScript object with for loop */
               let userCount = 0;
               let found = false;

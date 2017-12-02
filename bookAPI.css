@@ -290,6 +290,22 @@ input:focus {
     padding: 20px;
     margin: 0px;
 }
+#library > div.detailedHeader {
+    display: flex;
+    position: relative;
+    flex: 2 2 auto;
+    padding: 20px;
+    margin: 0px;
+    justify-content: center;
+    border-bottom: 2px solid #777;
+}
+#library > div.detailedHeader > h3 {
+  color: #333;
+  font-weight: normal;
+  font-size: 1.4em;
+  margin: 0;
+  padding: 0;
+}
 
 #library > div > .expandedObject {
   display: flex;
@@ -394,12 +410,12 @@ input:focus {
     border-top-left-radius: 5px;
 }
 
-#library > div:nth-child(odd) {
+#library > div:nth-child(odd):not(.detailedHeader) {
     background-color: #aaa;
     color: #111;
 }
 
-#library > div:nth-child(even) {
+#library > div:nth-child(even):not(.detailedHeader) {
     background-color: #ddd;
     color: #333;
 }
@@ -883,10 +899,18 @@ input[type="checkbox"]:checked + label {
   background-color: #becf7b;
   font-size: 0.8em;
   padding: 12px 0px;
+  max-width: 200px;
+  align-self: center;
   margin: 10px 5px 8px 5px;
   vertical-align: -1px;
   box-shadow: 1px 1px 3px #111;
   width: 100%;
+}
+.detailedHeader:nth-child(odd) {
+  background-color: #dcc79c;
+}
+.detailedHeader:nth-child(even) {
+  background-color: #e6e2d3;
 }
 
 #settingsModalWrapper > div .inputWithButton > button:hover {

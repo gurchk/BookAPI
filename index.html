@@ -19,6 +19,7 @@
     <script src="users.js"></script>
     <script src="md5.js"></script>
     <script src="getBook.js"></script>
+    <script src="stats.js"></script>
 </head>
 
 <body>
@@ -77,7 +78,7 @@
                       <div id="keySettingsDiv">
                         <h3>Key Settings</h3>
                         <div class="inputWithButton">
-                          <input type="text" placeholder="Inventory key.."><button>New key</button>
+                          <input type="text" placeholder="Active key"><button>New key</button>
                         </div>
                         <div class="inputWithButton">
                           <input type="text" placeholder="Retrieve inventory"><button>Set key</button>
@@ -103,6 +104,12 @@
                         </div>
                         <div class="inputWithButton">
                           <input id="importStatsInput" type="text" placeholder="Import stats"><button id="importStatsBtn">Import</button>
+                        </div>
+                        <div class="inputWithButton">
+                          <button class="fullDivButton" id="exportStatsBtn">Export local stats</button>
+                        </div>
+                        <div class="inputWithButton">
+                          <input id="setStatsInput" type="text" placeholder="Set stats database"><button id="setStatsBtn">Set Key</button>
                         </div>
                       </div>
                       <div id="userSettingsDiv">
