@@ -92,7 +92,9 @@ function requestKeyFromApi(){
             //logActive.innerHTML = ourNiceKey.key;
             if(responseData != null || responseData != undefined){
               saveKey(responseData.key);
+              increaseStat('success');
             } else {
+              increaseStat('failed');
               printMsg('Failed to require a API Key','error');
             }
         }
@@ -135,7 +137,6 @@ function addSettingsListeners(){
   /* Add events for Key settings */
   /* -------------------------- */
 
-  console.log(keySettingsDiv.innerHTML);
   let inputNewKey = keySettingsDiv.children[1].children[0];
   let btnNewKey = keySettingsDiv.children[1].children[1];
 
@@ -202,6 +203,20 @@ function addSettingsListeners(){
 
   });
 
+  /* Import Stats */
+
+  /* Export Local Stats */
+  let exportStatsInput = document.getElementById('exportStatsInput');
+  let exportStatsBtn = document.getElementById('exportStatsBtn');
+  let parent = exportStatsBtn.parentNode;
+  parent.style.justifyContent = 'center';
+  exportStatsBtn.addEventListener('click', function(){
+
+    exportLocalStats();
+
+  });
+
+
   /* Add events for User Settings */
   /* ---------------------------- */
 
@@ -233,9 +248,10 @@ function addSettingsListeners(){
 
     /* Add eventListener to changePasswordbtn */
     let changePasswordDiv = document.getElementsByClassName('inputWithButton changePasswordDiv');
-    let changePasswordBtn = changePasswordDiv[0].children[0];
+    let changePasswordBtn = changePasswordDiv[0];
 
     if(changePasswordBtn != undefined){
+      changePasswordBtn = changePasswordBtn.children[0];
       let parent = changePasswordBtn.parentNode;
 
       /* Defined input variables. */
@@ -286,23 +302,26 @@ function addSettingsListeners(){
     /* Add eventListener for setApiKeyBtn */
 
     let changeApiKeyDiv = document.getElementById('changeApiKeyDiv');
-    let changeApiKeyInput = changeApiKeyDiv.children[0];
-    let changeApiKeyBtn = changeApiKeyDiv.children[1];
 
-    changeApiKeyBtn.addEventListener('click', function(){
-      let loggedInUser = localStorage.getItem('loggedInUser');
+    if(changeApiKeyDiv != undefined){
 
-      /* Parse the user */
-      loggedInUser = JSON.parse(loggedInUser);
+      let changeApiKeyInput = changeApiKeyDiv.children[0];
+      let changeApiKeyBtn = changeApiKeyDiv.children[1];
 
-      if(changeApiKeyInput.value == ""){
-        printMsg('Empty field.', 'error');
-      } else {
-        verifyUserKey(changeApiKeyInput.value, loggedInUser);
-        changeApiKeyInput.value = "";
-      }
-    });
+      changeApiKeyBtn.addEventListener('click', function(){
+        let loggedInUser = localStorage.getItem('loggedInUser');
 
+        /* Parse the user */
+        loggedInUser = JSON.parse(loggedInUser);
+
+        if(changeApiKeyInput.value == ""){
+          printMsg('Empty field.', 'error');
+        } else {
+          verifyUserKey(changeApiKeyInput.value, loggedInUser);
+          changeApiKeyInput.value = "";
+        }
+      });
+    }
 }
 
 function verifyUserKey(key, userObj){
@@ -311,7 +330,7 @@ function verifyUserKey(key, userObj){
     if(response.status = 'success'){
       userObj.key = key;
       modifyUser(userObj);
-
+      increaseStat('success');
       localStorage.setItem('loggedInUser', JSON.stringify(userObj));
 
       let changeApiKeyDiv = document.getElementById('changeApiKeyDiv');
@@ -320,6 +339,7 @@ function verifyUserKey(key, userObj){
     }
   })
   .catch(response => {
+    increaseStat('failed');
     printMsg('Bad Api key', 'error');
   })
 
@@ -366,16 +386,19 @@ function importLibrary(key){
   recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key='+key)
   .then(response => {
     if(response.status == 'success'){
-
+      increaseStat('success');
       /* function addBook(counter, title, author, dbApiKey) */
       console.log(response.data);
       let newKey = retrieveKey();
       for(let data of response.data){
-        addBook(0, data.title, data.author, newKey);
+        addBook(0, data.title, data.author, newKey, true);
       }
+
+      retrieveBooks();
     }
   })
   .catch(badResponse => {
+    increaseStat('failed');
     printMsg('Bad Api key', 'error');
   });
 }
@@ -476,6 +499,7 @@ function addStats(total, successful, failed) {
         btnAddEventListeners(listItem);
         console.log('Stats refreshed.');
         printMsg('Stats refreshed.', 'success');
+        addDetailedStats();
 
     } else {
         /* There is a book at this location! */
@@ -563,6 +587,7 @@ function updateSettings(){
   let inputNewKey = keySettingsDiv.children[1].children[0];
   /* Set inputValue at key "newKey" to current key! */
   inputNewKey.setAttribute('value', retrieveKey());
+  inputNewKey.setAttribute('placeholder', 'Active key: '+retrieveKey());
 
   /* editWhenPressed */
   let apiSettingsDiv = document.getElementById('apiSettingsDiv');
@@ -580,8 +605,15 @@ function updateSettings(){
   /* User logged in stuff */
   let userSettingsDiv = document.getElementById('userSettingsDiv');
 
-  let userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+  userObj = 'Guest';
+  if(localStorage.getItem('loggedInUser') != 'Guest'){
+    userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+  }
 
+  /* Set Stats Key */
+  document.getElementById('setStatsInput').setAttribute('placeholder', retrieveStatsKey());
+
+  /* User logged in? */
   if(loggedIn()){
 
 
@@ -710,7 +742,7 @@ function retrieveOurKey() {
 
 }
 
-function addBook(counter, title, author, dbApiKey) {
+function addBook(counter, title, author, dbApiKey, silent = false) {
     if (counter > 10) {
         return printMsg('Failed after 10 retries', 'error');
     } else {
@@ -736,16 +768,20 @@ function addBook(counter, title, author, dbApiKey) {
                 responseData = JSON.parse(addBookRequest.responseText);
 
                 if (responseData.status == 'error') {
+                    increaseStat('failed');
                     /* IF ERROR, CALL MYSELF */
                     return addBook((counter + 1), title, author, dbApiKey);
 
                 } else {
+                  increaseStat('success');
                     console.log(responseData.status);
                     if (addUser) {
                         console.log('In addbook dbApiKey is: '+dbApiKey);
-                        printMsg('User created!', 'success');
+
+                        if(!silent) printMsg('User created!', 'success');
+
                     } else {
-                        printMsg('Book added!', 'success');
+                        if(!silent) printMsg('Book added!', 'success');
                     }
                 }
                 console.log(responseData.id);
