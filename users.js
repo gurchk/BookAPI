@@ -458,7 +458,9 @@ function addEventListenersForRegisterPage(){
   spinIcon(loginInputs[4]);
   setTimeout(function(){
 
-    loginInputs[4].value = retrieveKey();
+    if(loginInputs[4] != undefined) {
+      loginInputs[4].value = retrieveKey();
+    }
 
   }, 1000);
 
