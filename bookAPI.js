@@ -45,20 +45,6 @@
         addToTop(title.value, author.value, uniqueID);
     });
 
-    /* adding eventListener to saveActiveKey & retrieveOurKey */
-    let saveCurrentBtn = document.getElementById('saveCurrent');
-    saveCurrentBtn.addEventListener('click', function (e) {
-        saveActiveKey(retrieveKey());
-        updateSaved();
-    });
-
-    /* Set saved key to current key */
-    let useSavedKeyBtn = document.getElementById('useSavedKeyBtn');
-    useSavedKeyBtn.addEventListener('click', function () {
-        /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
-        verifyKey(retrieveOurKey(), undefined, undefined, undefined, undefined, true);
-        updateSaved();
-    });
 
     /* Add eventListeners to statsBtn and settingsBtn */
     let statsBtn = document.getElementById('statsBtn');
@@ -71,11 +57,6 @@
 
     let settingsBtn = document.getElementById('settingsBtn');
     settingsBtn.addEventListener('click', displaySettings);
-
-
-    // Fetch Key
-
-    const inputFetch = document.getElementById('apiInputKey');
 
     localStorage.setItem('settingsOpen', 'false'); // It can't be open when we load the site.
     retrieveBooks();
@@ -134,6 +115,14 @@ function addSettingsListeners(){
   let apiSettingsDiv = document.getElementById('apiSettingsDiv');
   let userSettingsDiv = document.getElementById('userSettingsDiv');
 
+
+
+  /* Test listners */
+  /* Remove Messages */
+  let removeMessagesBtn = document.getElementById('removeMessagesBtn');
+  removeMessagesBtn.style.margin = '10px 6px 8px 15px';
+  removeMessagesBtn.addEventListener('click', removeMessages);
+
   /* Add events for Key settings */
   /* -------------------------- */
 
@@ -144,8 +133,6 @@ function addSettingsListeners(){
 
   btnNewKey.addEventListener('click', requestKeyFromApi);
 
-
-
   /* EventListener for fetchKey */
   let inputFetchkey = keySettingsDiv.children[2].children[0];
   let btnFetchkey = keySettingsDiv.children[2].children[1];
@@ -154,6 +141,23 @@ function addSettingsListeners(){
     /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
     saveKey(inputFetchkey.value);
   });
+
+  /*EventListeners for Saved Key */
+  /* adding eventListener to saveActiveKey & retrieveOurKey */
+  let saveCurrentBtn = document.getElementById('saveCurrent');
+  saveCurrentBtn.addEventListener('click', function (e) {
+      saveActiveKey(retrieveKey());
+      updateSaved();
+  });
+
+  /* Set saved key to current key */
+  let useSavedKeyBtn = document.getElementById('useSavedKeyBtn');
+  useSavedKeyBtn.addEventListener('click', function () {
+      /* verifyKey(key, name, hashed, email, create = false, setKey = false) */
+      verifyKey(retrieveOurKey(), undefined, undefined, undefined, undefined, true);
+      updateSaved();
+  });
+
 
   /* Import library from other key */
   let importKeyInput = document.getElementById('importKeyInput');
@@ -197,8 +201,10 @@ function addSettingsListeners(){
 
     if(checkBoxApi2.checked){
       label.innerHTML = '<i class="fa fa-check"></i>';
+      localStorage.setItem('useDetailedStats', 'true');
     } else {
       label.innerHTML = '<i class="fa fa-times"></i>'
+      localStorage.setItem('useDetailedStats', 'false');
     }
 
   });
@@ -210,6 +216,7 @@ function addSettingsListeners(){
   let exportStatsBtn = document.getElementById('exportStatsBtn');
   let parent = exportStatsBtn.parentNode;
   parent.style.justifyContent = 'center';
+  exportStatsBtn.style.margin = '10px 6px 8px 15px';
   exportStatsBtn.addEventListener('click', function(){
 
     exportLocalStats();
@@ -351,6 +358,10 @@ function removeSettingsListeners(){
 
   settings.innerHTML = '';
   settings.innerHTML = oldHTML;
+
+
+  /* Remove displaying messages */
+  removeMessages();
 }
 
 function addCloseBtnListener() {
@@ -412,12 +423,29 @@ function displayStats() {
     addStats(total, successful, failed);
 }
 
+function removeMessages(){
+
+  /* All messages */
+  let messages = document.getElementsByClassName('messageDiv');
+
+  console.log('LENGTH OF MESSAGES IS:'+messages.length);
+  for(let i = messages.length-1; i >= 0; i--){
+    let currMsg = messages[i];
+    let parent = currMsg.parentNode;
+
+    parent.removeChild(currMsg);
+  }
+}
+
 function printMsg(message, type, location = 'default') {
 
+    /* All messages */
     let messages = document.getElementsByClassName('messageDiv');
+
     if(localStorage.getItem('settingsOpen') == 'true'){
       location = 'settings';
     }
+
     /* Set exsists to true and create a new msgDiv*/
     msgDiv = document.createElement('div');
 
@@ -445,6 +473,7 @@ function printMsg(message, type, location = 'default') {
     let stopElement = document.getElementsByClassName('apiKeyDisplay')[0];
     let skip = 1;
     let maxMessages = 3;
+
     if(location == 'default'){
       messageContainer = document.getElementsByTagName('main')[0];
       stopElement = document.getElementsByClassName('apiKeyDisplay')[0];
@@ -469,12 +498,14 @@ function printMsg(message, type, location = 'default') {
     }
 
     setTimeout(function () {
+          if(messageContainer.children[skip] != undefined){
             if (messageContainer.children[skip].getAttribute('uniqueID') == uniqueID) {
                 messageContainer.removeChild(messageContainer.children[skip]);
                 console.log('Removed msgDiv where uniqueID was correct.');
             }
-
+          }
     }, 5000);
+
 
     /* Finally add a eventListener to the close btn */
     addCloseBtnListener();
@@ -491,15 +522,14 @@ function addStats(total, successful, failed) {
     if (libraryDiv.children[1] == null) {
         libraryDiv.appendChild(listItem);
         btnAddEventListeners(listItem);
-        console.log('Added stats for the first time.');
-    } else if (libraryDiv.children[1].children[0].getAttribute('stats') != undefined) {
 
-        libraryDiv.removeChild(libraryDiv.children[1]);
+    } else if (libraryDiv.children[1].children[0].getAttribute('stats') != undefined) {
+        removeBooksFromLibrary();
+        //libraryDiv.removeChild(libraryDiv.children[1]);
         libraryDiv.appendChild(listItem);
         btnAddEventListeners(listItem);
         console.log('Stats refreshed.');
         printMsg('Stats refreshed.', 'success');
-        addDetailedStats();
 
     } else {
         /* There is a book at this location! */
@@ -507,6 +537,14 @@ function addStats(total, successful, failed) {
         removeBooksFromLibrary();
         libraryDiv.appendChild(listItem);
         btnAddEventListeners(listItem);
+    }
+
+    /* IF detailedStats is true, add detailed stats! */
+    if(localStorage.getItem('useDetailedStats') == 'true'){
+      printMsg('Detailed stats is activated!','success');
+      addDetailedStats();
+    } else {
+      printMsg('Detailed stats is deactivated!','warning');
     }
 }
 
@@ -589,8 +627,10 @@ function updateSettings(){
   inputNewKey.setAttribute('value', retrieveKey());
   inputNewKey.setAttribute('placeholder', 'Active key: '+retrieveKey());
 
-  /* editWhenPressed */
+  /* editWhenPressed & DetailedStats */
   let apiSettingsDiv = document.getElementById('apiSettingsDiv');
+
+  /*editWhenPressed */
   let editWhenPressedLabel = document.getElementById('editWhenPressedLabel');
   let editWhenPressedBox = document.getElementById('editWhenPressed');
 
@@ -600,6 +640,19 @@ function updateSettings(){
   } else {
     editWhenPressedLabel.innerHTML = '<i class="fa fa-times"></i>';
     editWhenPressedBox.checked = false;
+  }
+
+  /* DetailedStats */
+
+  let showDetailedStatsLabel = document.getElementById('showDetailedStatsLabel');
+  let showDetailedStatsBox = document.getElementById('showDetailedStats');
+
+  if(localStorage.getItem('useDetailedStats') == 'true'){
+    showDetailedStatsLabel.innerHTML = '<i class="fa fa-check"></i>';
+    showDetailedStatsBox.checked = true;
+  } else {
+    showDetailedStatsLabel.innerHTML = '<i class="fa fa-times"></i>';
+    showDetailedStatsBox.checked = false;
   }
 
   /* User logged in stuff */

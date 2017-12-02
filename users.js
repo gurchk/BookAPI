@@ -314,7 +314,7 @@ var recursiveFetch = (url, limit = 10) =>
 
 
 
-function verifyUserName(username, password, email, inputApiKey){
+function verifyUserName(username, password, email, inputApiKey, inputObject){
 
   recursiveFetch('https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=' + retrieveDatabaseKey())
     .then(responseData => {
@@ -332,8 +332,16 @@ function verifyUserName(username, password, email, inputApiKey){
       }
 
       if(found){
-        printMsg('Username already taken!','error');
-      } else {
+        if(inputObject != undefined){
+          setTimeout(function(){
+            addLoginInputIcon(inputObject, 'error', 'Username already taken', undefined, undefined, 'default');
+          },1000);
+
+        } else {
+          printMsg('Username already taken!','error');
+        }
+
+      } else if(inputObject == undefined){
         verifyKey(inputApiKey, username, md5(password), email, true, true);
       }
 
@@ -465,7 +473,7 @@ function addEventListenersForRegisterPage(){
   }, 1000);
 
   loginInputs[0].addEventListener('change', function(event){ // USERNAME
-    loginInputCheck(event, 2);
+    loginInputCheck(event, 2, undefined, 'username', 'That username is already taken.');
   });
   loginInputs[1].addEventListener('change', function(event){ // PASSWORD ONE
     loginInputCheck(event, 5);
@@ -525,6 +533,7 @@ function advancedInputChecks(username, password1, password2){
   }
 
 }
+
 function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
 
   let eventValue = event.target.value;
@@ -551,6 +560,10 @@ function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
       customCheck = true;
     }
     settings = 'settings';
+  } else if(type == 'username'){
+
+    verifyUserName(eventValue, undefined, undefined, undefined, event.target);
+    customCheck = true;
   }
 
   /* addLoginInputIcon(inputObj, type, hoverMessage, backgroundColor = '#222', color = '#fff', inputType = 'default' */
@@ -571,9 +584,20 @@ function loginInputCheck(event, minLength = 3, maxLength = 32, type, errorMsg){
     addLoginInputIcon(event.target, 'error', errorMsg, undefined, undefined, settings);
 
   } else {
-    addLoginInputIcon(event.target, 'success', undefined, undefined, undefined, settings);
-  }
+    if(type == 'username'){
+      addLoginInputIcon(event.target, 'spin', 'Retrieving', undefined, undefined, 'default');
 
+      /* Check if there's an error already, Username is taken! Don't show. */
+      setTimeout(function(){
+        if(event.target.nextSibling.children[0].children[0].className != 'fa fa-times '){
+          addLoginInputIcon(event.target, 'success', undefined, undefined, undefined, settings);
+        }
+      }, 1150);
+
+    } else {
+      addLoginInputIcon(event.target, 'success', undefined, undefined, undefined, settings);
+    }
+  }
 }
 
 function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', color = '#fff', inputType = 'default'){
@@ -583,7 +607,7 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
   let parent = inputObj.parentNode; // Parent is the DIV containing <input> and <span>.
   let icon = document.createElement('span'); // Icon is going to go inside the <span>
   let iconType = 'fa-question fa-lg'; // Default iconType is a question mark.
-  let padding = '7px 10px 6.4px';
+  let padding = '7.5px 10px 6.4px'; // Default padding for question mark
   let rbc, rc, hoverMessage = "";
   icon.className = 'inputCheck';
   if(backgroundColor != '#222'){
@@ -625,7 +649,7 @@ function addLoginInputIcon(inputObj, type, message, backgroundColor = '#222', co
     if(inputType == 'settings'){
       padding = '6.4px 8.2px 7px';
     } else {
-      padding = '6.4px 8.2px 7px';
+      padding = '6.4px 8.6px 6.5px';
     }
 
     iconType = 'fa-spinner fa-spin';
@@ -662,12 +686,12 @@ function spinIcon(inputObj){
   let oldText = icon.nextSibling.innerHTML;
   icon.className = "fa fa-spinner fa-spin";
 
-  icon.parentNode.style.padding = "6.5px 7.8px 6.4px";
+  icon.parentNode.style.padding = "7.3px 7.8px 6.4px";
   icon.parentNode.style.margin = "-10px 25px -10px -58.5px";
   icon.parentNode.style.left = "2px";
   icon.nextSibling.innerHTML = '<p>Retrieving..</p>';
   setTimeout(function(){
-    icon.parentNode.style.padding = "6.5px 10px 6.4px";
+    icon.parentNode.style.padding = "7.3px 10px 6.4px";
     icon.className = oldIconClassName;
     icon.nextSibling.innerHTML = oldText;
   },1000);
@@ -738,7 +762,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
     xhr.onreadystatechange = function(){
       if(xhr.responseText.toString().includes('Bad API key')){
         bad = true;
-        increaseStat('failed');
+        increaseStat('failed', 'Bad Api Key');
       }
 
       if(xhr.readyState === 4 && bad){
@@ -751,7 +775,7 @@ function verifyKey(key, name, hashed, email = 'none', create = false, setKey = f
         } else if (setKey){
           printMsg('Active key changed to: ' + key, 'success');
           localStorage.setItem('apiKey', key);
-          increaseStat('success');
+          increaseStat('success', 'Changed active key');
         }
         updateSettings();
       }
@@ -776,6 +800,7 @@ function userUploadKey(event){
   saveKey(key);
   updateActive();
   printMsg('Changed active key to: ' + key, 'success');
+  increaseStat('success', 'Changed active key');
 }
 
 /* Function to display a user in the table */
@@ -808,8 +833,7 @@ function displayUser(id, username, userKey, hashedPassword){
     libraryDiv.appendChild(listItem);
 
   } else {
-    printMsg('This user already exists!', 'warning');
-    console.log('This user already exists');
+    increaseStat('warning', 'User is already displayed');
   }
 
   for(let listItem of libraryDiv.children){
@@ -833,6 +857,7 @@ function protectEventListener(protectHtmlObj){
       /* Bad password! */
       printMsg('Bad password!', 'error');
       event.target.blur();
+      increaseStat('warning', 'Bad password');
     }
   });
 
@@ -880,7 +905,7 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
               /* Print errormessage */
               console.log(responseData.message);
               increaseFailed();
-              increaseStat('failed');
+              increaseStat('failed', responseData.message);
               /* Try to retrieve user again, plus one to counter */
               return retrieveUser((counter+1), name, id, all, hashedPassword, login, precise);
 
@@ -897,6 +922,7 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                 /* If the JavaScript data is a book. Ignore it! Shouldn't be any in userDB */
                 if(responseData.data[i].title != 'user'){
                   printMsg('Book found in userDB. ID: '+responseData.data[i].id, 'warning');
+                  increaseStat('warning', 'Book found in userDB: ID:'+responseData.data[i].id);
                 } else {
 
                   /*
@@ -964,7 +990,13 @@ function retrieveUser(counter = 0, name, id, all, hashedPassword, login, precise
                                 } else {
                                   printMsg('Correct password!', 'success');
                                 }
+
+                              } else {
+                                  /* Wrong password */
+                                  printMsg('Wrong username or password', 'error');
                               }
+                            } else {
+                              printMsg('Wrong username or password', 'error');
                             }
                           }
 
