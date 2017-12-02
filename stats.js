@@ -1,5 +1,7 @@
 window.addEventListener('load', function(){
   //addDetailedStats();
+  /* Create StatsKey */
+  createStatsKey();
 });
 
 /* Stats Database */

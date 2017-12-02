@@ -2,9 +2,6 @@ function loggedIn(){
   return localStorage.getItem('loggedIn') == 'true';
 }
 
-/* Create StatsKey */
-createStatsKey();
-
 function logoutUser(){
 
   /* Printmsg */
