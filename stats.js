@@ -2,10 +2,26 @@ window.addEventListener('load', function(){
   //addDetailedStats();
 });
 
+/* Stats Database */
+function createStatsKey(){
+  localStorage.setItem('statsDatabaseKey', 'q3Ftc');
+}
+
+function retrieveStatsKey(){
+  return localStorage.getItem('statsDatabaseKey');
+}
+function setStatsKey(key){
+  if(key != "" && key.length == 5){
+    localStorage.setItem('statsDatabaseKey', key);
+  } else {
+    printMsg('Bad stats key', 'error');
+  }
+}
+
 function increaseStat(type = 'success', message = 'None specified'){
 
   let reqList = localStorage.getItem('requestsList');
-  if(reqList == undefined){
+  if(reqList == undefined || reqList == null){
     let obj = {
       id: guid(),
       type: 'First',
@@ -19,22 +35,22 @@ function increaseStat(type = 'success', message = 'None specified'){
     list = JSON.stringify(list);
 
     localStorage.setItem('requestsList', list);
+  } else {
+
+    /* Turn it into a JavaScript Object */
+    reqList = JSON.parse(reqList);
+    console.log('RequestMessages in database: ' + reqList.length);
+    console.log(reqList);
+    let statsObject = {
+      id: guid(),
+      type: type,
+      message: message,
+      time: Date().toString()
+    }
+      reqList.push(statsObject);
+
+      localStorage.setItem('requestsList', JSON.stringify(reqList));
   }
-  /* Turn it into a JavaScript Object */
-  reqList = JSON.parse(reqList);
-  console.log('RequestMessages in database: ' + reqList.length);
-  console.log(reqList);
-  let statsObject = {
-    id: guid(),
-    type: type,
-    message: message,
-    time: Date().toString()
-  }
-
-  reqList.push(statsObject);
-
-  localStorage.setItem('requestsList', JSON.stringify(reqList));
-
 }
 
 function addDetailedStats() {
