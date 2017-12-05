@@ -3,13 +3,14 @@
     text-align: center;
     outline: none;
 }
+
 .readLess {
-  display: block;
-  padding: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 2px auto;
-  width: 20%;
+    display: block;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 2px auto;
+    width: 20%;
 }
 
 body {
@@ -24,17 +25,20 @@ body {
     background-position: bottom;
     background-size: cover;
 }
+
 .bookDescription {
-  overflow: hidden;
-  height: 180px;
-  padding: 6px 15px;
+    overflow: hidden;
+    height: 180px;
+    padding: 6px 15px;
 }
+
 .expandedAside {
-  flex: 10 0 200px;
+    flex: 10 0 200px;
 }
+
 span.readMore {
-  font-weight: bold;
-  cursor: pointer;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 h1,
@@ -49,14 +53,15 @@ h4 {
     background-color: #474e4c;
     padding: 30px;
 }
+
 header > h1 {
-  font-family: 'Raleway',sans-serif;
-  background-color: red;
-  font-size: 4em;
-  color: #222;
-  padding: 60px 0;
-  margin: 60px 0;
-  background-color: rgba(200,200,200, 0.54);
+    font-family: 'Raleway', sans-serif;
+    background-color: red;
+    font-size: 4em;
+    color: #222;
+    padding: 60px 0;
+    margin: 60px 0;
+    background-color: rgba(200, 200, 200, 0.54);
 }
 
 aside {
@@ -96,46 +101,54 @@ nav {
     display: flex;
     justify-content: center;
 }
+
 .libraryWrapper {
-  width: 70%;
-  margin: 0 auto;
-  padding-bottom: 100px;
+    width: 70%;
+    margin: 0 auto;
+    padding-bottom: 100px;
 }
 
 /* Footer stuff */
+
 footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding: 50px;
-  background-color: #e6e2d3;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 50px;
+    background-color: #e6e2d3;
 }
+
 footer p {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
+
 footer .nyhetsBrev {
-  border-top: 1px solid #111;
-  padding: 10px;
+    border-top: 1px solid #111;
+    padding: 10px;
 }
+
 footer .nyhetsBrev > div {
-  display: flex;
-  padding-top: 5px;
+    display: flex;
+    padding-top: 5px;
 }
+
 footer .nyhetsBrev button {
-  border: none;
-  display: block;
-  position: relative;
-  padding: 0px 15px;
-  margin: 10px 0px;
-  line-height: 30px;
+    border: none;
+    display: block;
+    position: relative;
+    padding: 0px 15px;
+    margin: 10px 0px;
+    line-height: 30px;
 }
+
 footer .nyhetsBrev button:hover {
-  border: none;
-  background-color: #9e9e9e;
+    border: none;
+    background-color: #9e9e9e;
 }
 
 /* End of footer stuff */
+
 #bookApi {
     margin-top: 40px;
 }
@@ -270,9 +283,9 @@ input:focus {
     display: inline-flex;
     padding: 10px 0px;
     margin: 10px;
-}q
+}
 
-#library > div > .spanID {
+q #library > div > .spanID {
     flex: 0 0 5%;
 }
 
@@ -290,6 +303,7 @@ input:focus {
     padding: 20px;
     margin: 0px;
 }
+
 #library > div.detailedHeader {
     display: flex;
     position: relative;
@@ -299,101 +313,116 @@ input:focus {
     justify-content: center;
     border-bottom: 2px solid #777;
 }
+
 #library > div.detailedHeader > h3 {
-  color: #333;
-  font-weight: normal;
-  font-size: 1.4em;
-  margin: 0;
-  padding: 0;
+    color: #333;
+    font-weight: normal;
+    font-size: 1.4em;
+    margin: 0;
+    padding: 0;
 }
 
 #library > div > .expandedObject {
-  display: flex;
-  justify-content: space-between;
-  /*height: 200px;*/
-  width: 100%;
-  flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+    /*height: 200px;*/
+    width: 100%;
+    flex: 1 1 auto;
 }
+
 #library > div .increasedPadding {
-  margin: 5px;
-  padding: 15px;
-  align-self: center;
+    margin: 5px;
+    padding: 15px;
+    align-self: center;
 }
+
 .inlineImage {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
 }
+
 .inlineImage > img {
-  background-color: #b9936c;
-  height: auto;
-  padding: 5px;
-  box-shadow: 1px 1px 4px #222;
-  align-self: center;
+    background-color: #b9936c;
+    height: auto;
+    padding: 5px;
+    box-shadow: 1px 1px 4px #222;
+    align-self: center;
 }
+
 #library > div > .expandedObject > div {
-  display: flex;
-  flex: 1 1 auto;
+    display: flex;
+    flex: 1 1 auto;
 }
+
 /* Try to make the dividers line up!!! */
-#library > div > .expandedObject > div:not(:first-child){
-  flex-direction: column;
-  justify-content: flex-start;
-  flex: 100 100 50px;
+
+#library > div > .expandedObject > div:not(:first-child) {
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 100 100 50px;
 }
-#library > div > .expandedObject > div:nth-child(1){
-  flex: 100 100 250px;
+
+#library > div > .expandedObject > div:nth-child(1) {
+    flex: 100 100 250px;
 }
+
 .removeBook {
-  display: inline;
-  margin: 0;
+    display: inline;
+    margin: 0;
 }
+
 /* Image on expandedObject */
+
 #library > div .expandedObject > div > img {
-  background-color: #b9936c;
-  width: 200px;
-  max-width: 220px;
-  height: auto;
-  padding: 5px;
-  box-shadow: 1px 1px 4px #222;
+    background-color: #b9936c;
+    width: 200px;
+    max-width: 220px;
+    height: auto;
+    padding: 5px;
+    box-shadow: 1px 1px 4px #222;
 }
+
 #library > div > .expandedObject > div > p {
-  padding: 5px;
-  margin: 12px 5px 10px 5px;
+    padding: 5px;
+    margin: 12px 5px 10px 5px;
 }
+
 #library > div > .expandedObject > div h3 {
-  text-align: left;
-  font-family: 'Lora', serif;
-  padding: 5px 10px;
-  font-weight: normal;
-  margin: 0;
+    text-align: left;
+    font-family: 'Lora', serif;
+    padding: 5px 10px;
+    font-weight: normal;
+    margin: 0;
 }
+
 #library > div > .expandedObject > div h3:first-child {
-  margin-top: 11px;
+    margin-top: 11px;
 }
 
 #library > div > .expandedObject > div button {
-  border: none;
-  display: inline;
-  background-color: #555;
-  padding: 5px 10px;
-  margin: 6px 3px;
+    border: none;
+    display: inline;
+    background-color: #555;
+    padding: 5px 10px;
+    margin: 6px 3px;
 }
 
 #library > div > .expandedObject > div button.trashcan:hover {
-  background-color: #f16060;
+    background-color: #f16060;
 }
+
 /*#library > div > .expandedObject > div button:not(.trashcan):hover {
   background-color: #e4cf80;
 }*/
 
 #library > div > .expandedObject > div:last-child {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 #library > div > .expandedObject > div:last-child > div:last-child {
-  align-self: flex-end;
+    align-self: flex-end;
 }
 
 #library > div p {
@@ -421,15 +450,16 @@ input:focus {
 }
 
 #library > #header {
-  position: relative;
-  background-color: #e6e2d3;
+    position: relative;
+    background-color: #e6e2d3;
 }
 
 
 #keyBtn {
-  border: none;
-  background-color: inherit;
+    border: none;
+    background-color: inherit;
 }
+
 #library > div > hr {
     margin: 0 25px;
 }
@@ -455,6 +485,7 @@ input:focus {
     background-color: #faffdb;
     color: #222;
 }
+
 #library > div button:hover.hoverGold {
     background-color: #faffdb;
     color: #222;
@@ -486,11 +517,13 @@ input:focus {
     background-color: inherit;
     color: #dac292;
 }
+
 #library > div > button.libraryRemoveBtn:nth-child(7) {
-  margin-left: 2.5%;
+    margin-left: 2.5%;
 }
+
 #library > div > button.libraryRemoveBtn:nth-child(9) {
-  margin-right: 2.5%;
+    margin-right: 2.5%;
 }
 
 /* Stats Modal */
@@ -566,7 +599,9 @@ input:focus {
 /* inputSucces, inputError & Hover text */
 
 .inputError,
-.inputSuccess, .inputInfo, .inputNoColor {
+.inputSuccess,
+.inputInfo,
+.inputNoColor {
     position: relative;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -577,7 +612,10 @@ input:focus {
     z-index: 1;
 }
 
-.inputError .hoverText, .inputSuccess .hoverText, .inputInfo .hoverText, .inputNoColor .hoverText {
+.inputError .hoverText,
+.inputSuccess .hoverText,
+.inputInfo .hoverText,
+.inputNoColor .hoverText {
     visibility: hidden;
     width: 128px;
     top: 0px;
@@ -590,9 +628,10 @@ input:focus {
     position: absolute;
     z-index: 9999;
 }
+
 .hoverText > p {
-  padding: 8px 2px;
-  margin: 0px;
+    padding: 8px 2px;
+    margin: 0px;
 }
 
 /* Colors! */
@@ -606,10 +645,12 @@ input:focus {
     padding: 8px 8.4px 9px;
     background-color: #599965;
 }
+
 .inputInfo {
     padding: 8px 8.4px 9px;
     background-color: #559bba;
 }
+
 .inputNoColor {
     padding: 8px 8.4px 9px;
 }
@@ -624,17 +665,22 @@ input:focus {
     background-color: #222;
     color: #fff;
 }
+
 .inputInfo .hoverText {
     background-color: #222;
     color: #fff;
 }
+
 .inputNoColor .hoverText {
     background-color: #222;
     color: #fff;
 }
 
 
-.inputError:hover .hoverText, .inputSuccess:hover .hoverText, .inputInfo:hover .hoverText, .inputNoColor:hover .hoverText {
+.inputError:hover .hoverText,
+.inputSuccess:hover .hoverText,
+.inputInfo:hover .hoverText,
+.inputNoColor:hover .hoverText {
     visibility: visible;
 }
 
@@ -647,6 +693,7 @@ input:focus {
 }
 
 /* Close Button */
+
 .userPanel .close {
     margin: 5px;
     right: 7px;
@@ -762,321 +809,357 @@ input:focus {
     margin-right: 5px;
     background-color: #8fd0be;
 }
+
 .msgContainer {
-  font-family: sans-serif;
-  display: flex;
-  align-self: center;
-  justify-content: flex-start;
-  width: 80%;
-  height: 50px;
+    font-family: sans-serif;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+    width: 80%;
+    height: 50px;
 }
 
 /* Settings and login Module */
+
 #loginModalWrapper {
-  position: absolute;
-  display: none;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 100;
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
 }
 
 #settingsModalWrapper {
-  position: absolute;
-  display: none;
-  flex-direction: column;
-  z-index: 100;
-  left: 0;
-  top: -188%;
-  border-radius: 5px;
-  width: 100%;
-  padding: 40px;
-  box-shadow: 3px 3px 5px #111;
-  background-color: #222;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    z-index: 100;
+    left: 0;
+    top: -188%;
+    border-radius: 5px;
+    width: 100%;
+    padding: 40px;
+    box-shadow: 3px 3px 5px #111;
+    background-color: #222;
 }
+
 #settingsModalWrapper > div {
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-around;
 }
 
 #settingsModalWrapper span.closeBtnSettings {
-  /* Close Button */
-  position: absolute;
-  right: 0;
-  padding: 0px;
-  margin: -28px 15px;
-  display: inline-block;
-  color: #ddd;
-  z-index: 1000;
+    /* Close Button */
+    position: absolute;
+    right: 0;
+    padding: 0px;
+    margin: -28px 15px;
+    display: inline-block;
+    color: #ddd;
+    z-index: 1000;
 }
+
 #settingsModalWrapper span.closeBtnSettings:hover {
-  color: #b44345;
+    color: #b44345;
 }
 
 
 /* Sub-Divs */
+
 .settingsDivs > div {
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  margin-top: 10px;
-  border-radius: 6px;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    margin-top: 10px;
+    border-radius: 6px;
 }
 
 #userSettingsDiv > h3 {
-  padding: 5px 10px;
+    padding: 5px 10px;
 }
 
 #settingsModalWrapper > div .inputWithButton {
-  display: flex;
-  justify-content: space-between;
-  margin: 0px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px;
 }
 
 #settingsModalWrapper > div .inputWithButton span.inputNoColor {
-  position: relative;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-left: 1px solid #bbb;
-  margin: 10px -5px 2px -187px;
-  display: inline-block;
-  color: #ddd;
-  z-index: 1;
+    position: relative;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 1px solid #bbb;
+    margin: 10px -5px 2px -187px;
+    display: inline-block;
+    color: #ddd;
+    z-index: 1;
 }
 
 #settingsModalWrapper > div .inputWithButton span:not(.inputCheck) {
-  color: #fefefe;
-  font-family: sans-serif;
-  font-weight: 500;
-  font-size: 0.7em;
-  background-color: #222;
-  border-radius: 5px;
-  padding: 14px 10px;
-  margin: 5px 5px;
+    color: #fefefe;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 0.7em;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 14px 10px;
+    margin: 5px 5px;
 }
+
 #settingsModalWrapper > div .inputWithButton > #editWhenPressedLabel + span {
-  padding: 14px;
+    padding: 14px;
 }
 
 input[type="checkbox"] {
-  position: absolute;
-  left: 60px;
-  top: 60px;
-  display: none;
-  visibility: hidden;
+    position: absolute;
+    left: 60px;
+    top: 60px;
+    display: none;
+    visibility: hidden;
 }
 
 input[type="checkbox"] + label {
-  cursor: pointer;
-  background-color: #ff5757;
-  color: #fff;
-  border-radius: 5px;
-  padding: 5px 10px;
-  margin: 10px 0px 10px 30px;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none;
+    cursor: pointer;
+    background-color: #ff5757;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 10px 0px 10px 30px;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+/Edge */
+    user-select: none;
 }
 
 input[type="checkbox"]:checked + label {
-  background-color: #90ff8e;
-  padding: 5px 7.8px;
+    background-color: #90ff8e;
+    padding: 5px 7.8px;
 }
 
-#settingsModalWrapper > div .inputWithButton > button, #settingsModalWrapper > div .inputWithButton > input {
-  display: inline-block;
-  margin: 10px 7px 10px 16px;
+#settingsModalWrapper > div .inputWithButton > button,
+#settingsModalWrapper > div .inputWithButton > input {
+    display: inline-block;
+    margin: 10px 7px 10px 16px;
 }
 
 #settingsModalWrapper > div .inputWithButton > button {
-  border: none;
-  background-color: #cfb97b;
-  font-size: 0.8em;
-  padding: 6px 15px;
-  margin: 10px 5px;
-  vertical-align: -1px
+    border: none;
+    background-color: #cfb97b;
+    font-size: 0.8em;
+    padding: 6px 15px;
+    margin: 10px 5px;
+    vertical-align: -1px
 }
+
 #settingsModalWrapper > div .inputWithButton > button.fullDivButton {
-  border: none;
-  background-color: #becf7b;
-  font-size: 0.8em;
-  padding: 12px 0px;
-  align-self: center;
-  margin: 10px 5px 8px 5px;
-  vertical-align: -1px;
-  box-shadow: 1px 1px 3px #111;
-  width: 100%;
+    border: none;
+    background-color: #becf7b;
+    font-size: 0.8em;
+    padding: 12px 0px;
+    align-self: center;
+    margin: 10px 5px 8px 5px;
+    vertical-align: -1px;
+    box-shadow: 1px 1px 3px #111;
+    width: 100%;
 }
+
 .detailedHeader:nth-child(odd) {
-  background-color: #dcc79c;
+    background-color: #dcc79c;
 }
+
 .detailedHeader:nth-child(even) {
-  background-color: #e6e2d3;
+    background-color: #e6e2d3;
 }
 
 #settingsModalWrapper > div .inputWithButton > button:hover {
-  background-color: #ddd;
-  color: #111;
+    background-color: #ddd;
+    color: #111;
 }
 
 .contentWrapperSettings {
-  display: flex;
-  background-color: #444;
-  color: #fff;
-  margin: 20px;
-  padding: 5px 30px;
-  justify-content: space-between;
+    display: flex;
+    background-color: #444;
+    color: #fff;
+    margin: 20px;
+    padding: 5px 30px;
+    justify-content: space-between;
 }
 
 /* Login stuff */
 
 /* Nav Login */
+
 p.navLogin {
-  font-family: Lora, sans-serif;
-  font-size: 1.8em;
-  border-radius: 6px;
-  padding: 4px;
-  margin: 0px;
+    font-family: Lora, sans-serif;
+    font-size: 1.8em;
+    border-radius: 6px;
+    padding: 4px;
+    margin: 0px;
 }
+
 #welcomeMsg {
-  margin: 5px;
+    margin: 5px;
 }
+
 button.navLogin {
-  background-color: #dddddd;
-  border: none;
-  margin: 5px;
+    background-color: #dddddd;
+    border: none;
+    margin: 5px;
 }
+
 button.navLogout {
-  border: none;
-  background-color: #dddddd;
-  margin: 5px;
-  display: inline;
-  margin-left: 100px;
-  margin-right: -220px;
+    border: none;
+    background-color: #dddddd;
+    margin: 5px;
+    display: inline;
+    margin-left: 100px;
+    margin-right: -220px;
 }
-button.navLogin:hover, button.navLogout:hover {
-  background-color: #dac292;
+
+button.navLogin:hover,
+button.navLogout:hover {
+    background-color: #dac292;
 }
 
 .loginModal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: absolute;
-  padding: 0px;
-  margin: 10% 0px 0px;
-  top: 20%;
-  left: calc(50% - 100px);
-  color: #222;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    padding: 0px;
+    margin: 10% 0px 0px;
+    top: 20%;
+    left: calc(50% - 100px);
+    color: #222;
 }
+
 .loginModal > #loginDiv > span.closeBtnLogin {
-  /* Close Button */
-  position: absolute;
-  right: 0;
-  padding: 0px;
-  margin: 6px;
-  display: inline-block;
-  color: #ddd;
-  z-index: 1000;
+    /* Close Button */
+    position: absolute;
+    right: 0;
+    padding: 0px;
+    margin: 6px;
+    display: inline-block;
+    color: #ddd;
+    z-index: 1000;
 }
+
 .loginModal > #loginDiv > span.closeBtnArrow {
-  margin: 8px;
+    margin: 8px;
 }
+
 .loginModal > #loginDiv > span.closeBtnArrow:hover {
-  color: #f49e74;
+    color: #f49e74;
 }
 
 .loginModal > #loginDiv > span:hover {
-  /* Close Button Hover*/
-  color: #b44345;
+    /* Close Button Hover*/
+    color: #b44345;
 }
 
 .loginModal > #loginDiv input.smallerBecauseInfo {
-  /* Close Button */
-  display: inline-block;
-  padding: 10px;
-  margin: 5px 25px 5px 25px;
-  line-height: 0px;
+    /* Close Button */
+    display: inline-block;
+    padding: 10px;
+    margin: 5px 25px 5px 25px;
+    line-height: 0px;
 }
 
 .loginModal > #loginDiv .inputInfo {
-  /* Close Button */
-  display: inline-block;
-  margin: -10px 25px -10px -59px;
-  padding: 8px 10px 9.4px;
-  left: 2px;
+    /* Close Button */
+    display: inline-block;
+    margin: -10px 25px -10px -59px;
+    padding: 8px 10px 9.4px;
+    left: 2px;
 }
+
 .loginModal > #loginDiv .inputNoColor {
-  /* Close Button */
-  display: inline-block;
-  margin: -10px 25px -10px -59px;
-  padding: 8px 10px 9.4px;
-  left: 2px;
+    /* Close Button */
+    display: inline-block;
+    margin: -10px 25px -10px -59px;
+    padding: 8px 10px 9.4px;
+    left: 2px;
 }
 
 .loginModal > div {
-  display: flex;
-  background-color: #6e6e6e;
-  color: #222;
+    display: flex;
+    background-color: #6e6e6e;
+    color: #222;
 }
+
 .loginModal h2 {
-  font-family: 'Raleway', sans-serif;
-  margin: 25px 20px;
-  text-shadow: 2px 2px 15px #d4db96;
+    font-family: 'Raleway', sans-serif;
+    margin: 25px 20px;
+    text-shadow: 2px 2px 15px #d4db96;
 }
+
 .line {
-  border-bottom: 1px solid #fff;
-  width: 30%;
+    border-bottom: 1px solid #fff;
+    width: 30%;
 }
+
 #loginDiv {
-  position: relative;
-  box-shadow: 4px 4px 10px #222;
-  border-radius: 6px;
-  background-color: #b9936c;
-  display: flex;
-  flex-direction: column;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
+    position: relative;
+    box-shadow: 4px 4px 10px #222;
+    border-radius: 6px;
+    background-color: #b9936c;
+    display: flex;
+    flex-direction: column;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+/Edge */
+    user-select: none;
+    /* Standard */
 }
+
 #loginDiv > input {
-  padding: 10px;
-  margin: 5px 25px;
-  line-height: 0px;
+    padding: 10px;
+    margin: 5px 25px;
+    line-height: 0px;
 }
+
 #loginDiv > input:first-child {
-  margin-top: 40px;
+    margin-top: 40px;
 }
 
 #loginDiv > button {
-  display: inline-block;
-  margin: 10px 25px;
-  padding: 10px 20px;
-  border: none;
-  outline: none;
+    display: inline-block;
+    margin: 10px 25px;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
 }
+
 #loginDiv > button:last-child {
-  margin-bottom: 25px;
+    margin-bottom: 25px;
 }
+
 #loginDiv > button:focus {
-  border: none;
-  outline: none;
+    border: none;
+    outline: none;
 }
+
 #loginDiv > button:hover {
-  border: none;
-  outline: none;
-  background-color: #e9cf9a;
+    border: none;
+    outline: none;
+    background-color: #e9cf9a;
 }
+
 #loginDiv > div > p {
-  font-family: 'dosis', sans-serif;
-  font-weight: 700;
-  padding: 0 10px;
-  margin: -5px 0px 0px;
-  font-size: 1.2em;
-  color: #fff;
+    font-family: 'dosis', sans-serif;
+    font-weight: 700;
+    padding: 0 10px;
+    margin: -5px 0px 0px;
+    font-size: 1.2em;
+    color: #fff;
 }
 
 
@@ -1343,4 +1426,62 @@ button:hover {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d961e885', endColorstr='#d961e885', GradientType=0);
     /* IE6-9 */
     z-index: 10;
+}
+
+@media screen and (max-width: 920px) {
+    .libraryWrapper {
+        width: auto;
+        margin: 10px 10px 0;
+        padding-bottom: 10px;
+    }
+    #settingsModalWrapper > div {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .navLogout {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    #library {
+        padding: 5px;
+    }
+    #library div hr {
+        margin: 0;
+    }
+    #header {
+        border-bottom: 1px solid #ccc !important;
+        padding: 10px 0px 15px !important;
+    }
+    #library > div {
+        display: block;
+        padding: 0 25%;
+    }
+    #library > div:not(#header) {
+        margin: 5px;
+    }
+    .hoverGrey {
+        display: none;
+    }
+    .mediaRemove {
+        display: none !important;
+    }
+    .libraryRemoveBtn {
+        margin-top: 7px !important;
+        margin-bottom: 7px !important;
+    }
+    #library > div > span:nth-child(1)::before {
+        content: 'ID: ';
+        font-weight: 700;
+    }
+    #library > div > span:nth-child(3)::before {
+        content: 'Title: ';
+        font-weight: 700;
+    }
+    #library > div > span:nth-child(5)::before {
+        content: 'Author: ';
+        font-weight: 700;
+    }
+
 }
